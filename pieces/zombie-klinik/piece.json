@@ -1,0 +1,8 @@
+{
+  "name": "zombie-klinik",
+  "title": "Zombie-Apokalypse im Krankenhaus (DE)",
+  "format": { "width": 1080, "height": 1920, "fps": 30, "duration": 6.0, "frames": 180 },
+  "storyFormat": "voice-led character story, hard cuts on the words",
+  "style": "flat-noir",
+  "review": { "safe": { "top": 240, "bottom": 340, "right": 140 }, "refs": {} }
+}
