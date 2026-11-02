@@ -17,34 +17,110 @@
 // Zombie-Klinik (de) - flat-noir style, 9:16, 30fps
 const FPS = 30, W = 1080, H = 1920;
 const BPM = 112.5, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
-const DURATION = 6.0;
+const DURATION = 110.0;
 const NFRAMES = Math.round(DURATION * FPS);
 const LOOP_T = NFRAMES / FPS;
 const SAFE = { top: 240, bottom: 340, right: 140 };
 const HAND = '"Oswald", Impact, sans-serif';
 const CX = 540;
-// LOOK CHECK: three style frames, one shot each (the full piece replaces this list from the voice timing)
-const SHOT_LIST = [
-  [0.0, 'room',     'push'],
-  [2.0, 'corridor', 'push'],
-  [4.0, 'elevator', 'push'],
+// ---- the voice is the clock: VL(id) = a line, VW(id, word) = when a word starts
+const VL = (id) => VOICE.lines.find((l) => l.id === id);
+function VW(id, word, n = 1) { const L = VL(id); let k = 0; for (const w of L.words) if (w.w.toLowerCase().includes(word.toLowerCase()) && ++k === n) return w.t0; return L.t0; }
+const at = (s) => (typeof s === 'number' ? s : s.includes(':') ? VW(...s.split(':')) : VL(s).t0);
+// ---- the shot list: [start, scene, camera, args]. A shot starts 0.05s before its word; cameras in src/bridges.js:
+//   in / out = slow push in / pull out (+ a heavier vignette), fin / fout = fast zoom (+ whoosh), hold = a drift, shake = impact
+const SHOT_SPEC = [
+  [0,              'curtain',   'fin',   { state: 'rise', alarm: true }],
+  ['l02',          'curtain',   'in',    { state: 'arm', alarm: true, close: true }],
+  ['l03',          'curtain',   'out',   { state: 'sit', title: true }],
+  ['l03:während',  'face',      'in',    { who: 'lukas', face: 'scared', bg: 'room' }],
+  ['l04',          'monitor',   'in',    { hr: [118, 124], hand: true }],
+  ['l05',          'city',      'out',   {}],
+  ['l07',          'roomBed',   'in',    { label: ['LUKAS · 18', 'BLINDDARM-OP GESTERN NACHT'] }],
+  ['l08',          'lukasSide', 'hold',  {}],
+  ['l09',          'dogPet',    'in',    { label: ['KEKS', 'THERAPIEHUND DER KLINIK'] }],
+  ['l10',          'dogNap',    'out',   {}],
+  ['l11',          'curtain',   'in',    { state: 'lying', calm: true }],
+  ['l12',          'monitorB',  'fin',   {}],
+  ['l13',          'feet',      'in',    {}],
+  ['l14',          'face',      'fin',   { who: 'lukas', face: 'panic', bg: 'room', bpm: true }],
+  ['l15',          'monitor',   'hold',  { hr: [132, 140], beep: true }],
+  ['l15:bei',      'curtain',   'in',    { state: 'stand', near: true }],
+  ['l16',          'reach',     'in',    {}],
+  ['l17',          'clip',      'fin',   {}],
+  ['l18',          'monitor',   'shake', { hr: [146, 148], alarm: true }],
+  ['l19',          'face',      'fin',   { who: 'lukas', face: 'panic', bg: 'red' }],
+  ['l20',          'station',   'out',   {}],
+  ['l21',          'corridor',  'in',    { turn: true, red: true }],
+  ['l21:hat',      'corridor',  'fin',   { walk: true, red: true, close: true }],
+  ['l22',          'doorPlate', 'in',    {}],
+  ['l23',          'burst',     'shake', {}],
+  ['l24',          'face',      'in',    { who: 'jana', face: 'determined', bg: 'redRoom', label: ['SCHWESTER JANA', 'NACHTSCHICHT · STATION 3'] }],
+  ['l25',          'janaDog',   'out',   {}],
+  ['l26',          'bedWheel',  'in',    {}],
+  ['l27',          'brake',     'fin',   {}],
+  ['l28',          'monitor',   'hold',  { hr: [144, 144], alarm: true, rule: true, silenceAt: 'l29:stumm' }],
+  ['l30',          'leads',     'in',    {}],
+  ['l31',          'iv',        'in',    { step: 'warn' }],
+  ['l32',          'iv',        'fin',   { step: 'clamp' }],
+  ['l33',          'iv',        'fin',   { step: 'tape' }],
+  ['l34',          'iv',        'fin',   { step: 'pull' }],
+  ['l35',          'iv',        'fin',   { step: 'press' }],
+  ['l36',          'door',      'in',    { handle: true }],
+  ['l37',          'door',      'out',   { sign: true }],
+  ['l38',          'door',      'hold',  { sign: true, wide: true }],
+  ['l39',          'door',      'fin',   { press: true }],
+  ['l40',          'group',     'hold',  { clock: true }],
+  ['l42',          'group',     'shake', { blackout: true }],
+  ['l43',          'janaDark',  'in',    {}],
+  ['l44',          'dogDark',   'in',    {}],
+  ['l44:Vorschrift','janaDark', 'in',    { close: true }],
+  ['l45',          'door',      'fin',   { horde: true }],
+  ['l46',          'bathPush',  'shake', {}],
+  ['l48',          'blueprint', 'hold',  {}],
+  ['l49',          'dogSilent', 'in',    {}],
+  ['l50',          'face',      'fout',  { who: 'lukas', face: 'panic', bg: 'bath', hands: true }],
+  ['l51',          'gownBack',  'out',   {}],
+  ['l52',          'elevHall',  'in',    {}],
+  ['l52:tausendmal','button',   'fin',   {}],
+  ['l53',          'button',    'shake', { stop: true }],
+  ['l54',          'elevator',  'in',    { rule: true }],
+  ['l55',          'elevator',  'fin',   { open: true }],
+  ['l56',          'corridor',  'fin',   { turn: true, ding: true }],
+  ['l58',          'rush',      'shake', {}],
+  ['l59',          'wheelchair','fin',   {}],
+  ['l60',          'wheelRun',  'in',    {}],
+  ['l61',          'wheelClose','hold',  {}],
+  ['l62',          'radio',     'in',    { label: ['DR. YILMAZ', 'NOTAUFNAHME · FUNK'] }],
+  ['l63',          'face',      'in',    { who: 'jana', face: 'worried', bg: 'stairs' }],
+  ['l64',          'stairGroup','out',   {}],
+  ['l65',          'stairDown', 'in',    {}],
+  ['l67',          'stairUp',   'in',    {}],
+  ['l69',          'helipad',   'out',   {}],
+  ['l70',          'choice',    'in',    { pick: 'A' }],
+  ['l72',          'choice',    'in',    { pick: 'B' }],
+  [107.45,         'endcard',   'hold',  {}],
 ];
-const SCENE = { room: () => sceneRoom(), corridor: () => sceneCorridor(), elevator: () => sceneElevator() };
-const ERA_LIST = SHOT_LIST.map(([t0, sc], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, SCENE[sc]]);
-const SHOTS = SHOT_LIST.map(([t0, sc, cam], i) => [sc, i, t0, ERA_LIST[i][1], sc]);
+const SHOT_LIST = SHOT_SPEC.map(([s, sc, cam, args], i) => [i ? Math.max(0, Math.round((at(s) - 0.05) * FPS) / FPS) : 0, sc, cam, args]);
+const ERA_LIST = SHOT_LIST.map(([t0, sc, cam, args], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, () => SCENES[sc](args, i)]);
 const TIMELINE = {
   width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
-  format: 'beat-cut',
-  shots: SHOTS.map(([key, era, t0, t1, title], i) => ({ id: i + 1, key, era, t0, t1, title })),
+  format: 'voice-led character story, hard cuts on the words',
+  shots: SHOT_LIST.map(([t0, sc], i) => ({ id: i + 1, key: sc + i, era: i, t0, t1: ERA_LIST[i][1], title: sc })),
   cuts: SHOT_LIST.slice(1).map(([t0]) => t0),
   morphs: [],
   cues: {},
-  acts: [{ name: 'look', role: 'build', t0: 0, t1: DURATION }],
-  board: [
-    { t: 1.5, title: 'Leo im Bett', sound: '-', next: 'cut' },
-    { t: 3.5, title: 'der Flur', sound: '-', next: 'cut' },
-    { t: 5.5, title: 'Regel #2', sound: '-', next: '-' },
+  acts: [
+    { name: '1 Hook',      role: 'build',   t0: 0, t1: at('l05') },
+    { name: '2 Setup',     role: 'journey', t0: at('l05'), t1: at('l18') },
+    { name: '3 Alarm',     role: 'peak',    t0: at('l18'), t1: at('l29:stumm') },
+    { name: '4 Escape',    role: 'journey', t0: at('l29:stumm'), t1: at('l42') },
+    { name: '5 Blackout',  role: 'silence', t0: at('l42'), t1: at('l45') },
+    { name: '6 The door',  role: 'gift',    t0: at('l45'), t1: at('l56') },
+    { name: '7 Run',       role: 'goodbye', t0: at('l56'), t1: DURATION },
   ],
-  narration: [],
+  board: [],
+  narration: VOICE.lines.map((l) => ({ t0: l.t0, t1: l.t1, text: l.text })),
 };
+TIMELINE.board = TIMELINE.shots.map((s) => ({ t: Math.min(s.t1 - 0.05, s.t0 + Math.min(0.9, (s.t1 - s.t0) * 0.6)), title: s.id + ' ' + s.title, sound: '', next: '' }));
 window.TIMELINE = TIMELINE;

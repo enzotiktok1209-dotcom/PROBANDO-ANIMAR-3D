@@ -11,3 +11,5 @@ plugins/**/review/
 # reference media stays local (other people's work)
 references/
 **/index.html
+pieces/*/voice/*.wav
+pieces/*/voice/whisper.json

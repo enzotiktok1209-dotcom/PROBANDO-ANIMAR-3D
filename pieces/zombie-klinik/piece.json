@@ -1,8 +1,40 @@
 {
   "name": "zombie-klinik",
   "title": "Zombie-Apokalypse im Krankenhaus (DE)",
-  "format": { "width": 1080, "height": 1920, "fps": 30, "duration": 6.0, "frames": 180 },
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "duration": 110.0,
+    "frames": 3300
+  },
   "storyFormat": "voice-led character story, hard cuts on the words",
   "style": "flat-noir",
-  "review": { "safe": { "top": 240, "bottom": 340, "right": 140 }, "refs": {} }
+  "review": {
+    "safe": {
+      "top": 240,
+      "bottom": 340,
+      "right": 140
+    },
+    "refs": {}
+  },
+  "voice": {
+    "file": "voice/voice.wav",
+    "music": -4,
+    "gain": 0
+  },
+  "build": [
+    "src/head.html",
+    "kit/core.js",
+    "style",
+    "src/sets-a.js",
+    "src/sets-b.js",
+    "src/overlay.js",
+    "src/bridges.js",
+    "kit/morph.js",
+    "kit/board.js",
+    "kit/score-head.js",
+    "src/score.js",
+    "kit/score-tail.js"
+  ]
 }
