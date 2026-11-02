@@ -1,0 +1,11 @@
+{
+  "name": "million-vs-cent",
+  "title": "1 Million sofort vs 1 Cent x2 – 30 Tage (DE)",
+  "format": { "width": 1440, "height": 2560, "fps": 30, "duration": 109.0, "frames": 3270 },
+  "storyFormat": "beat-cut character comedy, a cut every ~2 s, voice-over clock",
+  "style": "flat-toon (in src/toon.js)",
+  "build": ["src/head.html", "src/data.js", "kit/core.js", "src/toon.js", "src/rig.js", "src/props.js", "src/sets.js", "src/main.js",
+            "src/shots-1.js", "src/shots-2.js", "src/shots-3.js", "src/timeline.js", "kit/score-head.js", "src/score.js", "src/score-tail.js"],
+  "voice": { "file": "voice/vo.wav", "music": -6 },
+  "review": { "safe": { "top": 220, "bottom": 380, "right": 120 }, "deadMax": 4 }
+}
