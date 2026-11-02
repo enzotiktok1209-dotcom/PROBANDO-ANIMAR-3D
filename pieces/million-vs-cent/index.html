@@ -1243,7 +1243,17 @@ function ticket(x, y, s, rot, txt) { ctx.save(); ctx.translate(x, y); ctx.rotate
 //  sets.js — the places, drawn in world space (1080 x 1920, floor at y ≈ 1560).
 //  Each set takes { blur } for a depth-of-field look in close-ups, and keeps 3+ things alive.
 // =====================================================================
-function withBlur(px, fn) { if (!px) return fn(); ctx.save(); ctx.filter = `blur(${px}px)`; fn(); ctx.restore(); }
+// depth of field: draw the layer once into a scratch canvas, then blur it in a single pass (per-shape blur is far too slow at 1440p)
+const BLURCV = {};
+function withBlur(px, fn) {
+  if (!px) return fn();
+  const key = ctx.canvas.width + 'x' + ctx.canvas.height;
+  if (!BLURCV[key]) { BLURCV[key] = document.createElement('canvas'); BLURCV[key].width = ctx.canvas.width; BLURCV[key].height = ctx.canvas.height; }
+  const sc = BLURCV[key], g = sc.getContext('2d'), T = ctx.getTransform(), prev = ctx;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, sc.width, sc.height); g.filter = 'none'; g.globalAlpha = 1; g.setTransform(T);
+  ctx = g; try { fn(); } finally { ctx = prev; }
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = `blur(${Math.round(px * SC)}px)`; ctx.drawImage(sc, 0, 0); ctx.restore();
+}
 const FLOOR = 1560;
 
 function setStudio(o = {}) {
