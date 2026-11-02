@@ -35,6 +35,7 @@ Continuación del video de Rafael (Parte 1, la versión en portugués). La estru
 
 ## 2. Adaptación a Brasil: decisiones
 
+- **Sin mencionar la votación anterior:** Rafael va al porto por decisión propia (soledad de 7 días), no por el voto.
 - **Continuidad con la Parte 1 de Rafael:** el billete decía *"Você não é o único. Somos onze. Rio de Janeiro. O porto. Sábado, meia-noite."* y atrás tenía la dirección de la casa de su mamá. Esta parte cierra esas dos pistas: el billete lo escribió la policía, y el celular de la mamá lo sacaron de esa dirección.
 - **Los "onze homens" son policías disfrazadas con barba falsa**, el mismo truque que usó Rafael en la Regra 2. Como no quedan hombres, el giro tiene más lógica que en el original.
 - **Escenario carioca:** Píer Mauá / porto do Rio, contêineres, helicóptero da polícia, trilhos do VLT, Boulevard Olímpico, escadaria y becos do Morro da Conceição, varal de roupa, cachorro latindo, Kombi branca.
@@ -60,13 +61,14 @@ HUD: `DIA 7 · RIO DE JANEIRO · 23:58`
 | O *último* homem vivo. | sello PROCURADO |
 | E o planeta inteiro tá te *caçando*. | pantallas con "CADÊ ELE?" en varios idiomas |
 
-### RECAP + VOTO (8–18 s)
+### RECAP (8–18 s)
 | Narração | Tela |
 |---|---|
 | Um bilhete na varanda prometia: *somos onze*. | primer plano del billete |
 | Porto do Rio. Sábado. *Meia-noite*. | |
-| E a maioria de vocês votou: *vai*. | tarjeta: `PARTE 1 · SEU VOTO` A: SIM, AGORA xx% / B: NUNCA xx% (poner tus números reales) |
-| Então Rafael *foi*. | Rafael caminando por el cais, Museu do Amanhã al fondo |
+| Podia ser *armadilha*. | Rafael mirando el billete en el sítio, de noche |
+| Mas sete dias sozinho... *pesam*. | reloj/radinho, el sítio vacío |
+| Ele *desceu a serra*. | corte: Rafael caminando por el cais, Museu do Amanhã al fondo |
 
 ### O GIRO (18–33 s)
 HUD: `PÍER MAUÁ · 00:00`
@@ -143,7 +145,7 @@ Pantalla de votación con contador regresivo de 8 s.
 
 > Todos os homens da Terra sumiram. Menos você, Rafael. Vinte e três anos. O último homem vivo. E o planeta inteiro tá te caçando.
 >
-> Um bilhete na varanda prometia: somos onze. Porto do Rio. Sábado. Meia-noite. E a maioria de vocês votou: vai. Então Rafael foi.
+> Um bilhete na varanda prometia: somos onze. Porto do Rio. Sábado. Meia-noite. Podia ser armadilha. Mas sete dias sozinho... pesam. Ele desceu a serra.
 >
 > Um barco de pesca, todo apagado. Onze homens no convés. Um deles grita: "Rafinha!" Só a mãe dele chamava ele assim. Ele dá um passo... e os holofotes acendem. Sirene pra todo lado. E os onze homens? Não são homens. São policiais. De barba falsa. A comandante segura o celular da mãe dele. O apelido. O endereço. O bilhete. Tudo armado.
 >
