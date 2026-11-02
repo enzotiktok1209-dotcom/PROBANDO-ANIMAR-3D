@@ -20,7 +20,7 @@
   },
   "voice": {
     "file": "voice/voice.wav",
-    "music": -4,
+    "music": -9,
     "gain": 0
   },
   "build": [
