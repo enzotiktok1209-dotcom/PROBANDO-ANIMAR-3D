@@ -144,11 +144,11 @@ function S40(u, d) {
 }
 // ---------------------------------------------------------------- S41 one cut
 function S41(u, d) {
-  ctx.save(); const [sx, sy] = flShake(TT, 14 * (1 - u / d), 50, 41); ctx.translate(sx, sy);
+  ctx.save(); const [sx, sy] = flShake(TT, 14 * (1 - u / d), 50, 41); ctx.translate(sx, sy); flCam(1 + EZ.io(u / d) * 0.08, 540, 720, 540, 740);
   flBg([[0, '#1a1418'], [1, '#08060a']]);
-  const M = flvMap('g_63.5', 540, 690, 480);
   flvGreta(540, 690, 480, { mood: 'angry', blink: 1, blood: 1 });
-  const mb = M.lbox('mouth'); flRect(mb[0] - 90, mb[1] - 30, (mb[2] - mb[0]) + 180, 90, 40, '#2a2a26');
+  const p = EZ.o3(clamp(u / 0.18)); flKnife(lerp(980, 700, p), lerp(1180, 1080, p), 1.3, -0.35, p);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; flLine([[1000, 1150], [lerp(1000, 640, p), lerp(1150, 1010, p)]], 'rgba(255,255,255,0.7)', 6); ctx.restore();
   ctx.restore();
   const fl = u < 0.12 ? 1 - u / 0.12 : 0; if (fl) { ctx.save(); ctx.globalAlpha = fl * 0.8; ctx.fillStyle = '#e0102a'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
 }
@@ -173,10 +173,14 @@ function S43(u, d) {
 }
 // ---------------------------------------------------------------- S44 one is still alive
 function S44(u, d) {
-  ctx.save(); flCam(1 + EZ.io(u / d) * 0.06, 540, 760, 540, 760);
-  flBg([[0, '#1c2440'], [1, '#2a3558']]);
-  flYoungHead(540, 700, 260, { mood: 'fear', blink: u < 0.25, pr: 7, mouth: 'o' });
-  ctx.save(); ctx.fillStyle = '#eef3fa'; ctx.beginPath(); ctx.moveTo(-50, 900); for (let x = -50; x <= 1150; x += 60) ctx.lineTo(x, 900 + 30 * Math.sin(x * 0.012)); ctx.lineTo(1150, 2000); ctx.lineTo(-50, 2000); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); flCam(1 + EZ.io(u / d) * 0.1, 540, 760, 540, 760);
+  flBg([[0, '#1c2440'], [1, '#2a3558']]); flMountains(640, { key: 44, s: 0.7 }); flRect(-200, 640, 1500, 1400, 0, '#dfe6f1');
+  flSmooth([[180, 1400], [220, 920], [380, 860], [700, 860], [860, 920], [900, 1400]], FL.olive);
+  flYoungHead(540, 700, 250, { mood: 'fear', blink: u < 0.25, pr: 7, mouth: u > 0.25 ? 'o' : null });
+  ctx.save(); ctx.fillStyle = '#eef3fa'; ctx.beginPath(); ctx.moveTo(-100, 1000); ctx.quadraticCurveTo(250, 880, 420, 905); ctx.quadraticCurveTo(540, 925, 660, 905); ctx.quadraticCurveTo(830, 880, 1180, 1000); ctx.lineTo(1180, 2000); ctx.lineTo(-100, 2000); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.6; ctx.fillStyle = '#c9d3e3'; ctx.beginPath(); ctx.ellipse(540, 930, 330, 40, 0, 0, TAU); ctx.fill(); ctx.restore();
+  for (let i = 0; i < 7; i++) flEll(380 + i * 55, 905 - (i % 2) * 10, 30, 16, '#ffffff');
+  if (u < 0.35) { const k = u / 0.35; for (let i = 0; i < 8; i++) flEll(540 + Math.cos(i) * 120 * k, 620 - Math.sin(i * 1.3) * 60 * k + k * k * 200, 8, 8, '#ffffff', 1 - k); }
   ctx.restore();
   flSnow({ n: 60, key: 44 });
 }

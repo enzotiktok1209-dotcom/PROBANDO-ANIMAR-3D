@@ -54,9 +54,9 @@ function S02(u, d) {
   nightBack({ moon: false, hy: 860 }); flGround(860);
   for (let i = 0; i < 5; i++) flPoliceFront(160 + i * 190, 900, 0.75, { ph: i });
   for (let r = 2; r >= 0; r--) {
-    const n = [5, 7, 9][r], s = [0.98, 0.7, 0.5][r], y = [1180, 1000, 905][r];
-    for (let i = 0; i < n; i++) { const x = W / 2 + (i - (n - 1) / 2) * (r === 0 ? 205 : r === 1 ? 150 : 115); const k = EZ.o3(clamp((u - 0.08 - (i + r * 2) * 0.045) / 0.22)); ctx.save(); ctx.globalAlpha = r === 2 ? 0.75 : 1; soldierFrontAim(x, y, s, k, { laser: r === 0 ? [500 + (i - 2) * 30 + Math.sin(TT * 9 + i) * 8, 1460 + Math.cos(TT * 7 + i) * 8] : null }); ctx.restore(); }
-    if (r > 0) { ctx.save(); ctx.globalAlpha = 0.25; ctx.fillStyle = '#c8d2e4'; ctx.fillRect(-100, y - 500, W + 200, 520); ctx.restore(); }
+    const n = [5, 7, 9][r], hh = [560, 400, 300][r], y = [1200, 1010, 915][r];
+    for (let i = 0; i < n; i++) { const x = W / 2 + (i - (n - 1) / 2) * (r === 0 ? 205 : r === 1 ? 150 : 112); const k = EZ.o3(clamp((u - 0.08 - (i + r * 2) * 0.045) / 0.22)); ctx.save(); ctx.globalAlpha = r === 2 ? 0.8 : 1; flvSoldier(x, y + (1 - k) * 18, hh, { eyes: 'red', bob: k * 6 }); ctx.restore(); if (r === 0 && k > 0.9) flLaser(flvMuzzle(x, y, hh), [500 + (i - 2) * 30 + Math.sin(TT * 9 + i) * 8, 1460 + Math.cos(TT * 7 + i) * 8]); }
+    if (r > 0) { ctx.save(); ctx.globalAlpha = 0.22; ctx.fillStyle = '#c8d2e4'; ctx.fillRect(-100, y - 520, W + 200, 540); ctx.restore(); }
   }
   ctx.restore();
   flSnow({ n: 140, wind: -30, key: 2 });
@@ -203,25 +203,25 @@ function S13(u, d) {
 }
 // ---------------------------------------------------------------- S14 one runs
 function S14(u, d) {
-  ctx.save(); flCam(1.05, 540, 900, 540, 860);
+  ctx.save(); flCam(1.05 + EZ.io(u / d) * 0.05, 540, 900, 540, 860);
   nightBack({ hy: 960, key: 14, moon: false }); flGround(960);
   for (let i = 0; i < 4; i++) flPoliceFront(200 + i * 230, 990, 0.6, { ph: i });
-  for (let i = 0; i < 4; i++) flSoldier(150 + i * 260, 1000, 0.55, { aim: 0, eyes: 'red', rifle: true });
-  // the rifle falls and bounces
-  const p = clamp(u / 0.45), ry = 780 + (p < 1 ? p * p * 380 : 380 - Math.abs(Math.sin((u - 0.45) * 12)) * 40 * Math.exp(-(u - 0.45) * 6));
-  const turned = u > 0.18, gait = flGait(TT, 2.2, 34);
-  flSoldier(540 - (turned ? (u - 0.18) * 520 : 0), 1160, 1.1, { flip: turned, aim: 0, rifle: false, eyes: 'red', ...(turned ? gait : { armL: [60, 60], armR: [60, 60] }) });
-  ctx.save(); ctx.translate(620, ry); ctx.rotate(p * 5 + (u > 0.45 ? Math.sin(u * 20) * 0.1 : 0)); flRifle(-90, 0, 0, 1.15); ctx.restore();
+  for (let i = 0; i < 4; i++) flvSoldier(150 + i * 260, 1010, 300, { eyes: 'red' });
+  const turned = u > 0.15, x = 540 - (turned ? EZ.i2((u - 0.15) / 0.6) * 620 : 0);
+  flvSoldier(x, 1200, 560, { eyes: 'red', flip: turned, run: turned ? TT * 2.4 : null, lean: turned ? 0.12 : 0, bob: turned ? Math.abs(Math.sin(TT * 2.4 * TAU)) * 14 : 0 });
+  if (turned) { const R = RNG('kick14'); for (let i = 0; i < 10; i++) { const ph = mod(u * 3 + R.r(0, 1), 1); flEll(x + 60 + ph * 120, 1195 - Math.sin(ph * Math.PI) * 60, 8, 6, '#ffffff', 1 - ph); } }
   ctx.restore();
   flSnow({ n: 100, wind: 80, key: 14 });
 }
 // ---------------------------------------------------------------- S15 then all
 function S15(u, d) {
-  ctx.save(); const [sx, sy] = flShake(TT, 6, 30, 15); ctx.translate(sx, sy); flCam(1, 540, 900, 540, 860);
+  ctx.save(); const [sx, sy] = flShake(TT, 6, 30, 15); ctx.translate(sx, sy); flCam(1 + EZ.io(u / d) * 0.06, 540, 900, 540, 860);
   nightBack({ hy: 960, key: 15, moon: false }); flGround(960);
   for (let i = 0; i < 5; i++) flPoliceFront(120 + i * 210, 990, 0.62, { ph: i });
   const R = RNG('flee');
-  for (let i = 0; i < 9; i++) { const dir = R.r(0, 1) > 0.5 ? 1 : -1, s = R.r(0.55, 1.05), x = R.r(120, 960) + dir * u * R.r(300, 700), y = 1000 + s * 180; const g = flGait(TT + i * 0.3, 2.4, 36); flSoldier(x, y, s, { flip: dir < 0, rifle: i % 3 !== 0, eyes: 'red', ...g }); const bx = x + dir * 40 * s, by = y - 420 * s; flBeam(bx, by, (dir > 0 ? 0 : Math.PI) + Math.sin(TT * 6 + i) * 0.6, 500 * s, 80 * s, 0.25); }
+  for (let i = 0; i < 9; i++) { const dir = i % 2 ? 1 : -1, hh = R.r(300, 560), x = R.r(160, 920) + dir * u * R.r(400, 800), y = 1000 + hh * 0.35; const ph = TT * R.r(2.2, 2.8) + i;
+    flvSoldier(x, y, hh, { eyes: 'red', flip: dir < 0, run: ph, lean: 0.12, bob: Math.abs(Math.sin(ph * TAU)) * 12 });
+    flBeam(x + dir * 40, y - hh * 0.62, (dir > 0 ? 0 : Math.PI) + Math.sin(TT * 6 + i) * 0.6, 500, 80, 0.22); }
   ctx.restore();
   flSnow({ n: 100, wind: 60, key: 15 });
 }

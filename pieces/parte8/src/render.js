@@ -57,7 +57,12 @@ function renderFrame(t, canvas) {
   ctx.filter = 'saturate(1.2) contrast(1.05)';
   const sat = flLayer('sat'), sg = sat.getContext('2d'); sg.setTransform(1, 0, 0, 1, 0, 0); sg.filter = 'saturate(1.2) contrast(1.05)'; sg.clearRect(0, 0, W, H); sg.drawImage(L, 0, 0); sg.filter = 'none';
   ctx.filter = 'none';
+  // a slow push-in on every shot (every fifth one pulls out instead) — keeps the eye locked on the centre
+  const NOZ = { S17: 1, S26: 1, S37: 1, S87: 1 }, prog = EZ.io(clamp((TT - s.t0) / (s.t1 - s.t0)));
+  const gz = NOZ[s.key] ? 1 : (i % 5 === 4 ? lerp(1.12, 1.0, prog) : lerp(1.0, 1.12, prog));
+  ctx.save(); ctx.translate(540, 780); ctx.scale(gz, gz); ctx.translate(-540, -780);
   blit(sat, kind, p);
+  ctx.restore();
   // overlays tied to transitions
   const k = 1 - Math.abs(p);
   if (kind === 'flash' || kind === 'flashS') { ctx.save(); ctx.globalAlpha = (kind === 'flash' ? 1 : 0.6) * k ** 1.5; ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H); ctx.restore(); }

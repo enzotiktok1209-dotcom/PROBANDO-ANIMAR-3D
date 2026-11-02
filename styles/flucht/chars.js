@@ -204,18 +204,17 @@ function flFatherBody(x, y, s, o = {}) {
 // ---------------------------------------------------------------- SOLDATEN
 function flSoldierHead(x, y, R, o = {}) {
   flUnit(x, y, R, o.rot || 0);
-  flEll(0, 10, 92, 102, FL.mask);
-  if (o.eyes === 'red') for (const s of [-1, 1]) { flGlow(s * 32, 0, 60, 'rgba(255,40,50,0.55)'); flEll(s * 32, 0, 16, 10, FL.eyeRed); }
+  flRect(-100, -40, 200, 200, 70, FL.mask);
+  if (o.eyes === 'red') for (const s of [-1, 1]) { flGlow(s * 42, 20, 70, 'rgba(255,40,50,0.6)'); flEll(s * 42, 20, 26, 16, FL.eyeRed); }
   else for (const s of [-1, 1]) {
-    flEll(s * 34, 2, 30, 30, '#f2f4f6');
-    if (o.refl) { ctx.save(); ctx.beginPath(); ctx.ellipse(s * 34, 2, 30, 30, 0, 0, TAU); ctx.clip(); flEll(s * 34 - 6, 18, 34 * o.refl, 22 * o.refl, '#c9d3e3'); flEll(s * 34 - 10, 14, 22 * o.refl, 14 * o.refl, '#ffffff'); ctx.restore(); }
-    flEll(s * 34 + (o.look?.[0] ?? 0) * 8, 4, o.pr ?? 11, o.pr ?? 11, '#151515');
+    flEll(s * 44, 22, 36, 26, '#d4d7db'); flEll(s * 44, 16, 33, 19, '#eceef0');
+    if (o.refl) { ctx.save(); ctx.beginPath(); ctx.ellipse(s * 44, 22, 36, 26, 0, 0, TAU); ctx.clip(); flEll(s * 44 - 6, 30, 40 * o.refl, 22 * o.refl, '#b9c3d4'); flEll(s * 44 - 10, 26, 26 * o.refl, 14 * o.refl, '#ffffff'); ctx.restore(); }
+    if (o.pr) flEll(s * 44 + (o.look?.[0] ?? 0) * 8, 22, o.pr, o.pr, '#151515');
   }
-  if (o.mouth) flEll(0, 66, 18, 14 * o.mouth, '#6b1520');
-  // helmet
-  flSmooth([[-112, -18], [-100, -90], [-50, -130], [50, -130], [100, -90], [112, -18], [130, -6], [-130, -6]], FL.olive);
-  flRect(-132, -22, 264, 22, 10, FL.oliveS);
-  flCurve(-70, -100, 0, -126, 70, -100, '#6f7e47', 6, 0.7);
+  if (o.mouth) flEll(0, 110, 30, 24 * o.mouth, '#5a1220');
+  flSmooth([[-120, -30], [-112, -110], [-60, -160], [60, -160], [112, -110], [120, -30]], '#5c6446');
+  flEll(-30, -120, 60, 18, '#6b7452', 0.6);
+  flRect(-150, -48, 300, 34, 17, '#5c6446'); flRect(-150, -26, 300, 10, 5, '#4a5137');
   ctx.restore();
 }
 function flRifle(x, y, ang, s = 1, c = FL.oliveD) { ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s); flRect(-40, -9, 210, 18, 4, c); flRect(-80, -12, 50, 24, 6, c); flRect(20, 6, 18, 36, 4, c); flRect(150, -14, 30, 10, 3, '#222'); ctx.restore(); }

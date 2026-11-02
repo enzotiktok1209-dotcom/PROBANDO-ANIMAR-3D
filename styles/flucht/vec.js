@@ -150,3 +150,28 @@ function flvFatherFull(x, y, h, o = {}) {
   flVec('f_open', 0, bodyTop - 30 * u, 56 * u, { blink: o.closed ? 1 : 0.2, lidC: '#d9bcab' });
   ctx.restore();
 }
+
+// ---------------------------------------------------------------- SOLDIERS traced from "Flucht" (fs 19.5): tall, olive vest, rifle across the chest
+// (x, y) = between the feet, h = height. o.eyes: 'white' | 'red'; o.run: legs swing (drawn), o.lean, o.flip, o.alpha, o.bob
+const SOLD = { hip: 274, legs: [[78, 98], [106, 124]], foot: 456, eyes: [[86, 77], [113.6, 77]] };
+function flvSprite(name, o = {}) {
+  const V = FLV[name]; const top = ['white', 'red'];
+  const sorted = V.order.filter((n) => !top.includes(n)).concat(top.filter((n) => V.order.includes(n)));
+  for (const ln of sorted) { const c = V.layers[ln].c; ctx.fillStyle = c; ctx.strokeStyle = c; ctx.lineWidth = 0.6; for (const p of flvPaths(name, ln)) { if (o.maxY != null && p.box[1] > o.maxY) continue; ctx.fill(p.P, 'evenodd'); ctx.stroke(p.P); } }
+}
+function flvSoldier(x, y, h, o = {}) {
+  const V = FLV.s_full, s = h / (SOLD.foot - 20), cx = (SOLD.legs[0][0] + SOLD.legs[1][1]) / 2;
+  ctx.save(); ctx.translate(x, y - (o.bob ?? 0)); if (o.flip) ctx.scale(-1, 1); if (o.lean) ctx.rotate(o.lean); if (o.alpha != null) ctx.globalAlpha *= o.alpha;
+  ctx.scale(s, s); ctx.translate(-cx, -SOLD.foot);
+  if (o.run != null) {
+    // legs drawn: two olive bars swinging from the hip, black boots
+    SOLD.legs.forEach(([a, b], i) => { const sw = Math.sin(o.run * TAU + (i ? Math.PI : 0)) * 0.45; ctx.save(); ctx.translate((a + b) / 2, SOLD.hip); ctx.rotate(sw); flRect(-(b - a) / 2, 0, b - a, SOLD.foot - SOLD.hip, 3, '#373d2f'); flEll(3, SOLD.foot - SOLD.hip, 11, 5, '#151515'); ctx.restore(); });
+    ctx.save(); ctx.beginPath(); ctx.rect(-50, -50, V.w + 100, SOLD.hip + 50); ctx.clip(); flvSprite('s_full'); ctx.restore();
+  } else flvSprite('s_full');
+  // the goggles (one is lost in the trace): white, or glowing red at night
+  for (const [ex, ey] of SOLD.eyes) { if (o.eyes === 'red') { flGlow(ex, ey, 18, 'rgba(255,40,50,0.7)'); flEll(ex, ey, 7, 4.5, '#ff2b3a'); } else { flEll(ex, ey, 7.5, 5.5, '#e2e5e8'); flEll(ex + 1, ey + 1, 3, 3, '#7f8590', 0.5); } }
+  ctx.restore();
+}
+function flvMuzzle(x, y, h, flip) { const s = h / (SOLD.foot - 20), cx = (SOLD.legs[0][0] + SOLD.legs[1][1]) / 2; return [x + (180 - cx) * s * (flip ? -1 : 1), y + (235 - SOLD.foot) * s]; }
+function flvSoldierHeadAt(x, y, h, flip) { const s = h / (SOLD.foot - 20), cx = (SOLD.legs[0][0] + SOLD.legs[1][1]) / 2; return [x + (100 - cx) * s * (flip ? -1 : 1), y + (85 - SOLD.foot) * s, s]; }
+function flLaser(a, b, w = 4) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; flLine([a, b], 'rgba(255,40,60,0.55)', w); ctx.restore(); flGlow(b[0], b[1], 34, 'rgba(255,40,60,0.85)'); flEll(b[0], b[1], 7, 7, '#ff2b3a'); }

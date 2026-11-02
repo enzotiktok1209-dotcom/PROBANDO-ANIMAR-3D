@@ -40,10 +40,10 @@ function S51(u, d) {
 function S52(u, d) {
   ctx.save(); flCam(1.05, 540, 1000, 540, 900);
   forestNight({ key: 52, moon: false });
-  flHuman(800, 1250, 0.95, { top: FL.olive, topS: FL.oliveS, topLen: -232, pants: FL.oliveS, shoe: '#111', hand: '#1a1a1a', armR: [55, 20], armL: [10, 10], head: (hx, hy) => flSoldierHead(hx, hy - 10, 58, { eyes: 'red' }) });
+  flvSoldier(820, 1250, 600, { eyes: 'white' });
   const bark = Math.sin(u * 14) > 0.3;
   flDog(380, 1240, 1.6, { growl: bark, walk: true, headRot: bark ? -0.15 : 0 });
-  flLine([[620, 1040], [845, 1080]], '#2b2b2b', 5);
+  flLine([[620, 1040], [770, 1000]], '#2b2b2b', 5);
   ctx.restore(); flSnow({ n: 80, key: 52 });
 }
 // ---------------------------------------------------------------- S53 signal found
@@ -61,18 +61,21 @@ function S54(u, d) {
   const ma = lerp(Math.PI * 1.1, Math.PI * 1.9, p); flMoon(540 + Math.cos(ma) * 420, 760 + Math.sin(ma) * 420, 40);
   flMountains(900, { key: 54 }); flGround(960);
   ctx.save(); ctx.globalAlpha = 0.9; flAvalanche(540, 1060, 1100, 200, { key: 54, roll: 0.2, chunks: 0, puff: 0.6 }); ctx.restore();
-  for (let i = 0; i < 5; i++) { const x = 260 + i * 140, ph = Math.sin(TT * 9 + i * 1.3); flSoldier(x, 1080, 0.55, { aim: 0, rifle: false, eyes: 'red', armR: [70 + ph * 40, 40], armL: [70 + ph * 40, 40], crouch: 0.3 }); ctx.save(); ctx.translate(x + 40, 860 + ph * 20); ctx.rotate(0.5 + ph * 0.4); flRect(-6, -60, 12, 150, 4, '#5a4632'); flRect(-26, 80, 52, 50, 10, '#7d8592'); ctx.restore(); }
+  for (let i = 0; i < 5; i++) { const x = 260 + i * 140, ph = Math.sin(TT * 9 + i * 1.3); flvSoldier(x, 1090, 300, { eyes: 'red', lean: 0.25 + ph * 0.12 }); ctx.save(); ctx.translate(x + 50, 1000 + ph * 20); ctx.rotate(0.6 + ph * 0.4); flRect(-5, -80, 10, 140, 4, '#5a4632'); flRect(-22, 55, 44, 40, 10, '#7d8592'); ctx.restore(); }
   flRect(820, 300, 200, 80, 12, 'rgba(10,12,22,0.85)'); const hh = Math.floor(lerp(2, 5.9, p)), mm = Math.floor(mod(lerp(14, 59 * 4, p), 60)); flText(`0${hh}:${String(mm).padStart(2, '0')}`, 920, 360, 46, FL.hudY, { font: FL_MONO, weight: 800, shadow: false });
 }
 // ---------------------------------------------------------------- S55 you crawl through the forest
 function S55(u, d) {
-  ctx.save(); flCam(1, 540, 1000, 540, 900);
-  forestNight({ key: 55, off: -u * 140 });
-  flvKlausFull(lerp(280, 520, u / d), 1260, 520, { gait: 1.1 });
-  ctx.save(); ctx.translate(lerp(280, 520, u / d) - 10, 1260 - 470); ctx.rotate(-1.45); flvFatherFull(0, 0, 360, { closed: true }); ctx.restore();
-  flvGretaFull(lerp(560, 760, u / d), 1280, 470, { mood: 'fear', gait: 1.2, lean: 0.15 });
-  for (const [x, y] of [[lerp(560, 760, u / d), 900], [lerp(280, 520, u / d), 790]]) { const ph = mod(u * 1.2, 1); flEll(x + 30 + ph * 30, y - ph * 60, 20 + ph * 30, 14 + ph * 18, '#d8e2ef', 0.5 * (1 - ph)); }
-  if (u > 0.9 && u < 1.2) { flLine([[900, 1240], [960, 1210]], '#3a2a1a', 8); flLine([[960, 1210], [1010, 1240]], '#3a2a1a', 8); }
+  ctx.save(); flCam(1 + EZ.io(u / d) * 0.08, 540, 1000, 540, 900);
+  forestNight({ key: 55, off: -u * 160 });
+  const kx = lerp(400, 520, u / d), ph = TT * 1.1, bob = Math.abs(Math.sin(ph * TAU)) * 10, KH = 640, ku = KH / 415, shY = 1300 - KH + 140 * ku - bob;
+  // father lying across Klaus's shoulders: head to the left, legs hanging right
+  flvKlausFull(kx, 1300 - bob, KH, { gait: 1.1, armL: 0.45, armR: 0.45 });
+  const chestY = 1300 - bob - KH + 230 * ku;
+  ctx.save(); ctx.translate(kx + 200, chestY); ctx.rotate(-Math.PI / 2 + 0.05); flvFatherFull(0, 0, 400, { closed: true }); ctx.restore();
+  for (const sg of [-1, 1]) flEll(kx + sg * 70 * ku, chestY + 22 * ku, 12 * ku, 12 * ku, '#d1a495');
+  const gx = lerp(780, 880, u / d); flvGretaFull(gx, 1330, 560, { mood: 'fear', gait: 1.25, lean: 0.12 });
+  for (const [x, y] of [[gx, 830], [kx, 690]]) { const p = mod(u * 1.2, 1); flEll(x + 30 + p * 30, y - p * 60, 20 + p * 30, 14 + p * 18, '#d8e2ef', 0.5 * (1 - p)); }
   ctx.restore();
 }
 // ---------------------------------------------------------------- S56 a dog stops
@@ -130,9 +133,9 @@ function S62(u, d) {
   ctx.save(); flCam(1, 540, 1000, 540, 900);
   forestNight({ key: 62, moon: false });
   const x = lerp(560, 120, EZ.i2(u / d)); const g = flGait(TT, 1.4, 26);
-  flHuman(x + 240, 1250, 0.95, { top: FL.olive, topS: FL.oliveS, topLen: -232, pants: FL.oliveS, shoe: '#111', hand: '#1a1a1a', flip: true, ...g, head: (hx, hy) => flYoungHead(hx, hy - 6, 60, {}) });
+  flvSoldier(x + 240, 1250, 600, { flip: true, run: TT * 1.4, bob: Math.abs(Math.sin(TT * 1.4 * TAU)) * 8 }); { const [hx, hy, ss] = flvSoldierHeadAt(x + 240, 1250 - Math.abs(Math.sin(TT * 1.4 * TAU)) * 8, 600, true); flYoungHead(hx, hy + 8 * ss, 40 * ss, { look: [-0.6, 0] }); }
   flDog(x, 1250, 1.5, { flip: true, walk: true, wag: 4 });
-  flLine([[x - 150, 1050], [x + 200, 1000]], '#2b2b2b', 5);
+  flLine([[x - 150, 1050], [x + 170, 1000]], '#2b2b2b', 5);
   ctx.restore(); flSnow({ n: 60, key: 62 });
 }
 // ---------------------------------------------------------------- S63 your heart in your throat
