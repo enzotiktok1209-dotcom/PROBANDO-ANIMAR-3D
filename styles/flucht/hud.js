@@ -49,7 +49,7 @@ function flRegelCard(n, t0) {
 function flIdCard(x, y, k, o = {}) {
   if (k <= 0) return; ctx.save(); ctx.translate(x + (1 - k) * 300, y); ctx.globalAlpha *= clamp(k);
   flRect(0, 0, 330, 200, 14, 'rgba(12,15,26,0.9)'); ctx.lineWidth = 4; ctx.strokeStyle = '#d9b24a'; ctx.beginPath(); ctx.roundRect(0, 0, 330, 200, 14); ctx.stroke();
-  flRect(18, 18, 92, 110, 10, '#2a3048'); flGretaHead(64, 78, 34, { mood: 'neutral', blink: false });
+  flRect(18, 18, 92, 110, 10, '#2a3048'); ctx.save(); ctx.beginPath(); ctx.roundRect(18, 18, 92, 110, 10); ctx.clip(); flVec('g_12.5', 64, 70, 66, { blink: 0 }); ctx.restore();
   flText('NAME:', 128, 60, 22, '#aab0c0', { font: FL_MONO, align: 'left', weight: 700, shadow: false }); flText('GRETA', 128, 92, 30, '#ffffff', { font: FL_MONO, align: 'left', weight: 800, shadow: false });
   flText('ALTER: 23', 128, 132, 22, '#aab0c0', { font: FL_MONO, align: 'left', weight: 700, shadow: false });
   flText(o.status || 'STATUS: DIE LETZTE', 18, 180, 22, FL.red, { font: FL_MONO, align: 'left', weight: 800, shadow: false });
@@ -78,7 +78,7 @@ function flNewsCard(x, y, k, stamp) {
   flRect(-380, -260, 760, 520, 20, '#151a2c'); ctx.lineWidth = 6; ctx.strokeStyle = FL.red; ctx.beginPath(); ctx.roundRect(-380, -260, 760, 520, 20); ctx.stroke();
   flRect(-380, -260, 760, 70, [20, 20, 0, 0], FL.red); flText('EILMELDUNG · NEWS 24', -350, -212, 32, '#ffffff', { font: FL_MONO, align: 'left', weight: 800, shadow: false });
   flText('LETZTE FRAU TOT', 0, -120, 62, '#ffffff', {});
-  flRect(-170, -80, 340, 300, 14, '#3a4058'); ctx.save(); ctx.beginPath(); ctx.roundRect(-170, -80, 340, 300, 14); ctx.clip(); ctx.filter = 'blur(6px)'; flGretaBust(0, 50, 80, { mood: 'neutral', blink: false }); ctx.restore();
+  flRect(-170, -80, 340, 300, 14, '#3a4058'); ctx.save(); ctx.beginPath(); ctx.roundRect(-170, -80, 340, 300, 14); ctx.clip(); ctx.filter = 'blur(6px)'; flvGreta(0, 20, 170, { mood: 'sad', blink: 0 }); ctx.restore();
   if (stamp > 0) { ctx.save(); ctx.translate(40, 80); ctx.rotate(-0.25); const s = lerp(2.4, 1, clamp(stamp)); ctx.scale(s, s); ctx.globalAlpha *= clamp(stamp * 2); ctx.lineWidth = 10; ctx.strokeStyle = FL.red; ctx.strokeRect(-150, -62, 300, 124); flText('TOT', 0, 38, 110, FL.red, { shadow: false }); ctx.restore(); }
   ctx.restore();
 }

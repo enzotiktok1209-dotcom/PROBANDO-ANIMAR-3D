@@ -99,7 +99,7 @@ function S05(u, d) {
   ctx.save(); ctx.beginPath(); ctx.roundRect(-60, 260, 520, 520, 40); ctx.clip(); roadPOV(1.2, { hy: 600 }); ctx.restore();
   flRect(-80, 240, 560, 560, 50, 'rgba(0,0,0,0)');
   flRect(-80, 760, 1300, 1300, 0, '#0e0f14'); flRect(560, 380, 560, 1500, 60, '#191b22');
-  flGretaBust(520, 790, 215, { mood: 'fear', sweat: true, breath: 7, breathAmp: 9, key: 1, blood: 1 });
+  flvGreta(520, 720, 470, { mood: 'fear', sweat: true, breath: 7, breathAmp: 9, key: 1, blood: 1 });
   // laser dots trembling on her cheek and coat
   for (let i = 0; i < 3; i++) { const x = 600 + i * 60 + Math.sin(TT * 13 + i) * 10, y = 830 + i * 120 + Math.cos(TT * 11 + i) * 10; flGlow(x, y, 40, 'rgba(255,40,60,0.85)'); flEll(x, y, 7, 7, '#ff3040'); }
   ctx.restore();
@@ -120,7 +120,7 @@ function S07(u, d) {
   flBg([[0, '#11141d'], [1, '#06070a']]);
   ctx.save(); ctx.beginPath(); ctx.roundRect(80, 250, 920, 420, 60); ctx.clip(); nightBack({ hy: 600, off: -TT * 300, key: 7 }); flGround(600); flForest(640, { off: -TT * 600, key: 7, s: 0.6 }); ctx.restore();
   flRect(-50, 640, 1180, 1400, 80, '#22252e');
-  flFatherBust(540, 780, 205, { lid: 0.65, mouth: u > 0.9 && u < 1.6 ? 'groan' : null, blood: lerp(0.8, 1.25, u / d), breath: 1.4 });
+  flvFather(540, 690, 430, {});
   // Greta's hand pressing the wound, trembling
   const [hx, hy] = flShake(TT, 3, 40, 7); flLine([[1100, 1500], [700 + hx, 1170 + hy]], FL.coat, 90); flEll(660 + hx, 1150 + hy, 62, 50, FL.skin); for (let k = 0; k < 4; k++) flEll(610 + k * 30 + hx, 1110 + hy, 16, 26, FL.skin);
   ctx.restore();
@@ -133,7 +133,7 @@ function S08(u, d) {
   ctx.save(); ctx.beginPath(); ctx.rect(0, 200, W, 520); ctx.clip(); roadPOV(1.5, { hy: 520, block: true }); ctx.restore();
   flRect(-50, 700, 1180, 1400, 0, '#0d0e12');
   const [sx, sy] = flShake(TT, 3, 30, 8);
-  flKlausBust(540 + sx, 740 + sy, 210, { mood: 'angry', look: [0.2, 0] });
+  flvKlaus(540 + sx, 650 + sy, 400, { look: [0.2, 0] });
   flSteering(540, 1290, 300, Math.sin(TT * 3) * 0.05);
   for (const s of [-1, 1]) { flEll(540 + s * 250, 1120, 50, 44, FL.kSkin); flEll(540 + s * 250, 1100, 52, 26, FL.hood); }
   ctx.restore();
@@ -227,7 +227,7 @@ function S15(u, d) {
 }
 // ---------------------------------------------------------------- S16 five seconds
 function S16(u, d) {
-  ctx.save(); ctx.filter = 'blur(12px) brightness(0.55)'; flBg([[0, '#141824'], [1, '#07080c']]); flGretaBust(540, 800, 230, { mood: 'panic', key: 2 }); ctx.restore();
+  ctx.save(); ctx.filter = 'blur(12px) brightness(0.55)'; flBg([[0, '#141824'], [1, '#07080c']]); flvGreta(540, 720, 480, { mood: 'cry', key: 2 }); ctx.restore();
   const pulse = 0.5 + 0.5 * Math.sin(TT * 10); ctx.save(); ctx.fillStyle = flRad(540, 900, 300, 1200, [[0, 'rgba(0,0,0,0)'], [1, `rgba(220,20,40,${0.35 + 0.25 * pulse})`]]); ctx.fillRect(0, 0, W, H); ctx.restore();
   const k = clamp(u / 0.16), s = lerp(2.6, 1, EZ.o3(k)) * (1 + 0.04 * Math.sin(TT * 12));
   ctx.save(); ctx.translate(540, 760); ctx.scale(s, s); flText('5', 0, 190, 540, FL.yellow, { stroke: 18, blur: 40 }); ctx.restore();
@@ -285,7 +285,7 @@ function S20(u, d) {
 function S21(u, d) {
   ctx.save(); const z = 1 + EZ.io(u / d) * 0.08; flCam(z, 540, 760, 540, 760);
   flBg([[0, '#121318'], [1, '#07080a']]);
-  flGretaBust(540, 470, 260, { mood: 'determined', key: 4, blood: 1 });
+  flvGreta(540, 400, 520, { mood: 'angry', key: 4, blood: 1 });
   const p = EZ.io(clamp(u / 0.35)), bx = lerp(980, 300, p), by = lerp(420, 1080, p);
   flLine([[1040, 300], [bx, by]], '#2b2e36', 70, 1, 'butt'); flLine([[1040, 300], [bx, by]], '#3a3e48', 14, 1, 'butt');
   flRect(bx - 50, by - 30, 100, 60, 12, '#c9ced6');
@@ -299,7 +299,7 @@ function S22(u, d) {
   ctx.save(); const z = 1 + EZ.io(u / d) * 0.06; flCam(z, 540, 760, 540, 760);
   flBg([[0, '#20242e'], [1, '#0a0b0f']]);
   ctx.save(); ctx.beginPath(); ctx.roundRect(60, 220, 960, 560, 40); ctx.clip(); flBg([[0, '#9aa6ba'], [1, '#dfe6f1']]); flAvalanche(540, 900, 1400, 700, { key: 22, roll: 2 }); ctx.restore();
-  flGretaBust(540, 760, 215, { mood: 'fear', key: 5, blood: 1 });
+  flvGreta(540, 690, 460, { mood: 'fear', key: 5, blood: 1 });
   const p = EZ.o3(clamp(u / 0.3));
   for (const s of [-1, 1]) { const x0 = 540 + s * 330, y0 = 1500, x1 = lerp(540 + s * 260, 540 - s * 120, p), y1 = lerp(1250, 700, p); flLine([[x0, y0], [x1, y1]], FL.coat, 110); flEll(x1 - s * 30, y1 - 20, 54, 50, FL.skin); }
   if (u > 0.3) { const k = clamp((u - 0.3) / 0.25); ctx.save(); ctx.globalAlpha = k; ctx.lineWidth = 10; ctx.strokeStyle = FL.green; ctx.shadowColor = FL.green; ctx.shadowBlur = 30; ctx.beginPath(); ctx.ellipse(540, 760, 280 * (1.2 - 0.2 * k), 190 * (1.2 - 0.2 * k), 0, 0, TAU); ctx.stroke(); ctx.restore(); flText('LUFTRAUM', 540, 520, 40, FL.green, { font: FL_MONO, weight: 800 }); }
@@ -311,8 +311,8 @@ function S23(u, d) {
   flBg([[0, '#1a1d26'], [1, '#08090c']]);
   ctx.save(); ctx.beginPath(); ctx.roundRect(40, 200, 1000, 620, 40); ctx.clip(); flBg([[0, '#1c2440'], [1, '#2a3558']]); flMountains(820, { key: 23 });
   const cover = EZ.io(clamp(u / d)); flAvalanche(540, lerp(-200, 900, cover), 1600, 1100, { key: 23, roll: 0.8 }); ctx.restore();
-  ctx.save(); ctx.globalAlpha = 0.6; flFatherHead(160, 760, 140, { closed: true }); ctx.restore();
-  flGretaBust(600, 760, 215, { mood: 'calm', mouth: 'puff', breath: 1.2, breathAmp: 16, key: 6, blood: 1, tear: u * 0.6 });
+  ctx.save(); ctx.globalAlpha = 0.6; flVec('f_open', 150, 720, 250, { blink: 1, lidC: '#d9bcab' }); ctx.restore();
+  flvGreta(600, 690, 460, { mood: 'calm', breath: 1.2, breathAmp: 16, key: 6, blood: 1 });
   ctx.save(); ctx.globalAlpha = 0.45 * EZ.i2(u / d); ctx.fillStyle = '#000'; ctx.fillRect(-200, -200, 1500, 2400); ctx.restore();
   ctx.restore();
 }

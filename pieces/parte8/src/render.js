@@ -64,6 +64,8 @@ function renderFrame(t, canvas) {
   if (kind === 'red') { ctx.save(); ctx.globalAlpha = 0.85 * k ** 1.3; ctx.fillStyle = '#e0102a'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
   if (kind === 'black') { ctx.save(); ctx.globalAlpha = k ** 0.8; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
   if (!(SHOT_FLAGS[s.key] || {}).noVig) flVignette(0.9);
+  // the reference darkens the bottom of every frame: the subtitles stay readable on snow
+  ctx.save(); ctx.fillStyle = flGrad(0, 1050, 0, H, [[0, 'rgba(0,0,0,0)'], [0.35, 'rgba(0,0,0,0.42)'], [1, 'rgba(0,0,0,0.85)']]); ctx.fillRect(0, 1050, W, H - 1050); ctx.restore();
   flHUD();
   flSubs();
   ctx.restore();

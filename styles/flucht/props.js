@@ -142,7 +142,7 @@ function flFire(x, y, s, k = 1) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s * k, s * k);
   flGlow(0, -60, 260, 'rgba(255,140,40,0.55)');
   for (const [c, sc, ph] of [[FL.fireD, 1, 0], [FL.fire, 0.72, 1.3], [FL.fireL, 0.42, 2.1]]) {
-    const P = []; for (let i = 0; i <= 16; i++) { const u = i / 16, a = u * Math.PI, fl = 1 + 0.25 * Math.sin(TT * 9 + i * 1.7 + ph) + 0.15 * Math.sin(TT * 15 + i * 3); const rr = Math.sin(a) ** 0.6 * 70 * sc; const yy = -Math.sin(a) ** 2 * 170 * sc * fl * (1 - Math.abs(u - 0.5) * 0.6); P.push([Math.cos(a) * 70 * sc, yy]); }
+    const P = []; for (let i = 0; i <= 16; i++) { const u = i / 16, a = u * Math.PI, fl = 1 + 0.25 * Math.sin(TT * 9 + i * 1.7 + ph) + 0.15 * Math.sin(TT * 15 + i * 3); const rr = Math.sin(a) ** 0.6 * 70 * sc; const yy = -(Math.sin(a) ** 2) * 170 * sc * fl * (1 - Math.abs(u - 0.5) * 0.6); P.push([Math.cos(a) * 70 * sc, yy]); }
     flSmooth(P, c);
   }
   for (let i = 0; i < 6; i++) { const p = mod(TT * 0.9 + i / 6, 1); flEll(Math.sin(i * 2.3 + TT * 2) * 40, -120 - p * 260, 4, 4, '#ffcc66', 1 - p); }
@@ -187,7 +187,7 @@ function flHeli(x, y, s, o = {}) {
   ctx.restore();
 }
 // ---------------------------------------------------------------- knife, chip, scanner, hand
-function flKnife(x, y, s, rot, glint = 0) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s); flRect(-120, -16, 120, 32, 12, '#2a1c12'); flRect(-8, -22, 14, 44, 4, '#888'); flFill([[6, -14], [230, -6], [250, 4], [6, 14]], '#d7dde5'); flFill([[6, 2], [250, 4], [6, 14]], '#aab3be'); if (glint > 0) { const gx = lerp(10, 240, glint); flGlow(gx, -2, 80, 'rgba(255,255,255,0.9)'); star4 && flEll(gx, -2, 6, 6, '#fff'); } ctx.restore(); }
+function flKnife(x, y, s, rot, glint = 0) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s); flRect(-120, -16, 120, 32, 12, '#2a1c12'); flRect(-8, -22, 14, 44, 4, '#888'); flFill([[6, -14], [230, -6], [250, 4], [6, 14]], '#d7dde5'); flFill([[6, 2], [250, 4], [6, 14]], '#aab3be'); if (glint > 0) { const gx = lerp(10, 240, glint); flGlow(gx, -2, 80, 'rgba(255,255,255,0.9)'); flEll(gx, -2, 6, 6, "#fff"); } ctx.restore(); }
 function flChip(x, y, s, on = 1) { flGlow(x, y, 90 * s * on, 'rgba(255,40,50,0.8)', on); flRect(x - 26 * s, y - 16 * s, 52 * s, 32 * s, 8 * s, '#2a2d33'); flEll(x, y, 9 * s, 9 * s, on > 0.5 ? '#ff2b3a' : '#5a1a20'); }
 function flScanner(x, y, s, o = {}) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
