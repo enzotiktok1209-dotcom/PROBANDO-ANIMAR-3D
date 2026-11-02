@@ -45,17 +45,38 @@ SCENES.curtain = (a, i) => {
     // the bed's shadow
     ctx.fillStyle = 'rgba(18,32,12,0.82)'; ctx.fillRect(250, 960, 760, 40); ctx.fillRect(280, 1000, 30, 250); ctx.fillRect(950, 1000, 30, 250);
     ctx.fillRect(240, 880, 24, 120); ctx.fillRect(990, 900, 24, 100);
-    const sh = { fill: 'rgba(18,32,12,0.9)', rim: 'rgba(18,32,12,0.9)', noEyes: true };
-    if (a.state === 'lying') { fcPath((g) => { g.ellipse(360, 930, 66, 56, 0, 0, TAU); g.ellipse(640, 945, 260, 44, 0, 0, TAU); }, 'rgba(18,32,12,0.88)', { line: false }); }
+    const SC = 'rgba(16,30,10,0.92)';
+    const limb = (P, w) => { ctx.save(); ctx.strokeStyle = SC; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = w; ctx.beginPath(); P.forEach(([x, y], j) => (j ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke(); ctx.restore(); };
+    const blob = (x, y, rx, ry) => { ctx.save(); ctx.fillStyle = SC; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, TAU); ctx.fill(); ctx.restore(); };
+    const jerk = (t) => Math.sin(t * 37) * 0.04 + Math.sin(t * 23) * 0.03;
+    if (a.state === 'lying') { blob(360, 930, 66, 56); blob(640, 945, 260, 44); }
     else if (a.state === 'rise') {
-      const k = EZ.io(clamp(lt / 1.0)), ang = lerp(-1.45, -0.15, k);
-      ctx.save(); ctx.translate(640, 960); ctx.rotate(ang); fcZombie(0, 0, 0.75, { ...sh, arms: 0.4, lean: 0, seed: 2 }); ctx.restore();
-      fcPath((g) => g.ellipse(820, 948, 200, 40, 0, 0, TAU), 'rgba(18,32,12,0.88)', { line: false });
+      // he sits up: the legs stay on the bed, the torso swings up from lying (pointing left) to upright, jerkily
+      const k = EZ.io(clamp((lt - 0.05) / 0.75)), ang = lerp(Math.PI, Math.PI * 1.5 - 0.12, k) + jerk(TT) * (1 - k * 0.5);
+      const hx = 650, hy = 935, dx = Math.cos(ang), dy = Math.sin(ang);
+      limb([[hx, hy], [920, 950]], 90);
+      limb([[hx, hy], [hx + dx * 200, hy + dy * 200]], 130);
+      blob(hx + dx * 300, hy + dy * 300, 66, 70);
+      const sx = hx + dx * 190, sy = hy + dy * 190, ra = ang + Math.PI * 0.55 * k;
+      limb([[sx, sy], [sx + Math.cos(ra) * 150, sy + Math.sin(ra) * 150], [sx + Math.cos(ra - 0.4 * k) * 300, sy + Math.sin(ra - 0.4 * k) * 300]], 42);
     } else if (a.state === 'arm') {
-      const k = EZ.o3(clamp(lt / 0.8));
-      fcZombie(560, 1380, 1.5, { ...sh, armUp: k, arms: 0.3, lean: -0.1, seed: 4 });
-    } else if (a.state === 'sit') fcZombie(600, 1000, 0.85, { ...sh, arms: 0.2, lean: 0.25 + Math.sin(TT * 3) * 0.05, seed: 5 });
-    else if (a.state === 'stand') { const s = a.near ? lerp(1.35, 1.6, u) : 1.1; fcZombie(560, 1330, s, { ...sh, arms: 0.9, lean: 0.06, seed: 6 }); }
+      // close: his hand comes up behind the curtain and grabs it; the fabric bunches where he holds it
+      const k = EZ.o3(clamp(lt / 0.7)), wx = 600 + Math.sin(TT * 9) * 6, wy = lerp(1350, 760, k);
+      limb([[760, 1500], [690, 1150], [wx, wy]], 120);
+      ctx.save(); ctx.translate(wx, wy); ctx.rotate(-Math.PI / 2 - 0.15); ctx.fillStyle = SC;
+      ctx.beginPath(); ctx.ellipse(0, 0, 95, 80, 0, 0, TAU); ctx.fill();
+      const curl = clamp((lt - 0.7) / 0.3);
+      [[-0.5, 1.4], [-0.17, 1.65], [0.17, 1.6], [0.5, 1.3]].forEach(([dy0, L]) => limb([[45, dy0 * 95], [95 * L * (1 - 0.35 * curl), dy0 * 105]], 40));
+      limb([[0, 70], [60, 140]], 40); ctx.restore();
+      if (curl > 0) for (let f = 0; f < 3; f++) fcLine([[wx - 120 + f * 60, wy - 260], [wx - 100 + f * 50, wy + 150]], 'rgba(30,50,20,0.35)', 10);
+    } else if (a.state === 'sit') {
+      // sitting on the bed's edge, facing us, legs hanging, head lolling
+      const hx = 640, hy = 960, tilt = Math.sin(TT * 2.6) * 0.18 + jerk(TT);
+      limb([[hx - 40, hy], [hx - 60, hy + 40], [hx - 70, hy + 270]], 70); limb([[hx + 40, hy], [hx + 60, hy + 40], [hx + 75, hy + 270]], 70);
+      limb([[hx, hy - 20], [hx, hy - 230]], 150);
+      blob(hx + Math.sin(tilt) * 300, hy - 320 + Math.abs(tilt) * 30, 64, 70);
+      limb([[hx - 70, hy - 210], [hx - 110, hy - 80], [hx - 100, hy + 40]], 40); limb([[hx + 70, hy - 210], [hx + 115, hy - 90], [hx + 120, hy + 30]], 40);
+    } else if (a.state === 'stand') { const s = a.near ? lerp(1.35, 1.6, u) : 1.1; fcZombie(560, 1330, s, { fill: SC, rim: SC, noEyes: true, arms: 0.9, lean: 0.06, seed: 6 }); }
   });
   fcPath(build, null);
   // rings on the track
@@ -65,7 +86,7 @@ SCENES.curtain = (a, i) => {
     fcPath((g) => { g.moveTo(-20, 1500); g.quadraticCurveTo(200, 1330, 460, 1380); g.lineTo(520, 1700); g.lineTo(-20, 1700); g.closePath(); }, '#c8d1e2');
     fcCirc(330, 1350, 46, '#e8823a', { ry: 34, rot: -0.4 }); fcCirc(430, 1370, 46, '#e8823a', { ry: 34, rot: -0.2 });
     fcLine([[300, 1335], [355, 1360]], '#fff3', 4);
-    fcDog(860, 1560, 0.9, { pose: 'sit', flip: true, earUp: !a.calm });
+    fcDog(930, 1450, 0.75, { pose: 'sit', flip: true, earUp: !a.calm });
   }
   if (a.alarm) { const p = 0.5 + 0.5 * Math.sin(TT * TAU * 2.2); fcGlow(540, 120, 700, 'rgba(255,40,40,1)', 0.25 + 0.35 * p); fcTint('rgba(255,30,40,1)', 0.08 * p, 'source-over'); }
   if (a.title) fcDefer(() => titleTag(EZ.o3(clamp((lt - 0.1) / 0.3))));
@@ -93,7 +114,7 @@ function fcMonitorSmall(x, y, w, h, o = {}) { fcLine([[x + w * 0.6, y - 120], [x
 SCENES.face = (a, i) => {
   const { lt } = shotT(i);
   faceBg(a.bg);
-  const tremble = a.face === 'panic' ? Math.sin(TT * 41) * 3 : 0, look = a.face === 'panic' ? [Math.sin(TT * 2.5) * 0.6, 0] : [-0.3, 0];
+  const tremble = a.face === 'panic' ? Math.sin(TT * 41) * 3 : 0, look = a.face === 'panic' ? [Math.sin(TT * 2.5) * 0.6, 0] : [lerp(0.2, -0.8, EZ.io(clamp((lt - 0.3) / 0.6))), 0];
   const face = Object.assign({}, FC_EXPR[a.face], { look });
   let arms = null;
   if (a.hands) { const k = EZ.o3(clamp(lt / 0.3)); arms = { l: [[-1.5, 1.7 - 0.3 * k], [-1.05, 0.7 + 0.6 * (1 - k)], 'open'], r: [[1.5, 1.7 - 0.3 * k], [1.05, 0.7 + 0.6 * (1 - k)], 'open'] }; }
@@ -138,7 +159,7 @@ SCENES.monitor = (a, i) => {
   const B0 = monitorBig(110, a.rule ? 560 : 300, 860, a.rule ? 700 : 760, { hr, alarm: a.alarm, muted, min: 2 + Math.floor(u) });
   // cables down to the patient
   fcLine([[300, 1060], [260, 1300]], '#e9edf3', 6); fcLine([[360, 1060], [420, 1300]], '#c43c35', 6);
-  if (a.hand) { const k = springMove(0.15 + SHOT_LIST[i][0], 0, 1, SPRING.smooth), hy = lerp(1900, 1250, k) + Math.sin(TT * 9) * 6; fcArm([700, 2100], [700, hy + 260], [640, hy], 'lukas', { pose: 'point', band: true, w: 70 }); }
+  if (a.hand) { const k = springMove(0.15 + SHOT_LIST[i][0], 0, 1, SPRING.smooth) - 0.12 * EZ.io(clamp((lt - 1.2) / 0.5)), wx = lerp(1150, 700, k) + Math.sin(TT * 11) * 5, wy = lerp(1900, 1190, k) + Math.sin(TT * 13) * 5; fcArm([1300, 2150], [lerp(1300, 1000, k), lerp(2100, 1560, k)], [wx, wy], 'lukas', { pose: 'point', band: true, w: 96 }); }
   if (a.rule) {
     const r0 = tAt('l28');
     fcDefer(() => fcRule(1, 'ERST DEN ALARM', 'STUMM SCHALTEN', { u: EZ.o3(clamp((TT - r0) / 0.3)), y: 230, size: 76 }));

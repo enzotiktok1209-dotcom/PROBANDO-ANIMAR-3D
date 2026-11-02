@@ -350,7 +350,7 @@ SCENES.stairUp = (a, i) => {
   const { lt } = shotT(i);
   stairShaft(1, lt);
   fcRect(410, 900, 260, 120, '#f2d14b', { r: 8 }); ctx.save(); ctx.fillStyle = '#1b1d22'; ctx.font = `700 36px ${FCF}`; ctx.textAlign = 'center'; ctx.fillText('DACH ▲', 540, 950); ctx.font = `600 22px ${FCF}`; ctx.fillText('HUBSCHRAUBER', 540, 990); ctx.restore();
-  fcDefer(() => fcSign(`${Math.min(7, 1 + Math.floor(lt * 4.5))} STOCKWERKE`, 'BIS ZUM DACH', 540, 230, { size: 100 }));
+  fcDefer(() => fcSign('7 STOCKWERKE', 'BIS ZUM DACH', 540, 230, { size: 100 }));
   endScene(0.05);
 };
 SCENES.helipad = (a, i) => {

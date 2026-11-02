@@ -2,8 +2,8 @@
   "name": "zombie-klinik",
   "title": "Zombie-Apokalypse im Krankenhaus (DE)",
   "format": {
-    "width": 1080,
-    "height": 1920,
+    "width": 1440,
+    "height": 2560,
     "fps": 30,
     "duration": 110.0,
     "frames": 3300
@@ -32,6 +32,7 @@
     "src/overlay.js",
     "src/bridges.js",
     "kit/morph.js",
+    "src/hires.js",
     "kit/board.js",
     "kit/score-head.js",
     "src/score.js",

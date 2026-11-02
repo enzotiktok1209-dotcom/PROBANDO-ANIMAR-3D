@@ -19,7 +19,7 @@ const FC = {
 const FCF = '"Oswald", "Bebas Neue", Impact, "Arial Narrow", "Liberation Sans Narrow", sans-serif';
 
 // ---- shapes: flat fill + constant dark outline (divided by the camera zoom so the line stays constant)
-const fcZ = () => { const T = ctx.getTransform(); return Math.hypot(T.a, T.b) || 1; };
+const fcZ = () => { const T = ctx.getTransform(); return (Math.hypot(T.a, T.b) || 1) / (ctx.canvas.__k || 1); };   // the camera zoom (not the output scale)
 function fcPoly(P, fill, o = {}) {
   ctx.save(); ctx.beginPath(); P.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); if (o.open !== true) ctx.closePath();
   if (fill) { ctx.fillStyle = fill; ctx.fill(); }
@@ -185,7 +185,7 @@ function fcZombie(x, y, s, o = {}) {
   }
   // eyes (in the rotated frame so they follow the head)
   if (!o.noEyes) for (const d of [-1, 1]) { const T = ctx.getTransform(), m = T.transformPoint(new DOMPoint(hx + d * 24, hy - 6)), k = Math.hypot(T.a, T.b);
-    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); fcGlow(m.x, m.y, 46 * k, 'rgba(220,235,255,0.9)', 0.55); ctx.fillStyle = FC.eye; ctx.beginPath(); ctx.arc(m.x, m.y, 10 * k, 0, TAU); ctx.fill(); ctx.restore(); }
+    ctx.save(); ctx.resetTransform(); fcGlow(m.x, m.y, 46 * k, 'rgba(220,235,255,0.9)', 0.55); ctx.fillStyle = FC.eye; ctx.beginPath(); ctx.arc(m.x, m.y, 10 * k, 0, TAU); ctx.fill(); ctx.restore(); }
   ctx.restore();
 }
 
@@ -332,7 +332,7 @@ function fcFigure(who, x, y, hgt, o = {}) {
   const tw = r * 1.5;
   const torso = (g) => { g.moveTo(sh[0] - tw / 2, sh[1] + r * 0.3); g.quadraticCurveTo(sh[0] - tw / 2, sh[1], sh[0] - tw * 0.2, sh[1]); g.lineTo(sh[0] + tw * 0.2, sh[1]); g.quadraticCurveTo(sh[0] + tw / 2, sh[1], sh[0] + tw / 2, sh[1] + r * 0.3); g.lineTo(sh[0] + tw * 0.55, hip[1] + (who === 'lukas' ? r * 0.7 : r * 0.15)); g.lineTo(sh[0] - tw * 0.55, hip[1] + (who === 'lukas' ? r * 0.7 : r * 0.15)); g.closePath(); };
   fcPath(torso, c.cloth);
-  if (who === 'lukas') fcClip(torso, () => fcDots([sh[0] - tw, sh[1], sh[0] + tw, hip[1] + r], c.clothD, 22, 2.6));
+  if (who === 'lukas') fcClip(torso, () => { ctx.save(); ctx.fillStyle = c.clothD; const st = r * 0.28; for (let yy = sh[1] + 8, row = 0; yy < hip[1] + r; yy += st, row++) for (let xx = sh[0] - tw + (row % 2) * st / 2; xx < sh[0] + tw; xx += st) { ctx.beginPath(); ctx.moveTo(xx, yy - st * 0.14); ctx.lineTo(xx + st * 0.12, yy); ctx.lineTo(xx, yy + st * 0.14); ctx.lineTo(xx - st * 0.12, yy); ctx.fill(); } ctx.restore(); });
   else { fcRect(sh[0] + k * tw * 0.12, sh[1] + r * 0.5, r * 0.3, r * 0.36, '#f4f6fa', { r: 4, w: 2.5 }); fcLine([[sh[0] - tw * 0.3, sh[1] + 4], [sh[0] - tw * 0.18, sh[1] + r * 0.8]], '#2d3138', 5); }
   fcPath(torso, null);
   // arms

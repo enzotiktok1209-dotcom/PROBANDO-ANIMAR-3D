@@ -43,7 +43,7 @@ function drawCaption(t) {
 }
 // ---- the HUD: pulse pill while the heart races, then the blackout timer, then the generator
 const BPM_KEYS = [[at('l14'), 132], [at('l15'), 138], [at('l17'), 142], [at('l18'), 147], [at('l22'), 153], [at('l23'), 158], [at('l26'), 150], [at('l29'), 146], [at('l30'), 139]];
-function bpmAt(t) { let v = BPM_KEYS[0][1]; for (let i = 0; i < BPM_KEYS.length; i++) { const [k, b] = BPM_KEYS[i]; if (t >= k) { const n = BPM_KEYS[i + 1]; v = n ? Math.round(lerp(b, n[1], clamp((t - k) / Math.max(0.5, n[0] - k)) ** 3)) : b; } } return v; }
+function bpmAt(t) { if (t < BPM_KEYS[0][0]) return t < at('l05') ? Math.round(lerp(112, 124, clamp(t / at('l05')))) : 88; let v = BPM_KEYS[0][1]; for (let i = 0; i < BPM_KEYS.length; i++) { const [k, b] = BPM_KEYS[i]; if (t >= k) { const n = BPM_KEYS[i + 1]; v = n ? Math.round(lerp(b, n[1], clamp((t - k) / Math.max(0.5, n[0] - k)) ** 3)) : b; } } return v; }
 function hudPill(text, color, icon) {
   const cx = W / 2, y = 150, h = 62;
   ctx.save(); ctx.font = `700 34px ${FCF}`; ctx.letterSpacing = '2px'; const w = ctx.measureText(text).width + 100;
@@ -61,8 +61,8 @@ function drawHUD(t) {
   else if (sc === 'city') hudPill('LEIPZIG · TAG 1 · 6:12 UHR', '#c0392b', '●');
 }
 // ---- flashes: a white pop on the big hits, a black dip into the blackout
-const FLASHES = [[0, '#ffffff', 0.18], [at('l12'), '#ffffff', 0.12], [at('l18'), '#ff3b30', 0.25], [at('l23'), '#ffffff', 0.12], [at('l39'), '#ffffff', 0.1], [at('l45'), '#cfe6ff', 0.2], [at('l55'), '#ffffff', 0.15]];
-function drawFlash(t) { for (const [t0, c, d] of FLASHES) { const k = (t - t0) / d; if (k >= 0 && k < 1) { ctx.save(); ctx.globalAlpha = (1 - k) * 0.75; ctx.fillStyle = c; ctx.fillRect(0, 0, W, H); ctx.restore(); } } }
+const FLASHES = [[0.53, '#ff2a2a', 0.15], [at('l12'), '#ffffff', 0.12], [at('l18'), '#ff3b30', 0.25], [at('l23'), '#ffffff', 0.12], [at('l39'), '#ffffff', 0.1], [at('l45'), '#cfe6ff', 0.2], [at('l55'), '#ffffff', 0.15]];
+function drawFlash(t) { for (const [t0, c, d] of FLASHES) { const k = (t - t0) / d; if (k >= 0 && k < 1) { ctx.save(); ctx.globalAlpha = (1 - k) * (c === '#ff2a2a' ? 0.4 : 0.7); ctx.fillStyle = c; ctx.fillRect(0, 0, W, H); ctx.restore(); } } }
 function drawLabel(t) {
   const e = eraAt(t), a = SHOT_LIST[e][3];
   if (!a.label) return;
