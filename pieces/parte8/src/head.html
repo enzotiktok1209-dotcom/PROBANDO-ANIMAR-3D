@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Die letzte Frau · Teil 8 · Unter dem Schnee</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05060a; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { height: min(100vh, calc(100vw * 16 / 9)); width: auto; aspect-ratio: 9 / 16; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  DIE LETZTE FRAU · TEIL 8 · «UNTER DEM SCHNEE» — 9:16, 30fps, motion on 1s, hard cuts with drawn transitions.
+//  The voice (voice.json, the trimmed ElevenLabs take) is the clock. 86 shots, one every ~1.3s (≤ 2s).
+//  Look: styles/flucht (traced from "Flucht", Teil 7). Script and shot list: parte8/PROMPT_PARTE8.md.
+// =====================================================================
+const FPS = 30, W = 1080, H = 1920;
+const BPM = 100, BEAT = 60 / BPM;
+const DURATION = 108.2;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 150, bottom: 380, right: 130 };
+const HAND = FL_FONT_FALLBACK();
+function FL_FONT_FALLBACK() { return '"Poppins", "Inter", "DejaVu Sans", sans-serif'; }
+const CX = 540;
+
+// ---- the shot list: [t0, scene function name, transition INTO this shot, title]
+// transitions: cut | zoomIn | zoomOut | whipL | whipR | flash | flashS | glitch | black | shake | red
+const SHOT_LIST = [
+  [0.00, 'S01', 'cut', 'POV: Windschutzscheibe, Sperre am Horizont'],
+  [1.40, 'S02', 'zoomIn', 'Hundert Gewehre: die Wand aus Soldaten'],
+  [2.80, 'S03', 'whipL', 'Rückspiegel: die Lawine wächst'],
+  [3.90, 'S04', 'shake', 'Totale: Auto vor der Lawine'],
+  [5.08, 'S05', 'flash', 'Greta Close-up + ID-Karte'],
+  [6.67, 'S06', 'zoomOut', 'Globus: ein Punkt'],
+  [8.19, 'S07', 'zoomIn', 'Vater verblutet'],
+  [10.49, 'S08', 'whipR', 'Klaus am Steuer'],
+  [11.98, 'S09', 'glitch', 'Hände reißen das Lenkrad'],
+  [13.69, 'S10', 'zoomIn', 'Draufsicht: der Wagen schleudert'],
+  [15.00, 'S11', 'shake', 'Bodennah: quer vor der Sperre'],
+  [16.35, 'S12', 'flashS', 'Soldat: Spiegelung in der Brille'],
+  [17.90, 'S13', 'whipR', 'Über die Schultern: die Lawine'],
+  [19.66, 'S14', 'shake', 'Einer rennt'],
+  [20.41, 'S15', 'whipL', 'Dann alle'],
+  [21.10, 'S16', 'black', 'Fünf Sekunden'],
+  [22.48, 'S17', 'glitch', 'REGEL 1'],
+  [23.58, 'S18', 'zoomIn', 'Motor aus'],
+  [24.55, 'S19', 'flashS', 'Auspuff unter Schnee'],
+  [26.30, 'S20', 'whipR', 'Querschnitt: giftiges Gas'],
+  [28.99, 'S21', 'zoomIn', 'Gurt fest'],
+  [30.11, 'S22', 'whipL', 'Arme vors Gesicht'],
+  [31.07, 'S23', 'cut', 'Letzter Atemzug'],
+  [32.75, 'S24', 'flash', 'WEISS'],
+  [33.40, 'S25', 'black', 'Dunkel. Stille.'],
+  [34.52, 'S26', 'glitch', 'REGEL 2'],
+  [35.59, 'S27', 'zoomIn', 'Finde oben'],
+  [36.63, 'S28', 'whipR', 'Die Welt dreht sich'],
+  [39.01, 'S29', 'zoomIn', 'Spucken'],
+  [39.94, 'S30', 'whipL', 'Die Spucke läuft nach links'],
+  [41.30, 'S31', 'zoomOut', 'Oben ist rechts'],
+  [42.52, 'S32', 'shake', 'Fenster eintreten'],
+  [43.80, 'S33', 'flashS', 'Graben'],
+  [44.66, 'S34', 'whipR', 'Blutige Hände'],
+  [45.87, 'S35', 'zoomIn', 'Tunnel nach oben'],
+  [46.75, 'S36', 'flash', 'Sternenhimmel'],
+  [47.69, 'S37', 'glitch', 'REGEL 3'],
+  [48.76, 'S38', 'zoomOut', 'Stirb für die Welt'],
+  [50.06, 'S39', 'zoomIn', 'Das rote Licht unter der Haut'],
+  [52.57, 'S40', 'whipL', 'Klaus zieht sein Messer'],
+  [53.88, 'S41', 'red', 'Ein Schnitt'],
+  [54.60, 'S42', 'zoomIn', 'Der Sender in der Hand'],
+  [55.90, 'S43', 'whipR', 'In die Hand des Soldaten'],
+  [57.45, 'S44', 'shake', 'Einer lebt noch'],
+  [58.57, 'S45', 'cut', 'Er starrt dich an'],
+  [59.54, 'S46', 'zoomIn', 'Zu lange'],
+  [60.28, 'S47', 'cut', 'Die Hand hebt sich'],
+  [61.97, 'S48', 'whipR', 'Er zeigt in den Wald'],
+  [63.16, 'S49', 'glitch', 'Minuten später'],
+  [64.17, 'S50', 'whipL', 'Hubschrauber'],
+  [64.89, 'S51', 'flashS', 'Suchscheinwerfer'],
+  [65.65, 'S52', 'whipR', 'Hunde'],
+  [66.40, 'S53', 'zoomIn', 'Signal gefunden'],
+  [67.56, 'S54', 'zoomOut', 'Sie graben die ganze Nacht'],
+  [69.39, 'S55', 'black', 'Ihr kriecht durch den Wald'],
+  [70.71, 'S56', 'cut', 'Ein Hund bleibt stehen'],
+  [71.77, 'S57', 'zoomIn', 'Direkt neben dir'],
+  [72.79, 'S58', 'shake', 'Er knurrt'],
+  [73.53, 'S59', 'flashS', 'Eine Stimme'],
+  [74.51, 'S60', 'whipL', 'Hier ist nichts!'],
+  [75.59, 'S61', 'zoomIn', 'Der Soldat von vorhin'],
+  [77.03, 'S62', 'whipR', 'Er ruft den Hund zurück'],
+  [78.22, 'S63', 'zoomIn', 'Herz bis zum Hals'],
+  [80.06, 'S64', 'black', 'Tag neun: die Jagdhütte'],
+  [80.87, 'S65', 'zoomIn', 'Innen'],
+  [81.77, 'S66', 'whipR', 'Ein Feuer'],
+  [82.48, 'S67', 'zoomOut', 'Stille'],
+  [83.05, 'S68', 'whipL', 'Vater atmet ruhig'],
+  [84.00, 'S69', 'zoomIn', 'Das Radio'],
+  [84.52, 'S70', 'zoomIn', 'Die Durchsage'],
+  [86.20, 'S71', 'glitch', 'EILMELDUNG: TOT'],
+  [87.91, 'S72', 'whipR', 'Klaus schaltet aus'],
+  [89.56, 'S73', 'zoomOut', 'Niemand sucht mehr'],
+  [91.58, 'S74', 'black', 'Sie schläft ein'],
+  [93.21, 'S75', 'flash', 'Fensterladen auf'],
+  [95.11, 'S76', 'whipR', 'Frischer Schnee'],
+  [96.01, 'S77', 'cut', 'Kamera neigt sich'],
+  [96.63, 'S78', 'zoomIn', 'Fußspuren'],
+  [97.47, 'S79', 'zoomIn', 'Klein'],
+  [98.02, 'S80', 'cut', 'Schmal'],
+  [98.65, 'S81', 'zoomOut', 'Zu klein für einen Mann'],
+  [100.03, 'S82', 'whipR', 'Bis zur Tür'],
+  [101.74, 'S83', 'glitch', 'Die letzte Frau?'],
+  [103.12, 'S84', 'zoomOut', 'Ein zweiter Punkt'],
+  [104.02, 'S85', 'cut', 'Die Tür. Stille.'],
+  [106.30, 'S86', 'cut', 'Drei leise Schläge'],
+  [107.61, 'S87', 'black', 'Schwarz'],
+];
+const SHOTS = SHOT_LIST.map(([t0, fn, tr, title], i) => ({ id: i + 1, key: fn, era: i, t0, t1: i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, tr, title }));
+
+// ---- keywords in colour per voice line (word, colour)
+const SUB_KW = {
+  l01: [['Gewehre', 'red']], l02: [['Lawine.', 'red']], l03: [['Greta.', 'pink']], l04: [['Frau', 'yellow']], l06: [['Vater.', 'pink']], l07: [['verblutet.', 'red']],
+  l09: [['Klaus.', 'pink']], l10: [['Lenkrad', 'blue']], l11: [['quer', 'yellow'], ['Sperre', 'red']], l12: [['nicht', 'red']], l13: [['hinter', 'red']], l14: [['rennt.', 'blue']],
+  l15: [['alle.', 'yellow']], l16: [['fünf', 'yellow']], l17: [['Regel', 'yellow']], l18: [['aus.', 'blue']], l19: [['Auspuff', 'blue'], ['giftigem', 'red']], l20: [['fest.', 'blue']],
+  l21: [['Arme', 'blue']], l22: [['Atemzug.', 'green']], l23: [['Weiß.', 'white']], l24: [['Dunkel.', 'blue']], l25: [['Stille.', 'blue']], l26: [['Regel', 'yellow']],
+  l27: [['oben.', 'yellow']], l28: [['oben', 'yellow']], l29: [['spuckst', 'blue']], l30: [['links.', 'yellow']], l31: [['rechts.', 'yellow']], l32: [['Fenster', 'blue']],
+  l33: [['gräbst.', 'blue']], l34: [['blutigen', 'red']], l36: [['Sternenhimmel.', 'green']], l37: [['Regel', 'yellow']], l38: [['Welt.', 'red']], l39: [['rote', 'red']],
+  l40: [['Messer.', 'blue']], l41: [['Schnitt.', 'red']], l42: [['Sender', 'blue'], ['begrabenen', 'red']], l43: [['lebt', 'green']], l44: [['starrt', 'red']], l45: [['lange.', 'yellow']],
+  l46: [['Hand', 'blue']], l47: [['Wald.', 'green']], l48: [['später:', 'yellow']], l49: [['Hubschrauber.', 'red']], l50: [['Suchscheinwerfer.', 'yellow'], ['Hunde.', 'red']], l51: [['Sender.', 'blue']],
+  l52: [['graben.', 'blue']], l53: [['Nacht.', 'yellow']], l54: [['kriecht', 'blue']], l55: [['Hund', 'red']], l56: [['neben', 'red']], l57: [['knurrt.', 'red']], l58: [['Stimme:', 'yellow']],
+  l59: [['nichts!“', 'green']], l60: [['Soldat', 'pink']], l61: [['zurück.', 'green']], l62: [['Herz', 'red']], l63: [['neun.', 'yellow']], l64: [['Jagdhütte.', 'blue']], l65: [['Feuer.', 'yellow']],
+  l66: [['Stille.', 'blue']], l67: [['ruhig.', 'green'], ['Radio:', 'yellow']], l68: [['Lawinenunglück', 'red'], ['gestorben.“', 'red']], l69: [['aus.', 'blue']], l70: [['niemand', 'green']],
+  l71: [['ruhig', 'green']], l72: [['Fensterladen.', 'blue']], l73: [['Schnee.', 'blue']], l75: [['Fußspuren.', 'red']], l76: [['Klein.', 'yellow']], l77: [['Schmal.', 'yellow']],
+  l78: [['Mann.', 'red']], l79: [['Tür.', 'red']], l80: [['letzte', 'pink']], l81: [['du.', 'yellow']], l82: [['Moment', 'yellow'], ['klopft', 'red']], l83: [['Drei', 'yellow'], ['leise', 'red']],
+};
+
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'beat-cut (voice-led, hard cuts with drawn transitions)',
+  shots: SHOTS.map(({ id, key, era, t0, t1, title }) => ({ id, key, era, t0, t1, title })),
+  cuts: SHOTS.slice(1).map((s) => s.t0),
+  morphs: [],
+  cues: { impact: 32.75, knocks: 106.3 },
+  acts: [
+    { name: '1 Hinterhalt', role: 'build', t0: 0, t1: 21.1 },
+    { name: '2 Regel 1', role: 'peak', t0: 21.1, t1: 31.07 },
+    { name: '2b Atemzug', role: 'silence', t0: 31.07, t1: 32.75 },
+    { name: '3 Lawine', role: 'gift', t0: 32.75, t1: 34.5 },
+    { name: '4 Unter dem Schnee', role: 'journey', t0: 34.5, t1: 63.16 },
+    { name: '5 Die Suche', role: 'journey', t0: 63.16, t1: 80.06 },
+    { name: '6 Hütte', role: 'goodbye', t0: 80.06, t1: 104.02 },
+    { name: '7 Tür', role: 'silence', t0: 104.02, t1: 106.3 },
+    { name: '8 Drei Schläge', role: 'gift', t0: 106.3, t1: DURATION },
+  ],
+  board: [3.0, 6.0, 12.5, 18.5, 25.0, 33.0, 40.5, 47.0, 51.0, 56.5, 61.5, 65.0, 72.0, 76.0, 79.0, 82.0, 86.8, 92.0, 97.0, 102.5, 105.0].map((t) => ({ t, title: '' })),
+  narration: (typeof VOICE !== 'undefined' ? VOICE.lines : []).map((l) => ({ t0: l.t0, t1: l.t1, text: l.text })),
+};
+window.TIMELINE = TIMELINE;
