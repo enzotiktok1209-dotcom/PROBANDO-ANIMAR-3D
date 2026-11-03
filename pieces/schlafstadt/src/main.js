@@ -414,7 +414,7 @@ shot(68.79, 70.76, 'W', null, (L) => { use('room');
 shot(70.76, 72.62, 'S', null, (L) => { use('room');
   put(finn, RX - 7, 0, -3, 0.6); kp(finn, L.lt, [[0, { aLx: 1.2, aLe: 1.2, aRx: 1.2, aRe: 1.2 }], [1.2, { aLx: 0.6, aLe: 1.8, aRx: 0.6, aRe: 1.8, headX: 0.25 }]]); face(finn, { eyes: 'open', mouth: 'smirk', brows: 0.5 }, L.T);
   mbox.g.visible = L.lt < 1.0; mbox.g.position.copy(finn.aR.hand.getWorldPosition(V(0, 0, 0))).add(V(-0.6, 0, 0.6)); mbox.g.scale.setScalar(0.5);
-  const hp = finn.head.getWorldPosition(V(0, 0, 0)); camMove([hp.x + 3, hp.y, hp.z + 5, hp.x, hp.y - 0.6, hp.z, 42], [hp.x + 2.2, hp.y, hp.z + 3.8, hp.x, hp.y - 0.4, hp.z, 40], L.k); shadowAround(V(RX - 7, 0, -3), 15); }, [[1.0, 'zip', .8]]);
+  const hp = finn.head.getWorldPosition(V(0, 0, 0)); camMove([hp.x + 3.6, hp.y + 0.2, hp.z + 7, hp.x, hp.y - 1.0, hp.z, 44], [hp.x + 3, hp.y + 0.2, hp.z + 5.6, hp.x, hp.y - 0.9, hp.z, 42], L.k); shadowAround(V(RX - 7, 0, -3), 15); }, [[1.0, 'zip', .8]]);
 // 43 — en el café lleno Finn la abre
 shot(72.62, 74.85, 'Z', null, (L) => { use('cafe');
   [[-12, 7], [0, 8.4], [12, 7]].forEach(([x, z], j) => { for (let i = 0; i < 2; i++) { const f = folk[j * 2 + i]; put(f, CX + x + (i ? 3 : -3), 0, z, i ? -1.4 : 1.4); applyPose(f, { ...sitPose, aLx: 1.0, aRx: 1.0, aLe: 0.6, aRe: 0.6, headX: 0.3 }); face(f, { eyes: 'half', bags: 1, mouth: 'flat', look: [0, 0] }, L.T + j); } });
