@@ -26,7 +26,14 @@ Este es el encargo estándar para cada video de este proyecto. Se aplica entero 
   | giro (roll 90° + desenfoque) | 8 | remolino |
   | iris / círculo que se cierra en el sujeto | 8 | pop grave |
   | corte seco con golpe de zoom | 0 | impacto / thump |
-- **Zooms**: acercamientos y alejamientos dentro de los planos, siempre con su efecto (whoosh suave al acercar, swoosh invertido al alejar, "boom" en golpes de zoom sobre reacciones).
+- **Zooms de velocidades distintas**, acercamientos y alejamientos, cada uno con su sonido:
+  | tipo | velocidad | sonido | imagen |
+  |---|---|---|---|
+  | **lento (tensión)** | +15–35 % de escala en 1,5–3 s, ease-in (va acelerando) | **riser** (sonido de tensión que sube) durante todo el zoom y **golpe dramático** (impacto grave/"braam") justo al terminar | **viñeta** que se cierra mientras dura (de 0,3 a ~0,75) y se abre con el golpe |
+  | medio | +8–15 % en ~1 s | whoosh suave | — |
+  | rápido / golpe de zoom | +25–60 % en 0,15–0,3 s | impacto / thump / "boom" | sacudida de 2–3 fotogramas |
+  | alejamiento rápido | −30 % en 0,3 s | swoosh invertido | — |
+  Usar los lentos en los momentos de revelación o tensión (unos 6–10 por video), no en todos los planos.
 - **Cámara nunca quieta**: push-in lento (+2–7 %/s) por defecto; track, tilt, dron, golpe de zoom, balanceo de mano según el plano.
 
 ## 3. Imagen (más detalle que la referencia)
@@ -47,7 +54,7 @@ Objetos que aparecen en escena entran animados (no de golpe): escalado con muell
 
 ## 6. Sonido
 - **Voz** (recortada) encima de todo.
-- **Música** de fondo continua, con el tono de la historia, baja bajo la voz.
+- **Música de fondo**: la pista que mande el usuario, a **velocidad original**, durante todo el video; si es más corta, **vuelve a empezar** al terminar (empalme de 60 ms) y **se corta al final del video** con un fundido de 1 s. Nivel: **≈13 dB por debajo de la voz** (voz −16 LUFS, música −29 LUFS) con un ducking suave cuando habla, de modo que se oiga claramente por debajo sin competir. Si no hay pista, se compone una en código.
 - **Efectos realistas para cada acción** (dinero → monedas/caja registradora; botón → clic; pasos sobre adoquín; taza → porcelana; reloj → tic-tac, campanadas; puerta, bostezo, golpe, salto, caída, multitud, gallo, cuco…).
 - **Al menos un efecto cada 1,5 s** de media, **variados** (nunca el mismo efecto tres veces seguidas; variar tono y velocidad cuando se repite).
 - Cada transición y cada zoom con su efecto.

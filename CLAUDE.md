@@ -12,6 +12,8 @@ Reglas fijas de este formato:
 - Plano medio ~2 s **con cambio de entorno**, lo que se ve ilustra literalmente lo que se dice, nunca dos encuadres iguales seguidos, nunca cámara quieta.
 - **Transiciones variadas entre planos** (barrido, zoom, destello, deslizamiento, giro, iris, golpe de zoom), cada una con su efecto de sonido; zooms con su efecto.
 - Efectos de sonido realistas y variados para cada acción, **≥1 cada 1,5 s**.
+- Zooms de velocidades distintas. **Zoom lento = riser de tensión + viñeta que se cierra + golpe dramático al final**; golpes de zoom rápidos con impacto.
+- Música de fondo del usuario a velocidad original, en bucle si hace falta, cortada al final del video, ≈13 dB por debajo de la voz.
 - Personajes articulados (codos, rodillas, cuello) con físicas y gestos reales; la emoción se ve en la cara.
 - Mucho detalle en ropa, caras, objetos y fondos; saturación alta.
 - **Lo principal en el centro** (25–62 % de la altura); subtítulo a ~74 % sin tapar a nadie.
