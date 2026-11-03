@@ -524,9 +524,9 @@ shot(101.97, 103.95, 'Z', null, (L) => { use('cafe');
   shadowAround(V(CX + 7, 0, -7), 15); }, [[0.3, 'cash', .9], [0.6, 'cash', .8], [0.9, 'cash', .9], [1.2, 'coins', .7]]);
 // 62 — el abuelo lo había descubierto (flashback)
 shot(103.95, 106.00, 'F', null, (L) => { use('cafe'); grade.uniforms.sepia.value = 0.7;
-  put(opa, CX - 3, 0, -3.5, 2.8); applyPose(opa, { aRx: 2.3, aRe: 1.8, headX: -0.1, lean: 0.15 }); face(opa, { eyes: 'squint', brows: 0.6, mouth: 'flat', look: [0.4, -0.2] }, L.T);
+  put(opa, CX - 4.5, 0, -2.6, 1.0); applyPose(opa, { aRx: 2.3, aRe: 1.8, headX: -0.1, lean: 0.15 }); face(opa, { eyes: 'squint', brows: 0.6, mouth: 'flat', look: [0.4, -0.2] }, L.T);
   put(wach, CX - 1, 0, -8.6, 0); applyPose(wach, { aRx: 1.25, aRe: 1.35 }); face(wach, { eyes: 'wide', brows: -0.3, mouth: 'flat', sweat: 1 }, L.T);
-  camMove([CX - 7, 7, 2, CX - 2, 6, -6, 44], [CX - 6.4, 6.8, 1, CX - 2, 6, -6, 42], L.k); shadowAround(V(CX - 2, 0, -6), 15); }, [[0.2, 'tick', .7], [0.6, 'hmm', .6]]);
+  camMove([CX + 1.5, 5.6, 5, CX - 4.3, 4.0, -2.6, 46], [CX + 1.1, 5.5, 4.2, CX - 4.3, 4.0, -2.6, 44], L.k); shadowAround(V(CX - 2, 0, -6), 15); }, [[0.2, 'tick', .7], [0.6, 'hmm', .6]]);
 // 63 — al día siguiente, manzanilla en su café
 shot(106.00, 108.30, 'W', null, (L) => { use('cafe'); grade.uniforms.sepia.value = 0.7;
   const cup = flyCups[0]; cup.visible = true; cup.position.set(CX - 2, 3.75, -5.4); cup.scale.setScalar(1.5);
