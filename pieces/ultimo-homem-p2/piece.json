@@ -1,0 +1,10 @@
+{
+  "name": "ultimo-homem-p2",
+  "title": "O Último Homem — Parte 2",
+  "format": { "width": 1080, "height": 1920, "fps": 30, "bpm": 112.5, "duration": 79.4, "frames": 2382 },
+  "storyFormat": "beat-cut thriller (a cut every ~1.8s, voice is the clock)",
+  "style": "flat-noite",
+  "voice": { "file": "voice/voice.wav", "music": -9, "gain": 0 },
+  "build": ["src/head.html", "kit/core.js", "style", "styles/flat-noite/rig.js", "styles/flat-noite/ui.js", "src/props.js", "src/scenes-1.js", "src/scenes-2.js", "src/scenes-3.js", "src/scenes-4.js", "src/bridges.js", "kit/morph.js", "kit/board.js", "kit/score-head.js", "src/score.js", "kit/score-tail.js"],
+  "review": { "safe": { "top": 250, "bottom": 420, "right": 140 }, "refs": {}, "deadMax": 3 }
+}

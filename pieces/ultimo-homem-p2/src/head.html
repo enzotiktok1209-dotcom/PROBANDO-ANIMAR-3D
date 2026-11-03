@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O Último Homem — Parte 2</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05070f; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { height: min(100vh, calc(100vw * 16 / 9)); width: auto; aspect-ratio: 9 / 16; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  O ÚLTIMO HOMEM — PARTE 2. 9:16, 30fps, the voice is the clock (voice/voice.wav, 78.72s, no silences).
+//  A cut every ~1.5–2.2s, a camera move in every shot, a transition (with its own sound) on every cut.
+//  Content lives in y 260–1180 (the subtitle band is y 1180–1420).
+// =====================================================================
+const FPS = 30, W = 1080, H = 1920;
+const BPM = 112.5, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = 79.4;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 250, bottom: 420, right: 140 };
+const HAND = '"Inter", sans-serif';
+const CX = 540;
+
+// ---- the voice: phrases [t0, t1, text]; ' // ' splits subtitle chunks, ' / ' splits lines, WORD:c colours a word
+const PHR = [
+  [0.00, 2.04, 'TODOS OS HOMENS / DA TERRA // SUMIRAM.:r'], [2.04, 2.88, 'MENOS VOCÊ,'], [2.88, 3.51, 'RAFAEL.:y'],
+  [3.51, 4.70, 'VINTE E TRÊS:y / ANOS.'], [4.70, 6.23, 'O ÚLTIMO:r / HOMEM VIVO.'], [6.22, 8.25, 'E O PLANETA / INTEIRO // TÁ TE / CAÇANDO.:r'],
+  [8.25, 10.02, 'UM BILHETE / NA VARANDA:g // PROMETIA:'], [10.03, 11.01, 'SOMOS ONZE.:y'], [11.00, 11.78, 'PORTO DO RIO.:g'],
+  [11.79, 12.46, 'SÁBADO.:y'], [12.45, 13.26, 'MEIA-NOITE.:r'], [13.27, 14.45, 'UM BARCO / DE PESCA,:g'], [14.45, 15.29, 'TODO / APAGADO.:r'],
+  [15.29, 16.80, 'ONZE HOMENS:y / NO CONVÉS.'], [16.79, 17.79, 'UM DELES / GRITA:'], [17.80, 18.51, '“RAFINHA!”:p'],
+  [18.51, 20.48, 'SÓ A MÃE:p / DELE // CHAMAVA ELE / ASSIM.'], [20.48, 21.43, 'ELE DÁ / UM PASSO…:y'], [21.43, 22.98, 'E OS HOLOFOTES:y / ACENDEM.'],
+  [22.98, 24.55, 'SIRENE:r / PRA TODO LADO.'], [24.55, 25.58, 'E OS ONZE / HOMENS?'], [25.58, 26.59, 'NÃO SÃO / HOMENS.:r'],
+  [26.59, 27.82, 'SÃO / POLICIAIS.:b'], [27.82, 28.94, 'DE BARBA / FALSA.:y'], [28.94, 31.21, 'A COMANDANTE / SEGURA // O CELULAR:p / DA MÃE:p DELE.:p'],
+  [31.21, 31.98, 'O APELIDO.:p'], [31.98, 32.80, 'O ENDEREÇO.:g'], [32.80, 33.57, 'O BILHETE.:y'], [33.56, 34.31, 'TUDO / ARMADO.:r'],
+  [34.32, 35.70, 'ELAS PULAM / PRO CAIS.:b'], [35.70, 36.71, 'DRONES:r / NO CÉU.'], [36.71, 37.97, 'O HELICÓPTERO:b / CHEGANDO.'],
+  [37.96, 40.23, 'RAFAEL SE / ENFIA // ENTRE OS / CONTÊINERES.:g'], [40.23, 41.35, 'E PRENDE A / RESPIRAÇÃO.:y'], [41.34, 42.06, 'LANTERNA.:y'],
+  [42.06, 42.72, 'PASSOS.:r'], [42.71, 44.24, 'CADA VEZ / MAIS PERTO.:r'], [44.25, 46.45, 'ATÉ QUE / UM DRONE // PARA BEM / EM:r CIMA:r DELE.:r'],
+  [46.45, 47.64, 'ALVO / LOCALIZADO.:r'], [47.64, 48.88, 'E ELE CORRE:y / DE NOVO.'], [48.88, 50.09, 'PULA O MURO:g / DO PORTO!'],
+  [50.09, 51.87, 'CRUZA OS / TRILHOS // DO VLT.:g'], [51.88, 53.42, 'SOBE A / ESCADARIA // DO MORRO.:g'], [53.42, 53.98, 'BECO.:y'],
+  [53.97, 55.02, 'CACHORRO:r / LATINDO.'], [55.02, 55.84, 'OUTRO / BECO.:y'], [55.84, 57.18, 'O PULMÃO / QUEIMANDO.:r'],
+  [57.18, 58.93, 'SIRENE:r VINDO / DE TODO LADO.'], [58.93, 60.31, 'BECO SEM:r / SAÍDA.:r'], [60.31, 61.44, 'NÃO TEM PRA / ONDE IR.:r'],
+  [61.44, 62.24, 'ATRÁS DELE:'], [62.24, 63.15, 'LANTERNAS.:y'], [63.15, 63.86, 'NA FRENTE:'], [63.86, 64.64, 'FARÓIS.:y'],
+  [64.64, 67.22, 'UMA KOMBI:g / BRANCA:g // FREIA BEM / NA CARA DELE.'], [67.22, 68.18, 'O VIDRO / DESCE.:y'],
+  [68.18, 70.42, 'UMA MULHER / QUE ELE // NUNCA VIU:r / NA VIDA.'], [70.42, 71.81, 'E ELA SABE / O NOME DELE.:p'],
+  [71.81, 72.70, '“ENTRA, / RAFAEL.:y'], [72.70, 73.30, 'AGORA.”:r'], [73.29, 74.43, 'ELE ENTRA / NA KOMBI?:y'],
+  [74.44, 75.87, 'A: ENTRA,:g / AGORA.:g'], [75.88, 77.42, 'B: CONTINUA:r / CORRENDO.:r'], [77.42, 78.72, 'COMENTA / A OU B.:y'],
+];
+// word times: spread over each phrase by letter count; chunks start on their first word
+function buildSubs() {
+  const subs = [];
+  PHR.forEach(([t0, t1, txt], pi) => {
+    const chunks = txt.split(' // ').map((c) => c.split(' / ').map((l) => l.split(' ').filter(Boolean).map((w) => { const [ww, c2] = w.split(/:(?=[a-z]$)/); return { w: ww, c: c2 || 'w' }; })));
+    const all = chunks.flat(2), tot = all.reduce((a, w) => a + w.w.length + 2, 0); let acc = 0;
+    all.forEach((w) => { w.t0 = t0 + (t1 - t0) * acc / tot * 0.92; acc += w.w.length + 2; });
+    chunks.forEach((lines, ci) => { const s = lines[0][0].t0; subs.push({ t0: s, lines }); });
+  });
+  subs.forEach((s, i) => { s.t1 = i + 1 < subs.length ? subs[i + 1].t0 : DURATION; });
+  return subs;
+}
+// ---- shots: [t0, scene, camera, transition into this shot]
+//  cameras: { z: [from, to], p: world focus, to: screen point, m: 'snap' | 'slow' | 'out' | 'pulse' | 'drift', rot, vig }
+const C0 = [540, 760];
+const SHOT_LIST = [
+  [0.00, 'globe', { z: [0.55, 1.12], p: [540, 760], m: 'snap' }, 'none'],
+  [2.04, 'scan', { z: [1.0, 1.32], p: [540, 700], m: 'snap' }, 'zoomblur'],
+  [3.51, 'face', { z: [1.0, 1.16], p: [540, 760], m: 'slow', vig: 0.5 }, 'glitch'],
+  [4.70, 'poster', { z: [1.45, 1.0], p: [540, 760], m: 'out' }, 'whip'],
+  [6.22, 'screens', { z: [1.0, 1.22], p: [540, 760], m: 'slow' }, 'flash'],
+  [8.25, 'veranda', { z: [1.0, 1.3], p: [560, 820], m: 'slow', vig: 0.4 }, 'dip'],
+  [10.03, 'note', { z: [1.25, 1.05], p: [540, 760], m: 'out' }, 'zoomblur'],
+  [11.79, 'clock', { z: [1.7, 1.0], p: [540, 620], m: 'out' }, 'whipdown'],
+  [13.27, 'boat', { z: [1.0, 1.14], p: [540, 800], m: 'slow', vig: 0.55 }, 'whipdown'],
+  [15.29, 'eleven', { z: [1.0, 1.3], p: [540, 700], m: 'pulse' }, 'dip'],
+  [16.79, 'shout', { z: [1.0, 1.25], p: [540, 700], m: 'snap' }, 'whip'],
+  [18.51, 'memory', { z: [1.0, 1.12], p: [540, 760], m: 'slow' }, 'zoomblur'],
+  [20.48, 'step', { z: [1.0, 1.2], p: [540, 900], m: 'slow', vig: 0.7 }, 'burn'],
+  [21.43, 'lights', { z: [1.35, 1.0], p: [540, 760], m: 'out' }, 'flash'],
+  [22.98, 'sirens', { z: [1.0, 1.18], p: [540, 820], m: 'slow', rot: 0.06 }, 'flash'],
+  [24.55, 'beards', { z: [1.0, 1.15], p: [540, 700], m: 'slow', vig: 0.5 }, 'whip'],
+  [26.59, 'police', { z: [1.0, 1.28], p: [540, 680], m: 'snap' }, 'wipe'],
+  [28.94, 'phone', { z: [1.0, 1.35], p: [540, 640], m: 'slow', vig: 0.6 }, 'glitch'],
+  [30.30, 'heartbreak', { z: [1.0, 1.25], p: [540, 700], m: 'slow', vig: 0.7 }, 'zoomblur'],
+  [31.21, 'board', { z: [1.0, 1.3], p: [540, 760], m: 'pulse' }, 'zoomblur'],
+  [33.56, 'trap', { z: [1.0, 1.4], p: [540, 760], m: 'snap' }, 'out'],
+  [34.32, 'jump', { z: [1.1, 1.0], p: [540, 800], m: 'drift' }, 'hard'],
+  [35.70, 'sky', { z: [1.0, 1.15], p: [540, 700], m: 'slow' }, 'whipup'],
+  [37.96, 'containers', { z: [1.0, 1.18], p: [540, 800], m: 'slow', vig: 0.55 }, 'light'],
+  [39.10, 'hoodup', { z: [1.15, 1.35], p: [540, 700], m: 'slow', vig: 0.65 }, 'whip'],
+  [40.23, 'breath', { z: [1.0, 1.22], p: [540, 700], m: 'slow', vig: 0.9 }, 'zoomblur'],
+  [41.34, 'beam', { z: [1.0, 1.12], p: [540, 760], m: 'slow', vig: 0.8 }, 'hard'],
+  [42.06, 'boots', { z: [1.25, 1.0], p: [540, 900], m: 'out', vig: 0.8 }, 'whip'],
+  [42.71, 'closer', { z: [1.0, 1.3], p: [540, 720], m: 'slow', vig: 0.95 }, 'dip'],
+  [44.25, 'drone', { z: [1.0, 1.25], p: [540, 600], m: 'snap' }, 'whipup'],
+  [45.30, 'lookup', { z: [1.0, 1.2], p: [540, 760], m: 'slow', vig: 0.8 }, 'hard'],
+  [46.45, 'thermal', { z: [1.3, 1.0], p: [540, 760], m: 'out' }, 'glitch'],
+  [47.64, 'run', { z: [1.0, 1.08], p: [540, 800], m: 'drift' }, 'out'],
+  [48.88, 'wall', { z: [1.0, 1.1], p: [540, 800], m: 'drift' }, 'whip'],
+  [50.09, 'vlt', { z: [1.05, 1.0], p: [540, 800], m: 'drift' }, 'whipdown'],
+  [51.88, 'stairs', { z: [1.0, 1.12], p: [540, 780], m: 'slow' }, 'wipe'],
+  [53.42, 'alley1', { z: [1.2, 1.0], p: [540, 800], m: 'out' }, 'whip'],
+  [53.97, 'dog', { z: [1.0, 1.3], p: [540, 760], m: 'snap' }, 'hard'],
+  [55.02, 'alley2', { z: [1.0, 1.1], p: [540, 800], m: 'drift' }, 'wipe'],
+  [55.84, 'lungs', { z: [1.0, 1.2], p: [540, 720], m: 'slow', vig: 0.85 }, 'zoomblur'],
+  [57.18, 'map', { z: [1.0, 1.3], p: [540, 760], m: 'slow', vig: 0.6 }, 'out'],
+  [58.93, 'deadend', { z: [1.0, 1.15], p: [540, 780], m: 'slow', vig: 0.8 }, 'zoomblur'],
+  [60.31, 'cornered', { z: [1.0, 1.2], p: [540, 720], m: 'slow', vig: 0.9 }, 'whip'],
+  [61.44, 'backlights', { z: [1.0, 1.15], p: [540, 760], m: 'slow', vig: 0.7 }, 'hard'],
+  [63.15, 'headlights', { z: [1.0, 1.3], p: [540, 760], m: 'snap' }, 'light'],
+  [64.64, 'kombi', { z: [1.3, 1.0], p: [540, 800], m: 'out' }, 'zoomblur'],
+  [65.90, 'kombistop', { z: [1.0, 1.15], p: [540, 760], m: 'slow' }, 'whip'],
+  [67.22, 'window', { z: [1.0, 1.2], p: [540, 760], m: 'snap' }, 'hard'],
+  [68.18, 'woman', { z: [1.0, 1.14], p: [540, 700], m: 'slow', vig: 0.55 }, 'rack'],
+  [69.50, 'suspicious', { z: [1.0, 1.15], p: [540, 700], m: 'slow', vig: 0.6 }, 'whip'],
+  [70.42, 'shock', { z: [1.0, 1.35], p: [540, 700], m: 'snap' }, 'zoomblur'],
+  [71.81, 'getin', { z: [1.0, 1.18], p: [540, 740], m: 'slow', vig: 0.7 }, 'hard'],
+  [73.29, 'cta', { z: [1.12, 1.0], p: [540, 760], m: 'out' }, 'tapestop'],
+];
+const SCENE = {};   // filled by the scene files: SCENE.globe = () => { ... }
+const ERA_LIST = SHOT_LIST.map(([t0, sc], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, () => (SCENE[sc] || scenePlaceholder)(sc)]);
+const SHOTS = SHOT_LIST.map(([t0, sc], i) => ({ id: i + 1, key: sc, era: i, t0, t1: ERA_LIST[i][1], title: sc }));
+const HUD_AT = [
+  [0, 'DIA 7 · O MUNDO · 23:58'], [8.25, 'DIA 7 · MANTIQUEIRA · 06:12'], [11.79, 'PÍER MAUÁ · 23:59'], [13.27, 'PÍER MAUÁ · 00:00'],
+  [34.32, 'PÍER MAUÁ · 00:03'], [47.64, 'FUGA · 00:06'], [61.44, 'FUGA · 00:09'], [73.29, 'PARTE 2 · SEU VOTO'],
+];
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'beat-cut', shots: SHOTS, cuts: SHOT_LIST.slice(1).map(([t0]) => t0), morphs: [],
+  subs: buildSubs(),
+  narration: PHR.map(([t0, t1, txt]) => ({ t0, t1, text: txt.replace(/:[a-z](?=\s|$)/g, '').replace(/ \/\/ | \/ /g, ' ') })),
+  acts: [
+    { name: 'Gancho', role: 'build', t0: 0, t1: 8.25 }, { name: 'Recap', role: 'journey', t0: 8.25, t1: 13.27 },
+    { name: 'Giro', role: 'peak', t0: 13.27, t1: 34.32 }, { name: 'Escondido', role: 'journey', t0: 34.32, t1: 47.64 },
+    { name: 'Fuga', role: 'peak', t0: 47.64, t1: 58.93 }, { name: 'Sem saída', role: 'silence', t0: 58.93, t1: 64.64 },
+    { name: 'Kombi', role: 'gift', t0: 64.64, t1: 73.29 }, { name: 'CTA', role: 'goodbye', t0: 73.29, t1: DURATION },
+  ],
+  board: [{ t: 2.6, title: 'scan' }, { t: 22.2, title: 'holofotes' }, { t: 38.8, title: 'contêineres' }, { t: 54.5, title: 'cachorro' }],
+};
+window.TIMELINE = TIMELINE;
+const SHOT_T = (k) => SHOT_LIST.find((s) => s[1] === k)[0];
+const SHOT_T1 = (k) => { const i = SHOT_LIST.findIndex((s) => s[1] === k); return i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION; };
+function scenePlaceholder(k) { fnSky(FN.navy2, FN.navy0); fnBold(k.toUpperCase(), 540, 760, 90, '#ffffff'); }
