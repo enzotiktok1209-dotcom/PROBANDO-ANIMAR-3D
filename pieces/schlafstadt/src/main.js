@@ -153,7 +153,7 @@ function drawBadge(b) {
     c.fillStyle = cg; c.beginPath(); c.arc(-w / 2 + 40, 0, 48, 0, 7); c.fill(); c.shadowBlur = 0; c.fillStyle = '#c88a00'; c.font = `700 46px ${FONT}`; c.fillText('€', -w / 2 + 40, 3);
     c.fillStyle = '#fff'; c.font = `700 58px ${FONT}`; c.fillText(b.text, 40, 4);
   } else if (b.kind === 'big' || b.kind === 'red') {
-    c.font = `700 112px ${FONT}`; c.lineWidth = 22; c.strokeStyle = b.kind === 'red' ? '#5a0010' : '#1d2238'; c.shadowColor = 'rgba(0,0,0,.4)'; c.shadowBlur = 14; c.strokeText(b.text, 0, 0); c.shadowBlur = 0;
+    c.font = `700 112px ${FONT}`; { const tw = c.measureText(b.text).width; if (tw > W * 0.86) { const k = W * 0.86 / tw; c.scale(k, k); } } c.lineWidth = 22; c.strokeStyle = b.kind === 'red' ? '#5a0010' : '#1d2238'; c.shadowColor = 'rgba(0,0,0,.4)'; c.shadowBlur = 14; c.strokeText(b.text, 0, 0); c.shadowBlur = 0;
     const g = c.createLinearGradient(0, -50, 0, 50); if (b.kind === 'red') { g.addColorStop(0, '#ff6a6a'); g.addColorStop(1, '#d6202f'); } else { g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#ffe07a'); }
     c.fillStyle = g; c.fillText(b.text, 0, 0);
   } else if (b.kind === 'tag') {
@@ -204,7 +204,7 @@ shot(3.01, 5.14, 'W', null, (L) => { outdoors();
 shot(5.14, 6.45, 'C', null, (L) => { outdoors();
   put(folk[2], -4, 0, -34, 0.3); kp(folk[2], L.lt, [[0, idlePose(0)], [0.5, { aLz: 2.6, aRz: 2.6, aLe: 0.6, aRe: 0.6, headX: -0.35, lean: -0.12 }], [1.3, { aLz: 2.8, aRz: 2.8, aLe: 0.4, aRe: 0.4, headX: -0.45, lean: -0.15 }]]);
   face(folk[2], { eyes: 'closed', bags: 1, mouth: L.lt > 0.3 ? 'yawn' : 'o', brows: -0.3 }, 99);
-  camMove([-2, 1.2, -22, -4, 7, -34, 52], [-2.6, 1.4, -25, -4, 6.5, -34, 50], L.k); shadowAround(V(-4, 0, -34), 30); }, [[0.25, 'yawn_f', 1]]);
+  camMove([-2, 2.2, -22, -4, 4.6, -34, 50], [-2.6, 2.4, -25, -4, 4.8, -34, 48], L.k); shadowAround(V(-4, 0, -34), 30); }, [[0.25, 'yawn_f', 1]]);
 // 4 — …cuesta 50 euros: el Nachtwächter silba y da el ticket
 shot(6.45, 7.81, 'S', null, (L) => { outdoors();
   put(folk[2], -4, 0, -34, 0.6); applyPose(folk[2], { ...idlePose(L.T), lean: -0.1, aLx: 0.3, aRx: 0.3 }); face(folk[2], { eyes: 'wide', bags: 1, mouth: 'o', brows: -0.6 }, L.T);
@@ -667,6 +667,8 @@ function renderAt(T) {
   if (tr === 'R') { octx.rotate((phase < 0 ? 1 : -1) * a2 * 0.55); octx.scale(1 + a2 * 0.3, 1 + a2 * 0.3); octx.filter = `blur(${(a * 5).toFixed(1)}px)`; }
   if (tr === 'C' && phase > 0) { const sc = 1 + a * 0.22; octx.scale(sc, sc); }
   octx.drawImage(renderer.domElement, -W / 2, -H / 2, W, H);
+  if (tr === 'W') octx.drawImage(renderer.domElement, -W / 2 - phase * W, -H / 2, W, H);
+  if (tr === 'S') octx.drawImage(renderer.domElement, -W / 2, -H / 2 - phase * H, W, H);
   octx.restore(); octx.filter = 'none';
   if (tr === 'I') { const r = (1 - a) * H * 0.75; octx.save(); octx.fillStyle = '#000'; octx.beginPath(); octx.rect(0, 0, W, H); octx.arc(W / 2, H * 0.42, Math.max(0, r), 0, 7, true); octx.fill('evenodd'); octx.restore(); }
   for (const b of BADGES) drawBadge(b);
