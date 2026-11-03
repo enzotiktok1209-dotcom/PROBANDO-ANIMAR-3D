@@ -189,10 +189,10 @@ const sitPose = { crouch: 1.0, lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5 };
 
 // 1 — dron sobre la ciudad en noche eterna; un vecino se duerme en un banco
 shot(0.00, 3.01, 'Z', null, (L) => { outdoors();
-  camMove([0, 120, 60, 0, 10, -140, 55], [3, 8, -41, 6, 2.6, -52, 50], L.k, easeOut);
+  camMove([0, 120, 60, 0, 10, -140, 55], [4.5, 5.2, -40.5, 6, 3.4, -52, 48], L.k, easeOut);
   put(folk[1], 6, 0, -52.3, 0); kp(folk[1], L.lt, [[0, { ...sitPose, headX: 0.1 }], [1.6, { ...sitPose, headX: 0.7, lean: 0.25 }], [2.2, { ...sitPose, headX: 0.9, lean: 0.4, headZ: 0.3 }]]);
   face(folk[1], { eyes: L.lt > 1.6 ? 'closed' : 'half', bags: 1, mouth: 'flat' }, L.T);
-  if (L.lt > 2.0) badge('zzz', 'Zzz', ...proj(V(8, 8 + (L.lt - 2) * 2, -52)).slice(0, 2), L.lt - 2.0);
+  if (L.lt > 2.0) { const zp = proj(V(7.5, 6.6 + (L.lt - 2) * 1.5, -52)); badge('zzz', 'Zzz', zp[0], zp[1], L.lt - 2.0); }
   for (let i = 2; i < 6; i++) { put(folk[i], [-8, 9, -5, 12][i - 2], 0, -80 - i * 14 + L.T * 3, 0); applyPose(folk[i], walkPose(L.T + i * .3, 0.7, 1)); }
   shadowAround(V(0, 0, -60), 90); }, [[0, 'wind', .6], [0.4, 'bell_far', .5], [1.7, 'snore', .7], [2.2, 'zzz', .6]]);
 // 2 — ojeras hasta la barbilla

@@ -5,7 +5,19 @@
 - Idioma de pantalla: **alemán**.
 - Voz: `audio/voz-sin-silencios.wav`. Tiempo de cada palabra en `audio/words.json` (alineado por sílabas a los 80 tramos de voz: faster-whisper no puede descargar su modelo en este entorno, así que el margen es de ±0,15 s).
 
-## Personajes
+## Personajes (rediseño con aspecto alemán, a petición del usuario)
+| personaje | diseño final |
+|---|---|
+| **Finn** (11) | pelo rubio pajizo revuelto, ojos azules, pecas; camisa de Trachten a cuadros rojos y blancos, **Lederhosen** de cuero con tirantes y puente bordado con edelweiss, calcetines altos de lana, zapatos Haferl; la **lupa de relojero del abuelo** en una cinta en la frente |
+| **Opa** (relojero) | **Janker de loden** gris con solapas verdes y botones de asta, chaleco verde, pajarita, cadena de reloj; gafas redondas, bigote de morsa blanco, cejas pobladas; gorra plana (despierto) / gorro de dormir a cuadros (en la cama 9) |
+| **Herr Wachter** | camarero de Kaffeehaus: chaleco negro, camisa blanca con ligas en los brazos, pajarita, **delantal blanco largo**, pelo negro engominado con raya al medio y patillas; el bigote torcido son las agujas del reloj del ayuntamiento |
+| vecinos | mujeres con **Dirndl** (corpiño, blusa de mangas abullonadas, delantal, trenzas en corona) y hombres con **Tracht** y **sombrero tirolés** con Gamsbart; todos con ojeras |
+| Nachtwächter | capa oscura, sombrero de ala ancha, farol y alabarda: los vigilantes del pueblo |
+| ciudad | **casas de entramado (Fachwerk)** y fachadas pastel, jardineras con geranios, letreros de pretzel colgantes, muralla medieval, relojes de cuco de la Selva Negra en el taller |
+
+El diseño anterior queda abajo como referencia.
+
+## Personajes (primera versión, sustituida)
 | personaje | diseño | colores | rasgo |
 |---|---|---|---|
 | **Finn** (11) | sudadera amarilla con capucha, bufanda roja, vaqueros, zapatillas rojas, pelo castaño revuelto, pecas | amarillo `#FFC23A` + rojo | la **lupa de relojero del abuelo** en la frente; ojeras leves |
