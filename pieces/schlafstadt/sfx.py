@@ -268,11 +268,10 @@ if __name__ == '__main__':
     cues = fill_gaps(cues, DUR); print(len(cues), 'efectos; hueco máximo', max(np.diff(sorted([0] + [c['t'] for c in cues] + [DUR]))).round(2))
     sfx = render(cues, DUR); sfx = norm(sfx, 0.9)
     w = wave.open('/tmp/_sfx.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((sfx * 32767).astype('<i2').tobytes()); w.close()
-    # mezcla: voz −16 LUFS, música ya a −29 LUFS (con ducking), efectos −21 LUFS (con ducking suave bajo la voz)
-    fc = ("[0:a]aresample=44100,loudnorm=I=-16:TP=-2:LRA=9,asplit=3[v][sc1][sc2];"
-          "[1:a]aresample=44100[m0];[m0][sc1]sidechaincompress=threshold=0.05:ratio=3:attack=20:release=350[m];"
-          "[2:a]aresample=44100,loudnorm=I=-21:TP=-3:LRA=15[s0];[s0][sc2]sidechaincompress=threshold=0.08:ratio=2:attack=10:release=250[s];"
-          "[v][m][s]amix=inputs=3:duration=first:normalize=0,alimiter=limit=0.9,loudnorm=I=-15:TP=-1.2:LRA=11")
-    subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', voice_f, '-i', music_f, '-i', '/tmp/_sfx.wav', '-filter_complex', fc, '-ar', '44100', '-ac', '2', out_f], check=True)
-    subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', '/tmp/_sfx.wav', out_f.replace('.wav', '-sfx.wav')], check=True)
+    # la pista de efectos se guarda aparte y la mezcla la hace mezclar.sh (niveles aprobados por el usuario:
+    # efectos que nunca tapan la narración, música de fondo bien audible por debajo)
+    sfx_f = out_f.replace('.wav', '-sfx.wav')
+    subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', '/tmp/_sfx.wav', sfx_f], check=True)
+    import os
+    subprocess.run([os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mezclar.sh'), voice_f, music_f, sfx_f, out_f], check=True)
     print('ok', out_f)

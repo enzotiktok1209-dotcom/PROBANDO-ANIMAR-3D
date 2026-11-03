@@ -54,11 +54,12 @@ Objetos que aparecen en escena entran animados (no de golpe): escalado con muell
 
 ## 6. Sonido
 - **Voz** (recortada) encima de todo.
-- **Música de fondo**: la pista que mande el usuario, a **velocidad original**, durante todo el video; si es más corta, **vuelve a empezar** al terminar (empalme de 60 ms) y **se corta al final del video** con un fundido de 1 s. Nivel: **≈13 dB por debajo de la voz** (voz −16 LUFS, música −29 LUFS) con un ducking suave cuando habla, de modo que se oiga claramente por debajo sin competir. Si no hay pista, se compone una en código.
+- **Música de fondo**: la pista que mande el usuario, a **velocidad original**, durante todo el video; si es más corta, **vuelve a empezar** al terminar (empalme de 60 ms) y **se corta al final del video** con un fundido de 1 s. Nivel (corregido por el usuario tras el primer video: la quería más alta): **≈9 dB por debajo de la voz mientras habla** (voz −16 LUFS, música −19 LUFS, ducking suave ratio 1.5). Se oye claramente por debajo sin competir. Si no hay pista, se compone una en código.
 - **Efectos realistas para cada acción** (dinero → monedas/caja registradora; botón → clic; pasos sobre adoquín; taza → porcelana; reloj → tic-tac, campanadas; puerta, bostezo, golpe, salto, caída, multitud, gallo, cuco…).
+- **Los efectos nunca tapan la narración** (regla del usuario): pista de efectos a −30 LUFS, recorte de −6 dB en la banda de la voz (900 y 2400 Hz) y ducking (ratio 4) mientras habla; medido, incluso en su momento más fuerte quedan **≥14 dB por debajo de la voz**. La mezcla se hace con `pieces/<pieza>/mezclar.sh` y se comprueba midiendo voz/música/efectos por separado.
 - **Al menos un efecto cada 1,5 s** de media, **variados** (nunca el mismo efecto tres veces seguidas; variar tono y velocidad cuando se repite).
 - Cada transición y cada zoom con su efecto.
-- Mezcla final −16 a −18 LUFS, la voz siempre inteligible.
+- Mezcla final ≈ −13 LUFS integrados, pico ≤ −0,7 dBFS, la voz siempre delante.
 
 ## 7. Subtítulos y texto
 - Una palabra a la vez, sincronizada con la voz; relleno `#E2FD07`, contorno negro, sombra; pop 20 % → 112 % → 100 % en 3 fotogramas; palabras clave (números, nombres, golpes) 1,35× más grandes.
