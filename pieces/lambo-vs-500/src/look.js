@@ -1,8 +1,0 @@
-// look-check shots (replaced by the real shot list once the voice arrives)
-S(0, { draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, 0.2] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'calm']], look: [-0.3, 0] }); studioPodiums(); },
-  ui() { tText('LAMBO ODER 500 €?', 540, 260, 70, { color: PAL.yellow, stroke: '#240b5e', strokeW: 16 }); choiceCard(290, 470, 420, 240, 'OPTION 1', 'LAMBORGHINI', 'SOFORT', PAL.green, -1); choiceCard(790, 470, 420, 240, 'OPTION 2', '500 € / MONAT', '10 JAHRE', PAL.orange, -1); } });
-S(1, { cam: [[1, 540, 1000, 1.7]], draw() { setShowroom({ blur: 3 }); supercar(540, 1500, 0.95, { wheelSpin: 0 }); char('kevin', 540, FLOOR + 150, 1.0, { pose: [[0, 'cheer']], emo: [[0, 'laugh']], extras: { chain: 1, shades: 1 } }); } });
-S(2, { cam: [[2, 540, 1000, 1.75]], draw() { setLeoRoom({ blur: 9 }); char('jonas', 540, FLOOR + 160, 1.0, { pose: [[0, 'armsCross']], emo: [[0, 'smug']], extras: { glasses: true } }); } });
-S(3, { cam: [[3, 540, 1150, 1.0]], draw() { setShowroom(); supercar(560, 1560, 0.95, {}); char('kevin', 250, FLOOR + 40, 0.85, { pose: [[0, 'pointR']], emo: [[0, 'grin']], extras: { chain: 1 } }); } });
-S(4, { cam: [[4, 540, 1150, 1.0]], draw() { setGarage(); supercar(560, 1560, 0.95, { scratch: 1 }); char('mech', 860, FLOOR + 20, 0.82, { pose: [[0, 'hips']], emo: [[0, 'smug']] }); char('kevin', 220, FLOOR + 40, 0.85, { pose: [[0, 'headGrab']], emo: [[0, 'shock']] }); } });
-S(5, { cam: [[5, 540, 1150, 1.0]], draw() { setGasStation(); fuelPump(860, FLOOR, 0.9, { disp: '0,00 €' }); supercar(420, 1600, 0.85, {}); char('jonas', 250, FLOOR + 40, 0.8, { emo: [[0, 'happy']], walk: 0 }); bicycle(260, FLOOR + 40, 0.8); } });

@@ -5,8 +5,8 @@
     "width": 1440,
     "height": 2560,
     "fps": 30,
-    "duration": 109.0,
-    "frames": 3270
+    "duration": 104.0,
+    "frames": 3120
   },
   "storyFormat": "beat-cut character comedy, a cut every ~2 s, voice-over clock",
   "style": "flat-toon (in src/toon.js)",
@@ -20,7 +20,8 @@
     "src/sets.js",
     "src/props2.js",
     "src/main.js",
-    "src/look.js",
+    "src/shots-a.js",
+    "src/shots-b.js",
     "src/timeline.js",
     "kit/score-head.js",
     "src/score.js",
