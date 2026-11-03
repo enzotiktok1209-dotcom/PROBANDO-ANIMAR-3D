@@ -1761,10 +1761,28 @@ function rainCloud(x, y, t0) {
 function musicNotes(x, y, seed) { const R = RNG('mn', seed); for (let i = 0; i < 6; i++) { const u = ((TT * 0.8 + R.f()) % 1), px = x + R.n(160) + Math.sin(TT * 3 + i) * 30, py = y - u * 420; ctx.save(); ctx.globalAlpha = 1 - u; tText(i % 2 ? '♪' : '♫', px, py, 70, { color: [PAL.pink, PAL.yellow, PAL.blueL][i % 3], shadow: false }); ctx.restore(); } }
 function priceTag(x, y, s, txt, rot = -0.1, col = '#ffffff') { ctx.save(); ctx.translate(x, y); ctx.rotate(rot + Math.sin(TT * 2) * 0.03); ctx.scale(s, s); line(-170, -70, -250, -150, 5, '#ddd'); poly([[-170, -80], [220, -80], [220, 80], [-170, 80], [-230, 0]], col); circ(-185, 0, 14, '#1b1530'); tText(txt, 30, 4, 78, { color: '#1b1530', shadow: false, maxW: 360 }); ctx.restore(); }
 
+// a choice card with a picture: the car, or a fan of banknotes — read in a glance, before the words
+function iconCard(x, y, top, big, sub, col, t0, icon) {
+  if (TT < t0) return;
+  const k = springEase(TT - t0, 260, 15), w = 450, h = 380;
+  ctx.save(); ctx.translate(x, y); ctx.scale(k, k);
+  fillRR(-w / 2 + 8, -h / 2 + 12, w, h, 28, 'rgba(0,0,0,0.38)'); fillRR(-w / 2, -h / 2, w, h, 28, col); fillRR(-w / 2 + 10, -h / 2 + 10, w - 20, h - 20, 22, shade(col, 0.12));
+  tText(top, 0, -h / 2 + 36, 26, { color: 'rgba(255,255,255,0.9)', shadow: false, letter: 3, weight: 800 });
+  // the picture window
+  fillRR(-w / 2 + 22, -h / 2 + 62, w - 44, 170, 18, 'rgba(10,8,30,0.30)');
+  const ik = springEase(TT - t0 - 0.12, 280, 12), bob = Math.sin(TT * 3 + x) * 4;
+  ctx.save(); ctx.beginPath(); ctx.roundRect(-w / 2 + 22, -h / 2 + 62, w - 44, 170, 18); ctx.clip(); ctx.translate(0, -h / 2 + 150 + bob); ctx.scale(ik, ik);
+  if (icon === 'car') { glow(0, -20, 200, '#fff3b0', 0.35); supercar(0, 45, 0.34, { wheelSpin: TT * 0.5 }); sparkle(-120, -50, 16 * (0.6 + 0.4 * Math.sin(TT * 7)), '#fff'); sparkle(110, -60, 12 * (0.6 + 0.4 * Math.sin(TT * 9 + 1)), '#fff'); }
+  else { for (let i = 0; i < 5; i++) bill(0, 10, 190, -0.5 + i * 0.25 + Math.sin(TT * 2 + i) * 0.02, 1, { label: '500' }); coin(130, 40, 26, { sx: Math.cos(TT * 3), label: '€' }); coin(-135, 45, 22, { sx: Math.cos(TT * 3 + 1), label: '€' }); }
+  ctx.restore();
+  tText(big, 0, h / 2 - 92, 52, { color: '#fff', maxW: w - 36 });
+  tText(sub, 0, h / 2 - 40, 28, { color: 'rgba(255,255,255,0.95)', shadow: false, weight: 800 });
+  ctx.restore();
+}
 // ---- 1 · the game show: the two choices
-S(0.0, { tr: 'cut', cam: [[0, 540, 1020, 1.0], [0.62, 540, 1000, 1.06]],
+S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.0], [0.62, 540, 1010, 1.03]],
   draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, 0.4], jump: [[0, 0], [0.25, 18, 0.12], [0.4, 0, 0.12]] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'calm']], look: [-0.3, 0] }); studioPodiums(); },
-  ui() { tText('LAMBO ODER 500 €?', 540, 260, 74, { color: PAL.yellow, stroke: '#240b5e', strokeW: 16 }); choiceCard(290, 470, 420, 240, 'OPTION 1', 'LAMBORGHINI', 'SOFORT', PAL.green, 0.03); choiceCard(790, 470, 420, 240, 'OPTION 2', '500 € / MONAT', '10 JAHRE', PAL.orange, 0.15); tText('VS', 540, 470, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
+  ui() { tText('LAMBO ODER 500 €?', 540, 200, 70, { color: PAL.yellow, stroke: '#240b5e', strokeW: 16 }); iconCard(285, 462, 'OPTION 1', 'LAMBORGHINI', 'SOFORT', PAL.green, 0.03, 'car'); iconCard(795, 462, 'OPTION 2', '500 € / MONAT', '10 JAHRE', PAL.orange, 0.15, 'cash'); tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
   sfx: [[0.0, 'sting'], [0.03, 'pop', 1], [0.15, 'pop', 1.2]] });
 // ---- 2 · insert: the car rolls into the spotlight
 S(0.62, { tr: 'zoomIn', cam: [[0.62, 540, 1180, 1.0], [1.64, 540, 1160, 1.1]],
