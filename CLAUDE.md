@@ -3,13 +3,19 @@
 Este proyecto se usa **solo** para hacer un tipo de video: storytimes verticales (9:16) en primera persona, en un mundo 3D de juguete con personajes de bloques, cortes cada ~2 s, cámara siempre en movimiento, subtítulos de una palabra amarilla y pop-ups de dinero.
 
 Antes de planificar o animar cualquier video:
-1. Lee `plugins/animate/skills/animate/styles/blocky-3d/STYLE.md` (el estilo, con medidas) y `REFERENCIA.md` (el análisis plano por plano y la fórmula de guion en 13 bloques).
+1. Lee `plugins/animate/skills/animate/styles/blocky-3d/PRODUCCION.md` (el encargo detallado del usuario: **manda sobre lo demás**), `STYLE.md` (el estilo, con medidas) y `REFERENCIA.md` (el análisis plano por plano y la fórmula de guion en 13 bloques).
 2. Usa la skill `animate` (`plugins/animate/skills/animate/SKILL.md`) con `"style": "blocky-3d"`.
 3. El idioma de trabajo con el usuario es el español.
 
 Reglas fijas de este formato:
-- Plano medio 2 s, cortes secos, nunca dos encuadres iguales seguidos, nunca cámara quieta (push-in +2–7 %/s por defecto).
-- Subtítulo: una palabra a la vez, `#E2FD07` con contorno negro, pop 20 %→112 %→100 % en 3 fotogramas.
+- Narración del usuario: recortar todos los silencios (pausas → ~70 ms) y sincronizar todo con el tiempo de cada palabra.
+- Plano medio ~2 s **con cambio de entorno**, lo que se ve ilustra literalmente lo que se dice, nunca dos encuadres iguales seguidos, nunca cámara quieta.
+- **Transiciones variadas entre planos** (barrido, zoom, destello, deslizamiento, giro, iris, golpe de zoom), cada una con su efecto de sonido; zooms con su efecto.
+- Efectos de sonido realistas y variados para cada acción, **≥1 cada 1,5 s**.
+- Personajes articulados (codos, rodillas, cuello) con físicas y gestos reales; la emoción se ve en la cara.
+- Mucho detalle en ropa, caras, objetos y fondos; saturación alta.
+- **Lo principal en el centro** (25–62 % de la altura); subtítulo a ~74 % sin tapar a nadie.
+- Subtítulo: una palabra a la vez, `#E2FD07` con contorno negro, pop 20 %→112 %→100 % en 3 fotogramas. **Todo el texto en pantalla en el idioma de la narración.**
 - Cada número dicho aparece en el mundo (pop-up, teléfono, cartel).
 - Guion: regla absurda → me afecta → el pueblo se adapta → mi invento → el poder contraataca → caos → pista → guarida secreta → botón → celebración → giro final peor.
 - Personajes y nombres inventados para cada video; sin logos, marcas de agua ni nombres de otros creadores o juegos.
