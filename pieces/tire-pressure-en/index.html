@@ -1533,6 +1533,8 @@ function captions(g) {
   let lines = [[0, ws.length]]; const total = wid.reduce((a, b) => a + b, 0) + sp * (ws.length - 1);
   if (total > 900 && ws.length > 1) { let acc = 0, cut = 1; for (let i = 0; i < ws.length; i++) { acc += wid[i] + sp; if (acc > total / 2) { cut = Math.max(1, i); break; } } lines = [[0, cut], [cut, ws.length]]; }
   const lh = size * 1.22;
+  // a soft dark scrim behind the caption so it reads on bright shots too
+  { const cy = s.capY ?? CAP_Y, hh = lines.length * lh + 150; ctx.save(); ctx.fillStyle = lin(0, cy - hh, 0, cy + hh, [[0, 'rgba(0,0,0,0)'], [0.5, 'rgba(4,6,12,0.5)'], [1, 'rgba(0,0,0,0)']]); ctx.fillRect(0, cy - hh, W, hh * 2); ctx.restore(); }
   ctx.save(); ctx.translate(W / 2, s.capY ?? CAP_Y);
   lines.forEach(([a, b], li) => {
     const lw = wid.slice(a, b).reduce((p, q) => p + q, 0) + sp * (b - a - 1);
@@ -1627,7 +1629,7 @@ const T = {
   balloon: WT('balloon'), car: WT('car'), freezing: WT('freezing'), by2: WT('by', 2), wrinkled: WT('wrinkled'),
   even: WT('even'), hasnt: WT("hasn't"), air9: WT('air', 5), so3: WT('so', 3), full: WT('full'),
   thats3: WT("that's", 2), cold: WT('cold'), or: WT('or'), driving: WT('driving'), add: WT('add'), psi: WT('psi'),
-  top: WT('top'), and9: WT('want') - 0.36, follow: WT('follow'), account: WT('account'),
+  top: WT('top'), never: WT('never'), and9: WT('want') - 0.36, follow: WT('follow'), account: WT('account'),
 };
 const rotOf = (t0, speed) => -(TT - t0) * speed / WR;          // a car driving left at `speed` px/s turns its wheels this way
 const HOT_ENV = { rim: '#ffb070', hi: '#ffd2b0', top: '#ff8a70', glassTop: '#6a4a6a' };
@@ -1838,7 +1840,7 @@ S(T.so2, { title: 'you stop too early', tr: 'cut',
 });
 // ---------- 19. "Then overnight, the tire cools down," — time-lapse night at home: moon, lights off, frost
 S(T.then, { title: 'overnight it cools', tr: 'dissolve',
-  cam: [[T.then, 260, -470, 0.54], [T.air5, 240, -430, 0.6]],
+  cam: [[T.then, 230, -330, 0.72], [T.air5, 210, -300, 0.8]],
   draw() {
     const u = seg(TT, T.then, T.air5);
     setHome({ night: 1, moonA: lerp(0.15, 0.75, u), starRot: u * 0.25, winOn: 1 - u * 1.2, frost: u * 0.7 });
@@ -1890,7 +1892,7 @@ S(T.by2, { title: 'wrinkled by morning', tr: 'flash',
 });
 // ---------- 25. "even though it hasn't lost any air." — the knot, still tied
 S(T.even, { title: 'the knot is still tied', tr: 'cut',
-  cam: [[T.even, -150, -470, 2.0], [T.so3, -150, -480, 2.2]],
+  cam: [[T.even, -150, -640, 1.25], [T.so3, -150, -630, 1.38]],
   draw() { setInterior({ morning: 1, frost: 1, tempLabel: '23°F' }); balloon(-150, -720, 240, 1, { bob: 0 }); },
   ui() { tag('knot still tied', W / 2, 1110, T.hasnt, { size: 46, icon: (ix, iy, r) => checkIcon(ix, iy, r) }); tag('0 air lost', W / 2, 1230, T.air9, { size: 46, bg: 'rgba(20,70,40,0.92)', fg: '#c9ffd9' }); },
   sfx: [[T.even, 'carInterior', T.so3 - T.even], [T.hasnt, 'tagPop'], [T.air9, 'tagPop']],
@@ -1900,7 +1902,8 @@ S(T.so3, { title: 'never really full', tr: 'whipR', tense: [T.so3, T.full],
   cam: [[T.so3, -20, -20, 1.55], [T.full, 0, 0, 2.05, 'i2'], [T.thats3, 0, 0, 1.95, 'o3']], punch: [[T.full, 0.09]], shake: [[T.full, 14, 0.5]],
   draw() {
     setHome({ night: 0, frost: 0.6 });
-    drawCar(0, 0, { env: DAY_ENV, wheel: { sag: 0.6, outline: EZ.o3(seg(TT, T.full, T.full + 0.4)) } });
+    drawCar(0, 0, { env: DAY_ENV, wheel: { sag: 0.6, outline: EZ.io(seg(TT, T.never, T.full + 0.05)) } });
+    shockRing(0, 0, T.full, 140, 420, '#3ee07f', 0.6, 12);
   },
   ui() { const [x, y] = ws(0, -240); tag('never full', x, y - 40, T.full, { size: 54, bg: 'rgba(20,90,45,0.94)', edge: 'rgba(120,255,170,0.6)', fg: '#d7ffe4' }); },
   sfx: [[T.so3, 'morningAmb', T.thats3 - T.so3], [T.so3, 'riserShort', T.full - T.so3], [T.full, 'payoffHit']],
@@ -1911,7 +1914,7 @@ S(T.thats3, { title: 'check them cold', tr: 'zoomOut',
   draw() {
     setHome({ night: 0, frost: 0.6 });
     const k = EZ.io(seg(TT, T.thats3 + 0.3, T.cold + 0.2)), v = Math.round(lerp(28, 32, k));
-    drawCar(0, 0, { env: DAY_ENV, wheel: { sag: 0.6 * (1 - k) } });
+    drawCar(0, 0, { env: DAY_ENV, wheel: { sag: 0.6 * (1 - k), outline: 1 - EZ.i2(seg(TT, T.thats3 + 0.2, T.thats3 + 0.7)) } });
     const vp = valvePt(WR, 0, -2.2, 0, 0, 0.6 * (1 - k)); handGauge(vp[0], vp[1] - 4, 0.55, v, v >= 32 ? '#46ff8a' : '#ffb03a', { s: 0.9 });
   },
   ui() { tag('cold: 32 PSI', W / 2, 470, T.cold, { size: 52, bg: 'rgba(16,60,110,0.94)', edge: 'rgba(150,210,255,0.6)', icon: (ix, iy, r) => flakeIcon(ix, iy, r), fg: '#dff1ff' }); },

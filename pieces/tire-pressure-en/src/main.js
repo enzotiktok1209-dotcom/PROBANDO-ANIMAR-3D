@@ -87,6 +87,8 @@ function captions(g) {
   let lines = [[0, ws.length]]; const total = wid.reduce((a, b) => a + b, 0) + sp * (ws.length - 1);
   if (total > 900 && ws.length > 1) { let acc = 0, cut = 1; for (let i = 0; i < ws.length; i++) { acc += wid[i] + sp; if (acc > total / 2) { cut = Math.max(1, i); break; } } lines = [[0, cut], [cut, ws.length]]; }
   const lh = size * 1.22;
+  // a soft dark scrim behind the caption so it reads on bright shots too
+  { const cy = s.capY ?? CAP_Y, hh = lines.length * lh + 150; ctx.save(); ctx.fillStyle = lin(0, cy - hh, 0, cy + hh, [[0, 'rgba(0,0,0,0)'], [0.5, 'rgba(4,6,12,0.5)'], [1, 'rgba(0,0,0,0)']]); ctx.fillRect(0, cy - hh, W, hh * 2); ctx.restore(); }
   ctx.save(); ctx.translate(W / 2, s.capY ?? CAP_Y);
   lines.forEach(([a, b], li) => {
     const lw = wid.slice(a, b).reduce((p, q) => p + q, 0) + sp * (b - a - 1);
