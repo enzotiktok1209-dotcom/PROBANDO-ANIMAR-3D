@@ -114,7 +114,7 @@ function hideAll() {
   tower.minH.rotation.z = 0; tower.hourH.rotation.z = 0; cuckoo.visible = false;
   const mo = wach.props.moustache; mo.g.position.set(0, 0.42, 0.66); mo.g.rotation.set(0, 0, 0); mo.g.scale.set(1, 1, 1);
   hands.longH.rotation.z = 0.22; hands.shortH.rotation.z = -0.12; mbox.lid.rotation.x = 0; watch.lid.rotation.x = 0; gasse.lid.rotation.z = 0;
-  for (const p of notes) p.visible = false;
+  for (const p of notes) p.visible = false; sun.scale.setScalar(520);
 }
 const BABY0 = babyFace(false), BABY1 = babyFace(true);
 const use = (...names) => { for (const n of names) SETS[n].visible = true; };
@@ -572,8 +572,8 @@ shot(116.30, 118.35, 'Z', null, (L) => { outdoors(); tower.hands.visible = true;
   camMove([30, 50, -250, 0, 40, -480, 54], [26, 54, -262, 0, 44, -480, 52], L.k); shadowAround(V(0, 0, -350), 100); }, [[0.0, 'bells', .9], [0.6, 'bells', .7], [1.2, 'bells', .6], [0.5, 'choir', .6]]);
 // 71 — salió el sol
 shot(118.35, 119.52, 'W', null, (L) => { outdoors(); tower.hands.visible = true; tower.minH.rotation.z = -Math.PI * 2; tower.hourH.rotation.z = -7 / 12 * Math.PI * 2;
-  const d = 0.6 + 0.4 * easeOut(L.k); dayness(d); sun.position.set(-60, 120 + L.k * 60, -1500); bloom.strength = 0.8;
-  camMove([0, 20, -300, -30, 120, -1500, 52], [0, 22, -308, -30, 140, -1500, 48], L.k); shadowAround(V(0, 0, -350), 100); }, [[0, 'sunrise_shine', 1]]);
+  const d = 0.6 + 0.4 * easeOut(L.k); dayness(d); sun.position.set(-150, 60 + easeOut(L.k) * 180, -1500); sun.scale.setScalar(560 + L.k * 160); bloom.strength = 0.7;
+  camMove([10, 58, -140, -20, 95, -900, 52], [9, 60, -152, -20, 100, -900, 50], L.k); shadowAround(V(0, 0, -350), 100); }, [[0, 'sunrise_shine', 1]]);
 // 72 — „¡El sol! ¡El sol!"
 shot(119.52, 121.18, 'S', null, (L) => { outdoors(); dayness(1); sun.position.set(-60, 200, -1500);
   folk.slice(0, 5).forEach((f, i) => { put(f, -8 + i * 4, 0, -100 - (i % 2) * 3, Math.PI); applyPose(f, { aLx: i % 2 ? 0 : 2.8, aRx: i % 2 ? 2.6 : 1.0, aRe: i % 2 ? 0.3 : 1.6, headX: -0.4 }); face(f, { eyes: 'squint', bags: 0.6, mouth: lip(L.T + i * 0.07, spoken(119.52, 121.18)) || 'grin' }, L.T + i); });
