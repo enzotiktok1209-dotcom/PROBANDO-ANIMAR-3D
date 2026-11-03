@@ -6,9 +6,9 @@ cd "$(dirname "$0")"
 R=renders
 ffmpeg -y -hide_banner -loglevel error -i voice/voice.wav -i $R/stem-sfx.wav -i $R/stem-music.wav -filter_complex "\
 [0:a]aresample=48000,aformat=channel_layouts=stereo,volume=5dB,apad,asplit=3[v][k1][k2];\
-[1:a]aresample=48000,aformat=channel_layouts=stereo,acompressor=threshold=0.02:ratio=4:attack=3:release=120:makeup=6,alimiter=limit=0.7,volume=-1dB[s];\
+[1:a]aresample=48000,aformat=channel_layouts=stereo,acompressor=threshold=0.02:ratio=4:attack=3:release=120:makeup=6,alimiter=limit=0.7,volume=-8dB[s];\
 [2:a]aresample=48000,aformat=channel_layouts=stereo,volume=-3dB[m];\
-[s][k1]sidechaincompress=threshold=0.08:ratio=2:attack=20:release=250[sd];\
+[s][k1]sidechaincompress=threshold=0.04:ratio=3:attack=15:release=250[sd];\
 [m][k2]sidechaincompress=threshold=0.03:ratio=3:attack=30:release=400[md];\
 [v][sd][md]amix=inputs=3:normalize=0:duration=first,loudnorm=I=-14:TP=-1.5:LRA=11[o]" \
   -map "[o]" -ar 48000 -t 108.2 $R/mix.wav

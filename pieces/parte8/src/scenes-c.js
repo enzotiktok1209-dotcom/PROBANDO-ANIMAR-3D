@@ -69,11 +69,12 @@ function S55(u, d) {
   ctx.save(); flCam(1 + EZ.io(u / d) * 0.08, 540, 1000, 540, 900);
   forestNight({ key: 55, off: -u * 160 });
   const kx = lerp(400, 520, u / d), ph = TT * 1.1, bob = Math.abs(Math.sin(ph * TAU)) * 10, KH = 640, ku = KH / 415, shY = 1300 - KH + 140 * ku - bob;
-  // father lying across Klaus's shoulders: head to the left, legs hanging right
-  flvKlausFull(kx, 1300 - bob, KH, { gait: 1.1, armL: 0.45, armR: 0.45 });
-  const chestY = 1300 - bob - KH + 230 * ku;
-  ctx.save(); ctx.translate(kx + 200, chestY); ctx.rotate(-Math.PI / 2 + 0.05); flvFatherFull(0, 0, 400, { closed: true }); ctx.restore();
-  for (const sg of [-1, 1]) flEll(kx + sg * 70 * ku, chestY + 22 * ku, 12 * ku, 12 * ku, '#d1a495');
+  // the father walks beside Klaus, limping, his arm over Klaus's shoulders (same height as Klaus)
+  const fx = kx - 150, fb = Math.abs(Math.sin(ph * TAU + 1)) * 8;
+  flvFatherFull(fx, 1300 - fb, 620, { closed: true, rot: 0.08 });
+  flvKlausFull(kx, 1300 - bob, KH, { gait: 1.1 });
+  ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = '#ecece8'; ctx.lineWidth = 26; ctx.beginPath(); ctx.moveTo(fx + 40, shY + 20); ctx.quadraticCurveTo(kx - 20, shY - 30, kx + 55, shY + 10); ctx.stroke(); ctx.restore();
+  flEll(kx + 60, shY + 14, 13, 13, '#e0c4b4');
   const gx = lerp(780, 880, u / d); flvGretaFull(gx, 1330, 560, { mood: 'fear', gait: 1.25, lean: 0.12 });
   for (const [x, y] of [[gx, 830], [kx, 690]]) { const p = mod(u * 1.2, 1); flEll(x + 30 + p * 30, y - p * 60, 20 + p * 30, 14 + p * 18, '#d8e2ef', 0.5 * (1 - p)); }
   ctx.restore();

@@ -81,7 +81,7 @@ function flvGreta(cx, cy, faceW, o = {}) {
     if (o.blood) { flBlood(cx - w * 0.28, top + 170 * u, 1.3 * u * 1.6, o.blood, 'gvb1'); flBlood(cx + w * 0.22, top + 260 * u, 1.1 * u * 1.6, o.blood, 'gvb2'); flBlood(cx - w * 0.1, top + 380 * u, u * 1.6, o.blood, 'gvb3'); }
     ctx.restore();
   }
-  flVec(ex, cx, cy, faceW, { blink: o.blink ?? (o.mood === 'calm' ? 0 : flvBlink(o.key || 0)), look: o.look, rot: o.rot, pupilK: o.pupilK, cutBelow: flvFace(ex)[3] - 2 });
+  flVec(ex, cx, cy, faceW, { blink: o.blink ?? (o.mood === 'calm' ? 0 : flvBlink(o.key || 0)), rot: o.rot, pupilK: o.pupilK, cutBelow: flvFace(ex)[3] - 2 });
   if (o.sweat) flEll(cx + faceW * 0.42, cy - faceW * 0.25 + mod(TT * 0.8, 1) * 30 * u, 5 * u, 8 * u, '#cfe8ff', 0.85);
 }
 // Klaus: the traced head already includes the hood and the hoodie's top; the hoodie continues below
@@ -89,7 +89,7 @@ function flvKlaus(cx, cy, faceW, o = {}) {
   const ex = K_EXPR[o.mood || 'angry'] || 'k_angry', u = faceW / 240;
   const M = flvMap(ex, cx, cy, faceW), hb = M.lbox('hood');
   if (o.body !== false) { const top = M.bottom - 30 * u, x0 = hb[0], x1 = hb[2], sw = faceW * 1.45; ctx.save(); ctx.fillStyle = '#3c3d48'; ctx.beginPath(); ctx.moveTo(x0 + 10 * u, top); ctx.lineTo(x1 - 10 * u, top); ctx.quadraticCurveTo(cx + sw, top + 40 * u, cx + sw, top + 220 * u); ctx.lineTo(cx + sw, H * 2); ctx.lineTo(cx - sw, H * 2); ctx.lineTo(cx - sw, top + 220 * u); ctx.quadraticCurveTo(cx - sw, top + 40 * u, x0 + 10 * u, top); ctx.fill(); flRect(cx - faceW * 0.5, top + 330 * u, faceW, 170 * u, 18 * u, '#33343e'); ctx.restore(); }
-  flVec(ex, cx, cy, faceW, { blink: o.blink ?? flvBlink(o.key ?? 5, 4.1), look: o.look, rot: o.rot });
+  flVec(ex, cx, cy, faceW, { blink: o.blink ?? flvBlink(o.key ?? 5, 4.1), rot: o.rot });
   // the two round lumps on the hood (darker), measured from the reference
   for (const sgn of [-1, 1]) flEll(cx + sgn * faceW * 0.5, hb[1] + faceW * 0.5, faceW * 0.13, faceW * 0.15, '#33343e');
   if (o.body !== false) for (const sgn of [-1, 1]) flLine([[cx + sgn * 26 * u, M.bottom - 10 * u], [cx + sgn * 28 * u, M.bottom + 140 * u]], '#d9d9de', 5 * u);
@@ -97,7 +97,7 @@ function flvKlaus(cx, cy, faceW, o = {}) {
 function flvFather(cx, cy, faceW, o = {}) {
   const u = faceW / 300;
   if (o.body !== false) { const M = flvMap('f_open', cx, cy, faceW), sb = M.lbox('shirt'), top = M.bottom - 4, hw = Math.max(cx - sb[0], sb[2] - cx); ctx.save(); ctx.fillStyle = flGrad(cx - hw, 0, cx + hw, 0, [[0, '#eeeeea'], [0.8, '#e6e6e1'], [1, '#c8cac6']]); ctx.fillRect(cx - hw, top, 2 * hw, H * 2); ctx.restore(); }
-  flVec('f_open', cx, cy, faceW, { blink: o.closed ? 1 : (o.blink ?? 0), look: o.look, rot: o.rot, lidC: '#d9bcab' });
+  flVec('f_open', cx, cy, faceW, { blink: o.closed ? 1 : (o.blink ?? 0), rot: o.rot, lidC: '#d9bcab' });
 }
 // ---------------------------------------------------------------- full bodies (proportions measured from the references)
 // Greta: total height h ≈ 3.95 × head width; coat 2.25 head-heights, legs navy, small dark shoes, hands at the coat's edge
@@ -122,7 +122,7 @@ function flvGretaFull(x, y, h, o = {}) {
   if (!o.armsFront) {} else { arm(-1, o.armL ?? 2.4); arm(1, o.armR ?? 2.4); }
   // neck + traced head
   flRect(-9 * u, coatTop - 12 * u, 18 * u, 16 * u, 4 * u, '#e9b896');
-  flVec(G_EXPR[o.mood || 'sad'] || 'g_12.5', 0, coatTop - 50 * u, 70 * u, { cutBelow: flvFace(G_EXPR[o.mood || 'sad'] || 'g_12.5')[3] - 2, blink: flvBlink(o.key || 1), look: o.look });
+  flVec(G_EXPR[o.mood || 'sad'] || 'g_12.5', 0, coatTop - 50 * u, 70 * u, { cutBelow: flvFace(G_EXPR[o.mood || 'sad'] || 'g_12.5')[3] - 2, blink: flvBlink(o.key || 1) });
   if (o.extra) o.extra(u, coatTop);
   ctx.restore();
 }
@@ -137,7 +137,7 @@ function flvKlausFull(x, y, h, o = {}) {
   for (const s of [-1, 1]) flLine([[s * 10 * u, bodyTop + 10 * u], [s * 11 * u, bodyTop + 52 * u]], '#d9d9de', 2.4 * u);
   const arm = (s, ang) => { ctx.save(); ctx.translate(s * 52 * u, bodyTop + 22 * u); ctx.rotate(-s * ang); flRect(-8 * u, 0, 16 * u, 125 * u, 8 * u, '#353744'); flEll(0, 130 * u, 10 * u, 10 * u, '#d1a495'); ctx.restore(); };
   arm(-1, o.armL ?? (g ? g.armL[0] * DEG * 0.6 : 0.04)); arm(1, o.armR ?? (g ? g.armR[0] * DEG * 0.6 : 0.04));
-  flVec('k_angry', 0, bodyTop - 40 * u, 52 * u, { blink: flvBlink(5), look: o.look });
+  flVec('k_angry', 0, bodyTop - 40 * u, 52 * u, { blink: flvBlink(5) });
   if (o.extra) o.extra(u, bodyTop);
   ctx.restore();
 }
