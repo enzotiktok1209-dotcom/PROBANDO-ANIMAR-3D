@@ -89,6 +89,15 @@
   const used = {};
   SH.forEach((s, i) => { if (i === 0) return; const kit = TR_KIT[s.tr] || TR_KIT.cut; const k = (used[s.tr] = (used[s.tr] ?? -1) + 1) % kit.length; if (s.t0 > 31.0 && s.t0 < 32.7) return; if (s.t0 > 104 && s.t0 < 106.2) return; kit[k](s.t0); });
   // ---------------------------------------------------------------- foley, shot by shot
+  // THE HOOK: a hit on frame 0, a riser into the wall of rifles, a braam on it
+  const braam = (t, v = 1, dur = 1.6) => { const lp = filt('lowpass', 180, 3); lp.frequency.setValueAtTime(180, t); lp.frequency.exponentialRampToValueAtTime(2200, t + 0.12); lp.frequency.exponentialRampToValueAtTime(260, t + dur); const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.45 * v, t + 0.04); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); [36.7, 55, 73.4, 110, 73.4 * 1.007, 55 * 0.996].forEach((f) => osc('sawtooth', f, t, t + dur + 0.05).connect(lp)); lp.connect(g); out(g, 0, 0.3); sub(t, 0.9 * v); mark(t); };
+  S.impact(0.0, 1.0); S.glass(0.02, 0.3); sub(0.0, 1.0);
+  riser(0.05, 1.38, 0.09); sweep(0.6, 1.38, 0.06, 300, 9000, 0);
+  for (let t = 0.1; t < 1.4; t += 0.33) S.heart(t, 0.9);
+  braam(1.4, 1.0); S.rifle(1.42);
+  braam(5.1, 0.7); braam(16.35, 0.6, 1.2); braam(17.9, 0.9); braam(21.1, 0.9);
+  braam(47.7, 0.6); braam(57.45, 0.6); braam(63.16, 0.5); braam(86.2, 0.6); braam(101.74, 0.7);
+  riser(3.9, 5.05, 0.05); riser(14.5, 16.3, 0.05); riser(56.0, 57.4, 0.05); riser(99.0, 101.7, 0.05);
   // S01-S04: engine, wipers, wind, rifles, lasers, the mirror, the avalanche
   const eng = (t0, t1, f0, f1, v) => { const o1 = osc('sawtooth', f0, t0, t1), o2 = osc('square', f0 * 0.5, t0, t1); o1.frequency.linearRampToValueAtTime(f1, t1); o2.frequency.linearRampToValueAtTime(f1 * 0.5, t1); const lp = filt('lowpass', 420, 2), g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(v, t0 + 0.2); g.gain.setValueAtTime(v, t1 - 0.1); g.gain.exponentialRampToValueAtTime(0.0001, t1); o1.connect(lp); o2.connect(lp); lp.connect(g); out(g, 0, 0.05); };
   eng(0.0, 23.75, 52, 64, 0.12); eng(23.75, 24.6, 64, 18, 0.12);
@@ -184,9 +193,9 @@
   S.knock(106.35, 1.0); S.knock(106.75, 1.0); S.knock(107.15, 1.0); sub(107.4, 0.9);
   // ---------------------------------------------------------------- fill any gap > 1.4s with a soft, varied air sound (never in the silences)
   EVT.sort((a, b) => a - b);
-  const fillers = [(t) => S.tick(t, 0.15), (t) => noiseEnv(t, 0.4, 'bandpass', 1200, 0.6, 0.08, 0, 0.15), (t) => S.ui(t, 700), (t) => S.crunch(t, 0.15)];
+  const fillers = [(t) => S.tick(t, 0.4), (t) => S.whoosh(t, 0.3, true, 0.5), (t) => S.ui(t, 900), (t) => S.crunch(t, 0.45), (t) => S.swipe(t), (t) => S.heart(t, 0.6)];
   let last = 0, fi = 0;
-  for (const t of EVT.concat([DURATION])) { while (t - last > 1.4) { const ft = last + 1.2; if (!((ft > 31.0 && ft < 32.75) || (ft > 104.0 && ft < 106.3))) fillers[fi++ % fillers.length](ft); last = ft; } last = Math.max(last, t); }
+  for (const t of EVT.concat([DURATION])) { while (t - last > 1.25) { const ft = last + 1.05; if (!((ft > 31.0 && ft < 32.75) || (ft > 104.0 && ft < 106.3))) fillers[fi++ % fillers.length](ft); last = ft; } last = Math.max(last, t); }
   // ---------------------------------------------------------------- MUSIC (to = 'm'): tension → silence → hit → muffled → release → hunt → calm → silence → knocks
   to = 'm';
   pad(0.0, 21.1, ['D2', 'A2', 'F3'], 0.03, { type: 'sawtooth', cut: 500, att: 0.6, swellTo: 0.05, swellAt: 20.5 });

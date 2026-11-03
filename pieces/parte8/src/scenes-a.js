@@ -41,12 +41,23 @@ function snowBank(y, c = '#e7edf6') { ctx.save(); ctx.fillStyle = c; ctx.beginPa
 
 // ---------------------------------------------------------------- S01 POV windshield
 function S01(u, d) {
-  ctx.save(); const z = 1 + EZ.io(u / d) * 0.12, [sx, sy] = flShake(TT, 4, 30, 1); ctx.translate(sx, sy); flCam(z, 540, 720, 540, 720);
-  roadPOV(1.4, { block: true });
-  carInteriorFrame();
-  const a1 = -0.3 - Math.abs(Math.sin(u * 4.2)) * 1.2; flWiper(250, 1110, 420, a1 - 0.2); flWiper(620, 1110, 420, a1);
+  // THE HOOK: Greta in the passenger seat; through the windshield, the line of soldiers aiming at her
+  ctx.save(); const z = 1 + EZ.io(u / d) * 0.1, [sx, sy] = flShake(TT, 5, 30, 1); ctx.translate(sx, sy); flCam(z, 540, 760, 540, 760);
+  flBg([[0, '#0d1222'], [0.42, '#1f2948'], [0.43, '#cfd8e6'], [1, '#9aa7bd']]);
+  flStars(40, 700, 1); flMountains(820, { key: 1, s: 0.7 });
+  ctx.save(); ctx.globalAlpha = 0.9; for (let i = 0; i < 5; i++) flPoliceFront(130 + i * 205, 860, 0.55, { ph: i }); ctx.restore();
+  flRect(-100, 850, 1300, 400, 0, '#cfd8e6');
+  for (let i = 0; i < 7; i++) { const x = 90 + i * 150, k = EZ.o3(clamp((u - 0.05 - i * 0.04) / 0.25)); flvSoldier(x, 980 - k * 6, 400, { eyes: 'red' }); if (k > 0.9) flLaser(flvMuzzle(x, 980, 400), [470 + i * 22 + Math.sin(TT * 11 + i) * 10, 1010 + Math.cos(TT * 9 + i) * 10], 3); }
+  // the car: roof, pillars, dashboard
+  ctx.save(); ctx.fillStyle = '#0b0c10'; ctx.beginPath(); ctx.moveTo(-200, -200); ctx.lineTo(1280, -200); ctx.lineTo(1280, 2200); ctx.lineTo(-200, 2200); ctx.closePath(); ctx.moveTo(60, 340); ctx.lineTo(1020, 340); ctx.lineTo(1100, 1250); ctx.lineTo(-20, 1250); ctx.closePath(); ctx.fill('evenodd'); ctx.restore();
+  flRect(470, 345, 140, 56, 14, '#15161b');
+  // Greta, foreground centre, terrified, laser dots on her face
+  flvGreta(540, 960, 400, { mood: 'fear', sweat: true, breath: 7, breathAmp: 8, key: 1, blood: 1, look: [0.15, 0.1] });
+  for (let i = 0; i < 4; i++) { const x = 470 + i * 45 + Math.sin(TT * 11 + i) * 10, y = 960 + (i % 2) * 70 + Math.cos(TT * 9 + i) * 10; flGlow(x, y, 34, 'rgba(255,40,60,0.85)'); flEll(x, y, 6, 6, '#ff2b3a'); }
   ctx.restore();
+  sirenWash(0.22, 540 + Math.sin(TT * 5) * 400, 600);
   flSnow({ n: 50, wind: 0, speed: 2.2, alpha: 0.5, key: 1 });
+  if (u < 0.12) { ctx.save(); ctx.globalAlpha = 1 - u / 0.12; ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
 }
 // ---------------------------------------------------------------- S02 the wall of rifles
 function S02(u, d) {

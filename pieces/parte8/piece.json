@@ -1,11 +1,38 @@
 {
   "name": "parte8",
   "title": "Die letzte Frau · Teil 8 · Unter dem Schnee",
-  "format": { "width": 1080, "height": 1920, "fps": 30, "duration": 108.2 },
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "duration": 108.2
+  },
   "storyFormat": "voice-led beat cut (86 shots, ≤2s each), drawn transitions",
   "style": "flucht",
-  "build": ["src/head.html", "kit/core.js", "style", "styles/flucht/chars.js", "styles/flucht/props.js", "styles/flucht/hud.js", "styles/flucht/vectors.js", "styles/flucht/vec.js",
-            "src/scenes-a.js", "src/scenes-b.js", "src/scenes-c.js", "src/render.js", "kit/board.js", "kit/score-head.js", "src/score.js", "kit/score-tail.js"],
-  "voice": { "file": "voice/voice.wav", "music": -9, "gain": 0 },
-  "review": { "safe": { "top": 150, "bottom": 380, "right": 130 }, "deadMax": 2.5 }
+  "build": [
+    "src/head.html",
+    "kit/core.js",
+    "style",
+    "styles/flucht/chars.js",
+    "styles/flucht/props.js",
+    "styles/flucht/hud.js",
+    "styles/flucht/vectors.js",
+    "styles/flucht/vec.js",
+    "src/scenes-a.js",
+    "src/scenes-b.js",
+    "src/scenes-c.js",
+    "src/render.js",
+    "kit/board.js",
+    "kit/score-head.js",
+    "src/score.js",
+    "kit/score-tail.js"
+  ],
+  "review": {
+    "safe": {
+      "top": 150,
+      "bottom": 380,
+      "right": 130
+    },
+    "deadMax": 2.5
+  }
 }
