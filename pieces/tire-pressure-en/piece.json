@@ -1,0 +1,11 @@
+{
+  "name": "tire-pressure-en",
+  "title": "Why your tires are lower the next morning (EN)",
+  "format": { "width": 1080, "height": 1920, "fps": 30, "duration": 55.4, "frames": 1662 },
+  "storyFormat": "explainer, voice-over clock, a cut about every 2 s on the spoken words",
+  "style": "semi-flat vector (in src/look.js + src/car.js), matched to the reference video",
+  "build": ["src/head.html", "src/data.js", "kit/core.js", "src/look.js", "src/car.js", "src/sets.js", "src/props.js", "src/main.js",
+            "src/shots.js", "src/timeline.js", "kit/score-head.js", "src/score.js", "src/score-tail.js"],
+  "voice": { "file": "voice/vo.wav", "music": -10 },
+  "review": { "safe": { "top": 160, "bottom": 300, "right": 120 }, "deadMax": 4 }
+}

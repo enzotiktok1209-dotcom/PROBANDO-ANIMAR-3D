@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tire Pressure</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #07090f; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { height: min(100vh, calc(100vw * 16 / 9)); width: auto; aspect-ratio: 9 / 16; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  WHY YOUR TIRES ARE LOWER THE NEXT MORNING  (English, 9:16, 30 fps)
+//  Semi-flat 2D vector look (soft gradients, glossy highlights, glow), one red car and one wheel as the
+//  constant characters, a new shot about every 2 s synced to the voice, each cut with its own sound,
+//  slow push + heavy vignette on the tension lines, karaoke captions under the action.
+//  Parts: data.js (voice timing) · kit/core.js · look.js · car.js · sets.js · props.js · main.js
+//         shots.js · timeline.js · score (sfx + bed)
+// =====================================================================
+const FPS = 30, W = 1080, H = 1920, SC = 1, PW = W, PH = H;
+const DURATION = 55.4;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const CX = 540;
+const FOCUS_Y = 800;           // where a shot's subject sits on screen: centred above the captions
+const CAP_Y = 1455;            // caption line centre
+const SAFE = { top: 160, bottom: 300, right: 120 };
+const FONT = '"Inter", "Inter Display", "Segoe UI", Arial, sans-serif';
