@@ -2,6 +2,7 @@
 // Café Wachter por fuera y por dentro.
 import { THREE, RNG, canvasTex, mat, box, cyl, sphere, rrect, textPlane } from './engine.js';
 import { coffeeCup, makeOpa, makeTownsperson } from './cast.js';
+export { cobbleTex, plankTex, roofTex };
 
 const rnd = RNG(11);
 export const FONT = 'Cap, sans-serif';
@@ -51,10 +52,12 @@ const plankTex = canvasTex(512, 512, (c, w, h) => { const r = RNG(4);
 }, true);
 const roofTex = canvasTex(256, 256, (c, w, h) => { c.fillStyle = '#7a2a34'; c.fillRect(0, 0, w, h);
   for (let y = 0; y < h; y += 22) for (let x = (y / 22) % 2 ? -16 : 0; x < w; x += 32) { c.fillStyle = '#a23a44'; rrect(c, x + 2, y, 28, 20, [0, 0, 12, 12]); c.fill(); c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(x + 2, y + 16, 28, 4); } }, true);
-function facadeTex(col, lit) {
+function facadeTex(col, lit, fach) {
   return canvasTex(160, 200, (c, w, h) => {
-    c.fillStyle = col; c.fillRect(0, 0, w, h);
+    c.fillStyle = fach ? '#f6ecd6' : col; c.fillRect(0, 0, w, h);
     c.fillStyle = 'rgba(0,0,0,.06)'; for (let y = 0; y < h; y += 8) c.fillRect(0, y, w, 1);
+    if (fach) { c.fillStyle = '#5a3420'; c.fillRect(0, 0, w, 12); c.fillRect(0, h - 14, w, 14); c.fillRect(0, 0, 12, h); c.fillRect(w - 12, 0, 12, h);
+      c.strokeStyle = '#5a3420'; c.lineWidth = 11; c.beginPath(); c.moveTo(12, h - 14); c.lineTo(40, 160); c.moveTo(w - 12, h - 14); c.lineTo(120, 160); c.moveTo(12, 12); c.lineTo(36, 40); c.moveTo(w - 12, 12); c.lineTo(124, 40); c.stroke(); }
     // contraventanas
     c.fillStyle = '#2e5a8a'; c.fillRect(22, 46, 18, 100); c.fillRect(120, 46, 18, 100);
     c.fillStyle = 'rgba(255,255,255,.15)'; for (let y = 52; y < 140; y += 10) { c.fillRect(24, y, 14, 3); c.fillRect(122, y, 14, 3); }
@@ -69,16 +72,21 @@ function facadeTex(col, lit) {
 }
 const FAC = ['#f2b8c6', '#a8d8f0', '#f6dc8a', '#b9e3b0', '#d4b8f2', '#f4c09a', '#9fd0c8'];
 // las ventanas encendidas emiten (todos están despiertos)
-function litMat(col) { const t = facadeTex(col, true); return new THREE.MeshStandardMaterial({ map: t, emissive: 0xffffff, emissiveMap: canvasTex(160, 200, (c) => { c.fillStyle = '#000'; c.fillRect(0, 0, 160, 200); const g = c.createLinearGradient(0, 48, 0, 146); g.addColorStop(0, '#ffe9a0'); g.addColorStop(1, '#ff9a2a'); c.fillStyle = g; c.fillRect(47, 47, 66, 98); c.fillStyle = '#000'; c.fillRect(77, 47, 6, 98); c.fillRect(47, 92, 66, 6); }, true), emissiveIntensity: 0.9, roughness: .7 }); }
+function litMat(col, fach) { const t = facadeTex(col, true, fach); return new THREE.MeshStandardMaterial({ map: t, emissive: 0xffffff, emissiveMap: canvasTex(160, 200, (c) => { c.fillStyle = '#000'; c.fillRect(0, 0, 160, 200); const g = c.createLinearGradient(0, 48, 0, 146); g.addColorStop(0, '#ffe9a0'); g.addColorStop(1, '#ff9a2a'); c.fillStyle = g; c.fillRect(47, 47, 66, 98); c.fillStyle = '#000'; c.fillRect(77, 47, 6, 98); c.fillRect(47, 92, 66, 6); }, true), emissiveIntensity: 0.9, roughness: .7 }); }
 
 // casa alemana estrecha con tejado a dos aguas, buhardilla, chimenea
 function townhouse(parent, x, z, wid, floors, ci, rot = 0, opts = {}) {
   const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rot; parent.add(g);
   const fh = 9, h = 7 + floors * fh, d = 22, col = FAC[ci % FAC.length];
-  const m = litMat(col); m.map.repeat.set(wid / 8, floors); m.emissiveMap.repeat.set(wid / 8, floors);
+  const fach = ci % 2 === 0; const m = litMat(col, fach); m.map.repeat.set(wid / 8, floors); m.emissiveMap.repeat.set(wid / 8, floors);
   m.map.offset.x = m.emissiveMap.offset.x = (ci * 0.37) % 1;
   box(wid, h - 7, d, m, 0, g, 0, 7 + (h - 7) / 2, 0);
-  box(wid, 7, d, mat(col), 0, g, 0, 3.5, 0);
+  box(wid, 7, d, mat(fach ? 0xd9cdb8 : col), 0, g, 0, 3.5, 0);
+  // jardineras con geranios bajo las ventanas del primer piso
+  for (let i = 0; i < Math.floor(wid / 8); i++) { const fx = -wid / 2 + 4 + i * 8; box(4.4, 0.8, 1.2, mat(0x7a4a2a), 0.15, g, fx, 7 + 9 * 0.24, d / 2 + 0.6);
+    for (let j = 0; j < 4; j++) sphere(0.45, mat(j % 2 ? 0xe8323a : 0x3f9a45, { emissive: j % 2 ? 0x3a0000 : 0 }), g, fx - 1.4 + j * 0.95, 7 + 9 * 0.24 + 0.6, d / 2 + 0.6); }
+  if (opts.sign) { const sg = new THREE.Group(); sg.position.set(wid * 0.38, 8.6, d / 2 + 2.2); g.add(sg); box(0.2, 0.2, 3, mat(0x1d2238), 0, sg, 0, 1.2, -1.2);
+    const br = new THREE.Mesh(new THREE.TorusKnotGeometry(0.9, 0.28, 64, 10, 2, 3), mat(0xc8873a, { roughness: .6 })); br.scale.set(1, 0.8, 0.5); br.position.y = -0.2; br.castShadow = true; sg.add(br); }
   box(wid + 0.8, 0.9, d + 0.8, mat(0xffffff), 0.1, g, 0, 7.2, 0);
   box(wid + 1.4, 1.1, d + 1.4, mat(0xffffff), 0.1, g, 0, h + 0.4, 0);
   // tejado
@@ -120,7 +128,7 @@ export function townSet(scene) {
   // casas a ambos lados de la calle
   for (const s of [-1, 1]) { let z = 30, i = s > 0 ? 3 : 0;
     while (z > -250) { const wid = 16 + Math.floor(rnd() * 8), fl = 2 + Math.floor(rnd() * 3);
-      townhouse(root, s * (23 + 11), z - wid / 2, wid, fl, i, s > 0 ? -Math.PI / 2 : Math.PI / 2); z -= wid + 0.4; i++; } }
+      townhouse(root, s * (23 + 11), z - wid / 2, wid, fl, i, s > 0 ? -Math.PI / 2 : Math.PI / 2, { sign: i % 4 === 1 }); z -= wid + 0.4; i++; } }
   for (let z = 20; z > -250; z -= 30) for (const s of [-1, 1]) streetLamp(root, s * 14, z + (s > 0 ? 15 : 0));
   return root;
 }
@@ -202,9 +210,10 @@ export function schlafgarten(scene, x, z) {
   sign.position.set(0, 17, 0.4); arch.add(sign);
   for (const [lx, lz] of [[-15, 6], [15, 6], [-15, -22], [15, -22]]) streetLamp(g, lx, lz, lx < 0 && lz > 0);
   // Opa en la cama 9
-  const opa = makeOpa(scene, true);
+  const opa = makeOpa(scene); opa.sleepMode(true);
   const b9 = beds.find(b => b.n === 9).g;
   opa.root.position.set(b9.position.x + x, 1.45, b9.position.z + z + 1.6); opa.root.rotation.x = -Math.PI / 2; opa.root.scale.setScalar(0.8);
+  for (const p of sleepers) g.attach(p.root); g.attach(opa.root);
   return { g, beds, opa, bed9: b9, sleepers };
 }
 

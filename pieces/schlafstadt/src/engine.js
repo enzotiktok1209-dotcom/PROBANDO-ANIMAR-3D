@@ -65,9 +65,9 @@ export function makeRenderer(stage) {
   return renderer;
 }
 const GradeShader = {
-  uniforms: { tDiffuse: { value: null }, sat: { value: 1.22 }, vig: { value: 0.32 }, lift: { value: 0.0 }, flash: { value: 0 }, blurAmt: { value: 0 }, dir: { value: new THREE.Vector2(1, 0) } },
+  uniforms: { tDiffuse: { value: null }, sat: { value: 1.22 }, vig: { value: 0.32 }, lift: { value: 0.0 }, flash: { value: 0 }, blurAmt: { value: 0 }, dir: { value: new THREE.Vector2(1, 0) }, sepia: { value: 0 } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-  fragmentShader: `uniform sampler2D tDiffuse; uniform float sat, vig, lift, flash, blurAmt; uniform vec2 dir; varying vec2 vUv;
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float sat, vig, lift, flash, blurAmt, sepia; uniform vec2 dir; varying vec2 vUv;
   void main(){
     vec4 c = vec4(0.);
     if (blurAmt > 0.001) { for (int i=-6;i<=6;i++){ c += texture2D(tDiffuse, vUv + dir*blurAmt*float(i)/6.); } c/=13.; }
@@ -75,6 +75,8 @@ const GradeShader = {
     float l = dot(c.rgb, vec3(.299,.587,.114));
     c.rgb = mix(vec3(l), c.rgb, sat);
     c.rgb += lift;
+    vec3 sp = vec3(dot(c.rgb, vec3(.393,.769,.189)), dot(c.rgb, vec3(.349,.686,.168)), dot(c.rgb, vec3(.272,.534,.131)));
+    c.rgb = mix(c.rgb, sp*vec3(1.0,.92,.78), sepia);
     float d = distance(vUv, vec2(.5,.48));
     c.rgb *= 1. - vig*smoothstep(.35,.85,d);
     c.rgb = mix(c.rgb, vec3(1.), flash);
@@ -179,7 +181,7 @@ function drawFace(c, s) {
 export function character(scene, spec) {
   const S = spec, R = 0.13;
   const skinM = mat(S.skin || 0xf6cfb3, { roughness: .5 });
-  const shirtM = mat(S.shirt, { roughness: .7 }), shirt2M = mat(S.shirt2 ?? S.shirt, { roughness: .7 });
+  const shirtM = mat(S.shirtMap ? 0xffffff : S.shirt, { roughness: .7, map: S.shirtMap || null }), shirt2M = mat(S.shirtMap && S.shirt2 == null ? 0xffffff : (S.shirt2 ?? S.shirt), { roughness: .7, map: S.shirt2 == null ? (S.shirtMap || null) : null });
   const pantsM = mat(S.pants, { roughness: .75 }), shoeM = mat(S.shoes ?? 0xf3f3f3, { roughness: .5 }), soleM = mat(S.sole ?? 0x30303a);
   const hairM = mat(S.hair ?? 0x4a2c1a, { roughness: .65 });
   const root = new THREE.Group(); scene.add(root);
@@ -188,7 +190,14 @@ export function character(scene, spec) {
   // torso con detalles de ropa
   const torso = box(2, 2.05, 1.05, shirtM, R, spine, 0, 1.02, 0);
   (S.torsoDetail || (() => {}))(spine, { box, mat, shirtM, shirt2M, skinM, cyl, sphere });
-  const belt = box(2.04, 0.22, 1.08, mat(S.belt ?? 0x2b2018), 0.05, spine, 0, 0.08, 0);
+  if (!S.noBelt) box(2.04, 0.22, 1.08, mat(S.belt ?? 0x2b2018), 0.05, spine, 0, 0.08, 0);
+  if (S.skirt) {   // falda (Dirndl): cuelga de la cadera, con delantal
+    const sk = new THREE.Group(); hips.add(sk);
+    box(2.3, 1.5, 1.35, mat(S.skirt, { roughness: .8 }), 0.25, sk, 0, -0.62, 0);
+    box(2.42, 0.25, 1.45, mat(S.skirt, { roughness: .8 }), 0.12, sk, 0, -1.3, 0);
+    if (S.apron) box(1.3, 1.45, 0.08, mat(S.apron, { roughness: .9 }), 0.04, sk, 0, -0.55, 0.72);
+    if (S.apronBow) box(0.5, 0.3, 0.1, mat(S.apronBow), 0.06, sk, -0.6, 0.0, 0.74);
+  }
   // cuello y cabeza
   const neck = new THREE.Group(); neck.position.y = 2.05; spine.add(neck);
   const head = new THREE.Group(); head.position.y = 0.05; neck.add(head);
@@ -215,7 +224,8 @@ export function character(scene, spec) {
     const hp = new THREE.Group(); hp.position.set(s * 0.5, 0, 0); hips.add(hp);
     box(0.97, 1.05, 1.0, pantsM, R, hp, 0, -0.5, 0);
     const kn = new THREE.Group(); kn.position.set(0, -1.0, 0); hp.add(kn);
-    box(0.94, 0.78, 0.97, S.shorts ? skinM : pantsM, R, kn, 0, -0.38, 0);
+    box(0.94, 0.78, 0.97, S.shorts ? (S.socks ? mat(S.socks, { roughness: .9 }) : skinM) : pantsM, R, kn, 0, -0.38, 0);
+    if (S.shorts && S.socks) box(0.98, 0.16, 1.0, mat(S.socks, { roughness: .9 }), 0.05, kn, 0, -0.05, 0);
     if (S.socks) box(0.96, 0.22, 0.99, mat(S.socks), 0.05, kn, 0, -0.7, 0);
     const shoe = box(1.0, 0.36, 1.3, shoeM, 0.14, kn, 0, -0.86, 0.14);
     box(1.02, 0.1, 1.33, soleM, 0.04, kn, 0, -1.0, 0.14);
@@ -224,7 +234,7 @@ export function character(scene, spec) {
   };
   const aL = arm(-1), aR = arm(1), lL = leg(-1), lR = leg(1);
   root.scale.setScalar(S.scale || 1);
-  const ch = { root, hips, spine, neck, head, face, faceMat, aL, aR, lL, lR, spec: S, props: {} };
+  const ch = { root, hips, spine, neck, head, face, faceMat, aL, aR, lL, lR, spec: S, props: {}, seed: S.seed || 1 };
   ch.setFace = (f) => { const t = faceTexture({ skin: S.skinCss, ...(S.face || {}), ...f }); if (faceMat.map !== t) { faceMat.map = t; faceMat.needsUpdate = true; } };
   ch.root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return ch;
@@ -265,3 +275,14 @@ export function idlePose(t, ph = 0) {
   const b = Math.sin((t + ph) * 2.0);
   return { aLz: 0.07 + b * 0.015, aRz: 0.07 + b * 0.015, aLe: 0.12, aRe: 0.12, hipY: 2.05 + b * 0.015, headY: Math.sin((t + ph) * 0.8) * 0.1, headX: b * 0.02 };
 }
+
+// tejido a cuadros (camisas de Trachten) y otros estampados
+export function checkTex(a, b, n = 6, line = null) {
+  return canvasTex(128, 128, (c, w, h) => { c.fillStyle = a; c.fillRect(0, 0, w, h); c.fillStyle = b; const s = w / n;
+    for (let i = 0; i < n; i++) { c.globalAlpha = .55; c.fillRect(i * s, 0, s / 2, h); c.fillRect(0, i * s, w, s / 2); }
+    c.globalAlpha = 1; if (line) { c.strokeStyle = line; c.lineWidth = 1.5; for (let i = 0; i < n; i++) { c.beginPath(); c.moveTo(i * s + s / 4, 0); c.lineTo(i * s + s / 4, h); c.stroke(); } } }, true);
+}
+// parpadeo automático: devuelve true unos fotogramas cada ~2,7 s
+export const blinking = (t, seed = 1) => { const p = 2.3 + (seed % 5) * 0.31, x = (t + seed * 0.77) % p; return x < 0.1; };
+// labios: abre/cierra según las palabras habladas en [t0, t1]
+export function lip(t, words) { for (const w of words) if (t >= w[0] && t < w[1]) { const k = (t - w[0]) / Math.max(0.08, w[1] - w[0]); const syl = Math.max(1, Math.round((w[1] - w[0]) / 0.16)); return Math.sin(k * syl * Math.PI) > 0.25 ? 'shout' : 'o'; } return null; }
