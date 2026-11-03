@@ -1417,27 +1417,63 @@ function ledScreen(x, y, w, h, txt, c) { fillRR(x - 8, y - 8, w + 16, h + 16, 10
 // =====================================================================
 //  props2.js — the Lambo story: supercar, bicycle, fuel pump, card terminal, tyres, sale sign, places
 // =====================================================================
-// a low wedge supercar (side view, facing right). o: { col, roof (0 = open), scratch, wheelSpin, shake, dirt }
+// an Italian V10/V12-style supercar, side view facing right: very low wedge, sharp creases, Y-shaped lights,
+// a big angular side intake, gloss paint, Y-spoke rims and coloured brake calipers.
+// o: { col, roof (0 = open top), scratch (0..1), wheelSpin, dirt (0..1) }
 function supercar(x, y, s, o = {}) {
-  const col = o.col ?? '#ffc21a', dk = shade(col, -0.3), lt = shade(col, 0.35), spin = o.wheelSpin ?? 0;
+  const col = o.col ?? '#ffb800', hi = shade(col, 0.45), mid = shade(col, 0.12), dk = shade(col, -0.32), dk2 = shade(col, -0.55), spin = o.wheelSpin ?? 0, open = (o.roof ?? 1) < 0.5;
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  shadowEll(0, 8, 520, 50, 0.55);
-  // body
-  poly([[-500, -60], [-470, -150], [-300, -175], [-120, -265], [120, -268], [330, -175], [480, -150], [520, -95], [505, -30], [-495, -30]], col);
-  poly([[-500, -60], [505, -60], [505, -30], [-495, -30]], dk);
-  poly([[-470, -150], [-300, -175], [-120, -265], [-100, -255], [-290, -160], [-460, -138]], lt);
-  // cabin / roof
-  if ((o.roof ?? 1) > 0.5) { poly([[-110, -250], [110, -254], [270, -172], [-270, -168]], '#16192a'); poly([[-96, -238], [-6, -240], [-6, -180], [-238, -176]], '#4a6fb8'); poly([[10, -240], [104, -242], [236, -180], [10, -180]], '#4a6fb8'); line(-80, -236, -150, -186, 8, 'rgba(255,255,255,0.35)'); }
-  else { poly([[-60, -205], [180, -205], [270, -172], [-270, -168]], '#16192a'); fillRR(-200, -230, 60, 60, 20, '#2a2a3a'); }
-  // side intake, door line, lights, wing
-  poly([[-260, -110], [-90, -140], [-60, -90], [-230, -80]], '#16192a'); line(-60, -160, -40, -40, 4, dk);
-  fillRR(440, -150, 70, 24, 10, '#fff8d0'); glow(500, -140, 120, '#fff4b0', 0.4); fillRR(-500, -140, 40, 22, 8, '#ff3030');
-  poly([[-470, -175], [-360, -175], [-350, -160], [-480, -160]], dk); line(-440, -160, -430, -140, 10, dk);
-  if (o.scratch) { const k = o.scratch; line(60, -120, 60 + 90 * k, -112 + 10 * k, 5, '#7a5a00'); line(70, -110, 70 + 70 * k, -103 + 8 * k, 3, '#fff3c0'); }
-  if (o.dirt) { ctx.globalAlpha = 0.35 * o.dirt; for (let i = 0; i < 18; i++) circ(-450 + (hash(i) % 900), -40 - (hash(i, 2) % 90), 10 + (hash(i, 3) % 20), '#6b5a3a'); ctx.globalAlpha = 1; }
-  // wheels (gold rims)
-  for (const wx of [-320, 330]) { circ(wx, -20, 98, '#121220'); circ(wx, -20, 60, '#d9a514'); circ(wx, -20, 20, '#121220');
-    for (let i = 0; i < 6; i++) { const a = spin + (i / 6) * TAU; line(wx + Math.cos(a) * 18, -20 + Math.sin(a) * 18, wx + Math.cos(a) * 56, -20 + Math.sin(a) * 56, 12, '#9a7408'); } }
+  // ground: soft shadow + a faint reflection
+  shadowEll(0, 6, 600, 46, 0.6); ell(0, 2, 520, 16, 'rgba(0,0,0,0.35)');
+  const W1 = [-330, -40], W2 = [345, -40], TR = 104;
+  // ---- body silhouette
+  const body = [[548, -48], [552, -78], [500, -98], [330, -128], [205, -150], [60, -236], [-40, -246], [-170, -232], [-330, -196], [-470, -176], [-540, -160], [-552, -118], [-548, -62], [-520, -34], [-440, -30], [440, -30]];
+  ctx.beginPath(); body.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.closePath();
+  ctx.fillStyle = lin(0, -250, 0, -30, [[0, hi], [0.35, col], [0.75, mid], [1, dk]]); ctx.fill();
+  ctx.save(); ctx.clip();
+  // lower body below the shoulder crease is darker (the side is in shade)
+  poly([[560, -66], [330, -100], [120, -112], [-120, -128], [-360, -140], [-560, -132], [-560, 0], [560, 0]], dk);
+  poly([[560, -70], [330, -104], [120, -116], [-120, -132], [-360, -144], [-560, -136], [-560, -128], [-360, -136], [-120, -124], [120, -108], [330, -96], [560, -62]], hi);
+  // gloss streak along the top + a window reflection band
+  ctx.globalAlpha = 0.55; poly([[480, -100], [320, -128], [200, -146], [190, -140], [320, -121], [470, -94]], '#ffffff'); poly([[-180, -228], [-330, -192], [-470, -172], [-465, -167], [-330, -186], [-180, -221]], '#ffffff'); ctx.globalAlpha = 1;
+  // front splitter, side skirt, rear diffuser
+  poly([[552, -48], [440, -40], [440, -28], [556, -30]], '#14151c'); fillRR(-210, -58, 430, 26, 8, '#14151c'); poly([[-552, -70], [-430, -64], [-430, -28], [-548, -28]], '#14151c');
+  for (let i = 0; i < 4; i++) line(-540 + i * 30, -66, -530 + i * 30, -30, 4, '#2a2c38');
+  ctx.restore();
+  // ---- cabin
+  if (!open) {
+    const win = [[200, -150], [58, -230], [-36, -238], [-160, -224], [-250, -196], [-120, -160]];
+    ctx.beginPath(); win.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.closePath();
+    ctx.fillStyle = lin(0, -240, 0, -150, [[0, '#2b3550'], [1, '#0d1020']]); ctx.fill();
+    ctx.save(); ctx.clip(); ctx.globalAlpha = 0.35; poly([[120, -240], [160, -240], [40, -140], [0, -140]], '#bcd4ff'); poly([[-20, -240], [0, -240], [-110, -140], [-130, -140]], '#bcd4ff'); ctx.restore();
+    line(-60, -236, -110, -160, 6, dk2);       // B-pillar
+  } else {
+    poly([[200, -150], [120, -196], [80, -196], [140, -150]], '#1c2236');   // a low windscreen
+    poly([[120, -150], [-250, -170], [-240, -150]], '#120f18'); fillRR(-120, -214, 56, 70, 18, '#1a1a24'); fillRR(-200, -208, 56, 64, 18, '#1a1a24');
+  }
+  // ---- side intake (big angular scoop behind the door) + door line + mirror
+  poly([[-70, -150], [-290, -176], [-250, -96], [-96, -108]], '#0b0c12'); poly([[-80, -146], [-270, -168], [-245, -150], [-92, -132]], 'rgba(255,255,255,0.10)');
+  for (let i = 0; i < 3; i++) line(-120 - i * 50, -140 + i * 4, -110 - i * 50, -108 + i * 2, 4, '#22242e');
+  line(-60, -152, -40, -36, 4, dk2); line(200, -150, 215, -40, 3, dk2);
+  poly([[176, -164], [140, -178], [120, -166], [150, -152]], dk2);
+  // ---- Y-shaped LED headlight and taillight
+  poly([[540, -86], [455, -104], [420, -100], [470, -92], [436, -82], [452, -80], [500, -90], [536, -78]], '#f4f9ff'); glow(500, -92, 150, '#e6f4ff', 0.45);
+  poly([[-548, -150], [-480, -162], [-470, -156], [-505, -150], [-470, -140], [-482, -136], [-548, -138]], '#ff2a2a'); glow(-520, -148, 120, '#ff3030', 0.4);
+  // hexagonal exhausts
+  for (const ex of [-500, -470]) { ctx.save(); ctx.translate(ex, -54); poly([[-12, -9], [0, -14], [12, -9], [12, 9], [0, 14], [-12, 9]], '#3a3c48'); circ(0, 0, 7, '#0b0b12'); ctx.restore(); }
+  // ---- wheel arches, tyres, Y-spoke rims, calipers
+  for (const [wx, wy] of [W1, W2]) {
+    ctx.save(); ctx.beginPath(); ctx.rect(wx - 140, -260, 280, 220); ctx.clip(); circ(wx, wy, TR + 16, '#08080d'); ctx.restore();
+    circ(wx, wy, TR, '#111117'); circ(wx, wy, TR - 8, '#1b1c24');
+    circ(wx, wy, 74, '#2a2c36');
+    fillRR(wx + 18, wy - 58, 32, 70, 12, o.caliper ?? '#ffd400');   // brake caliper peeks through
+    for (let i = 0; i < 5; i++) { const a = spin + (i / 5) * TAU; ctx.save(); ctx.translate(wx, wy); ctx.rotate(a);
+      poly([[-7, -14], [7, -14], [12, -64], [24, -70], [16, -74], [0, -66], [-16, -74], [-24, -70], [-12, -64]], '#cfd3de'); ctx.restore(); }
+    circ(wx, wy, 16, '#cfd3de'); circ(wx, wy, 7, '#2a2c36');
+    ctx.save(); ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(wx, wy, 70, -2.6, -1.2); ctx.lineWidth = 8; ctx.strokeStyle = '#fff'; ctx.stroke(); ctx.restore();
+  }
+  if (o.scratch) { const k = o.scratch; line(40, -96, 40 + 110 * k, -90 + 8 * k, 6, '#6a4a00'); line(50, -90, 50 + 90 * k, -85 + 6 * k, 3, '#fff6c8'); }
+  if (o.dirt) { ctx.globalAlpha = 0.4 * o.dirt; for (let i = 0; i < 24; i++) circ(-480 + (hash(i) % 960), -40 - (hash(i, 2) % 110), 10 + (hash(i, 3) % 22), '#6b5a3a'); ctx.globalAlpha = 1; }
   ctx.restore();
 }
 function bicycle(x, y, s, spin = 0) {
@@ -1550,6 +1586,9 @@ const CAPCOL = { name: '#ff63b8', money: '#ffd23f', neg: '#ff4545', obj: '#52b8f
 function finalizeShots() {
   SHOTS.sort((a, b) => a.t0 - b.t0);
   SHOTS.forEach((s, i) => { s.t1 = i + 1 < SHOTS.length ? SHOTS[i + 1].t0 : DURATION; s.i = i; s.tr = s.tr || 'cut'; });
+  // keep the subject centred, above the captions: shots that stand on the floor are lifted on screen
+  SHOTS.forEach((s) => { if (s.lift != null) return; const src = String(s.draw || ''), z0 = s.cam ? s.cam[0][3] : 1;
+    s.lift = s.capY != null && s.capY > 1600 ? 0 : /FLOOR|supercar\(|bicycle\(|fuelPump\(|podium/.test(src) ? (z0 < 1.3 ? 280 : 90) : 0; });
 }
 function shotAt(t) { let s = SHOTS[0]; for (const x of SHOTS) if (t + 1e-6 >= x.t0) s = x; return s; }
 
@@ -1562,6 +1601,7 @@ function camAt(s) {
     const u = EZ.io(clamp((TT - tp) / Math.max(0.001, t - tp)));
     x = lerp(K[i - 1][1], kx, u); y = lerp(K[i - 1][2], ky, u); z = lerp(K[i - 1][3], kz, u);
   }
+  y += s.lift || 0;
   for (const [t, a] of s.punch || []) z *= 1 + a * springEase(TT - t, 340, 17);
   let sx = 0, sy = 0;
   for (const [t, amp, dur = 0.4] of s.shake || []) { const u = (TT - t) / dur; if (u < 0 || u > 1) continue; const R = RNG('shk', Math.round(TT * FPS)); sx += R.n(amp) * (1 - u); sy += R.n(amp) * (1 - u); }

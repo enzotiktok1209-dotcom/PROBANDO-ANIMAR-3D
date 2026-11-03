@@ -15,6 +15,9 @@ const CAPCOL = { name: '#ff63b8', money: '#ffd23f', neg: '#ff4545', obj: '#52b8f
 function finalizeShots() {
   SHOTS.sort((a, b) => a.t0 - b.t0);
   SHOTS.forEach((s, i) => { s.t1 = i + 1 < SHOTS.length ? SHOTS[i + 1].t0 : DURATION; s.i = i; s.tr = s.tr || 'cut'; });
+  // keep the subject centred, above the captions: shots that stand on the floor are lifted on screen
+  SHOTS.forEach((s) => { if (s.lift != null) return; const src = String(s.draw || ''), z0 = s.cam ? s.cam[0][3] : 1;
+    s.lift = s.capY != null && s.capY > 1600 ? 0 : /FLOOR|supercar\(|bicycle\(|fuelPump\(|podium/.test(src) ? (z0 < 1.3 ? 280 : 90) : 0; });
 }
 function shotAt(t) { let s = SHOTS[0]; for (const x of SHOTS) if (t + 1e-6 >= x.t0) s = x; return s; }
 
@@ -27,6 +30,7 @@ function camAt(s) {
     const u = EZ.io(clamp((TT - tp) / Math.max(0.001, t - tp)));
     x = lerp(K[i - 1][1], kx, u); y = lerp(K[i - 1][2], ky, u); z = lerp(K[i - 1][3], kz, u);
   }
+  y += s.lift || 0;
   for (const [t, a] of s.punch || []) z *= 1 + a * springEase(TT - t, 340, 17);
   let sx = 0, sy = 0;
   for (const [t, amp, dur = 0.4] of s.shake || []) { const u = (TT - t) / dur; if (u < 0 || u > 1) continue; const R = RNG('shk', Math.round(TT * FPS)); sx += R.n(amp) * (1 - u); sy += R.n(amp) * (1 - u); }
