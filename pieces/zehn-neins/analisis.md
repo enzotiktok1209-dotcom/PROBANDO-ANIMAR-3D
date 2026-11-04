@@ -31,7 +31,7 @@ Un **contador "NO 10"** flotando sobre la cabeza de cada personaje (rojo; amaril
 7. **Invita a comentar** buscando trucos ("yo le habría preguntado…").
 
 ## Cambios en la versión alemana
-- Gancho idéntico pero en alemán: **"In diesem Staat darfst du nur zehnmal im Jahr Nein sagen."**
+- Gancho idéntico pero en alemán: **"In dieser Stadt darfst du nur zehnmal im Jahr Nein sagen."** (Stadt = ciudad/pueblo, igual que el vídeo anterior que funcionó)
 - Conectores causales para la retención: *denn, deshalb, weil, dadurch, also, und genau da, warum? weil…*
 - Adaptado a Alemania: dólar → euro, Thanksgiving → cena de Navidad, Nochevieja = Silvester; nombres propios: vecino **Herr Brandt**, perro **Keks**.
 - Frases más cortas y claras; la regla de la trampa explicada en una sola línea.
