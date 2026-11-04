@@ -234,4 +234,4 @@ S(67.2, { tr: 'zoomOut', noCap: true, cam: [[67.2, 540, 960, 1.0], [70.5, 540, 9
   ui() { const k = springEase(TT - 67.3, 220, 15); ctx.save(); ctx.translate(540, 700); ctx.scale(k, k); tText('WIE VIEL HAT', 0, -70, 96, { color: '#fff', stroke: '#140c22', strokeW: 16 }); tText('JONAS JETZT?', 0, 50, 96, { color: PAL.yellow, stroke: '#140c22', strokeW: 16 }); ctx.restore();
     sticker('1 € × SEKUNDE × 1 JAHR = ???', 540, 960, 67.9, { bg: PAL.orange, size: 46 });
     if (TT > 68.6) { const p = 1 + 0.05 * Math.sin(TT * 8); ctx.save(); ctx.translate(540, 1110); ctx.scale(p, p); sticker('SCHREIB\'S IN DIE KOMMENTARE 👇', 0, 0, 68.6, { bg: PAL.red, size: 42 }); ctx.restore(); } },
-  sfx: [[67.25, 'impact'], [67.3, 'riser', 1.5], [67.9, 'pop', 1], [68.6, 'pop', 1.2]] });
+  sfx: [[67.3, 'pop', 0.7], [67.9, 'pop', 1], [68.6, 'pop', 1.2]] });

@@ -2171,7 +2171,7 @@ S(67.2, { tr: 'zoomOut', noCap: true, cam: [[67.2, 540, 960, 1.0], [70.5, 540, 9
   ui() { const k = springEase(TT - 67.3, 220, 15); ctx.save(); ctx.translate(540, 700); ctx.scale(k, k); tText('WIE VIEL HAT', 0, -70, 96, { color: '#fff', stroke: '#140c22', strokeW: 16 }); tText('JONAS JETZT?', 0, 50, 96, { color: PAL.yellow, stroke: '#140c22', strokeW: 16 }); ctx.restore();
     sticker('1 € × SEKUNDE × 1 JAHR = ???', 540, 960, 67.9, { bg: PAL.orange, size: 46 });
     if (TT > 68.6) { const p = 1 + 0.05 * Math.sin(TT * 8); ctx.save(); ctx.translate(540, 1110); ctx.scale(p, p); sticker('SCHREIB\'S IN DIE KOMMENTARE 👇', 0, 0, 68.6, { bg: PAL.red, size: 42 }); ctx.restore(); } },
-  sfx: [[67.25, 'impact'], [67.3, 'riser', 1.5], [67.9, 'pop', 1], [68.6, 'pop', 1.2]] });
+  sfx: [[67.3, 'pop', 0.7], [67.9, 'pop', 1], [68.6, 'pop', 1.2]] });
 // =====================================================================
 //  timeline.js — TIMELINE for the tools (export, review) and the score
 // =====================================================================
@@ -2531,6 +2531,29 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
   pad(57.3, 62.2, ['A2', 'C3', 'E3'], 0.03, { cut: 900, att: 0.3 });
   pad(62.22, 67.15, ['D3', 'A3', 'F4'], 0.025, { cut: 900, att: 0.2 }); drone(62.22, 67.15, 73.4, 0.05);
   pad(67.25, 70.4, ['D3', 'A3', 'D4', 'F4'], 0.035, { cut: 1400, att: 0.2, rel: 0.6 });
+  // ---- risers into dramatic hits on the key / reveal moments
+  to = 's';
+  // a cinematic "braam": a low detuned saw chord through a closing filter, a sub drop and a reverb burst
+  function dramaHit(t, v = 1) {
+    ['D1', 'D2', 'A2', 'D3', 'F3'].forEach((n, i) => { for (const det of [-9, 9]) { const o = osc('sawtooth', nz(n), t, t + 1.7); o.detune.value = det + i * 2;
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 3; lp.frequency.setValueAtTime(2600, t); lp.frequency.exponentialRampToValueAtTime(260, t + 1.4);
+      const g = ac.createGain(); env(g, t, 0.01, 0.045 * v, 1.6); o.connect(lp); lp.connect(g); out(g, (i - 2) * 0.15, 0.5); } });
+    sub(t, 0.6 * v); noiseHit(t, 1.2, 'lowpass', 900, 0.7, 0.22 * v, 0, 0.7, 120); noiseHit(t, 0.06, 'highpass', 2500, 0.7, 0.18 * v);
+  }
+  // a rising build that ends exactly on the hit
+  function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.035 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
+  const KEYS = [
+    [0.95, 0.8, 0.8],    // hook: 30.000.000 €
+    [4.7, 1.3, 1.0],     // hook: the choice, Kevin slams
+    [7.55, 0.8, 0.8],    // the briefcase opens
+    [17.6, 0.8, 0.7],    // second 1 starts
+    [41.38, 0.9, 1.0],   // "HATTE."
+    [52.68, 1.1, 0.8],   // the last day of the year
+    [57.12, 2.5, 1.3],   // the reveal: 2.300.000 €
+    [65.86, 1.2, 1.0],   // "Wie viel hat Jonas jetzt?"
+    [67.25, 1.0, 1.1],   // end card
+  ];
+  for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
   // =====================================================================
   //  score-tail.js (from kit/score-tail.js, without the loop fold) — render, loudness stage
   //  (RMS-normalise to -17 dBFS, look-ahead limiter at -1 dBFS; stems share the mix gain curve)
