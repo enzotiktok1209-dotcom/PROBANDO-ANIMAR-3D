@@ -37,7 +37,7 @@ function heartMonitor(x, y, w, h, o = {}) {
   ctx.lineWidth = 7; ctx.strokeStyle = '#41f08a'; ctx.lineJoin = 'round'; ctx.stroke(); ctx.restore();
   const beat = ((TT % per) / per), k = 1 + 0.25 * Math.max(0, 1 - beat * 6); heartIcon(x + w / 2 - 70, y - h / 2 + 70, 34 * k, '#ff3b5c');
 }
-function heartIcon(x, y, r, col = '#ff3b5c') { ctx.save(); ctx.translate(x, y); ctx.beginPath(); ctx.moveTo(0, r * 0.9); ctx.bezierCurveTo(-r * 1.6, -r * 0.2, -r * 0.8, -r * 1.3, 0, -r * 0.45); ctx.bezierCurveTo(r * 0.8, -r * 1.3, r * 1.6, -r * 0.2, 0, r * 0.9); ctx.fillStyle = col; ctx.fill(); ell(-r * 0.45, -r * 0.55, r * 0.22, r * 0.14, 'rgba(255,255,255,0.5)', -0.5); ctx.restore(); }
+function heartIcon(x, y, r, col = '#ff3b5c') { ctx.save(); ctx.translate(x, y); ctx.beginPath(); ctx.moveTo(0, r * 0.9); ctx.bezierCurveTo(-r * 1.6, -r * 0.2, -r * 0.8, -r * 1.3, 0, -r * 0.45); ctx.bezierCurveTo(r * 0.8, -r * 1.3, r * 1.6, -r * 0.2, 0, r * 0.9); ctx.closePath(); ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(4, r * 0.14); ctx.strokeStyle = '#1b0f2e'; ctx.stroke(); ctx.fillStyle = col; ctx.fill(); ell(-r * 0.45, -r * 0.55, r * 0.22, r * 0.14, 'rgba(255,255,255,0.5)', -0.5); ctx.restore(); }
 // push-ups (side view): a simple figure in Jonas' colours going up and down
 function pushups(x, y, s) {
   const L = LOOKS.jonas, k = (Math.sin(TT * 7) + 1) / 2, sh = -90 - k * 70;
@@ -57,4 +57,31 @@ function sleepingKevin(x, y, s, awake = 0) {
   ctx.beginPath(); ctx.moveTo(-200, -100 - br); ctx.quadraticCurveTo(100, -170 - br, 440, -110); ctx.lineTo(440, 30); ctx.lineTo(-200, 30); ctx.closePath(); ctx.fillStyle = '#2f6df6'; ctx.fill();
   if (awake < 0.5) for (let i = 0; i < 3; i++) { const u = ((TT * 0.5 + i / 3) % 1); ctx.save(); ctx.globalAlpha = 1 - u; tText('Z', -180 + u * 160 + i * 30, -300 - u * 240, 50 + i * 16, { color: '#ffffff', shadow: false }); ctx.restore(); }
   ctx.restore();
+}
+// a bank vault: a round steel door that swings open on stacks of cash and gold bars
+function moneyPyramid(x, y, s, k = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  const rows = [6, 5, 4, 3, 2, 1]; let n = 0;
+  rows.forEach((cnt, r) => { for (let i = 0; i < cnt; i++) { if (n++ / 21 > k) continue; const bx = (i - (cnt - 1) / 2) * 150, by = -r * 62;
+    fillRR(bx - 70, by - 56, 140, 60, 6, PAL.cash); fillRR(bx - 70, by - 56, 140, 14, 4, PAL.cashD); fillRR(bx - 12, by - 56, 24, 60, 2, '#f2e6c0'); } });
+  for (let i = 0; i < 3; i++) { if (k < 0.9) break; ctx.save(); ctx.translate(-330 + i * 50 + (i > 1 ? 560 : 0), -20); poly([[-60, 0], [60, 0], [44, -40], [-44, -40]], PAL.gold); poly([[-44, -40], [44, -40], [36, -48], [-36, -48]], '#ffe58a'); ctx.restore(); }
+  ctx.restore();
+}
+function vault(x, y, s, open = 0, fill = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  fillRR(-420, -420, 840, 840, 40, '#3a3f52'); circ(0, 0, 360, '#1b1d26');
+  ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 350, 0, TAU); ctx.clip(); ctx.fillStyle = rad(0, 0, 40, 380, [[0, '#ffe9a6'], [1, '#6a5a2a']]); ctx.fillRect(-360, -360, 720, 720); moneyPyramid(0, 230, 0.75, fill); ctx.restore();
+  // the door swings open (narrows towards its hinge on the right)
+  const w = 1 - open * 0.92; if (w > 0.05) { ctx.save(); ctx.translate(350, 0); ctx.scale(w, 1); ctx.translate(-350, 0);
+    circ(0, 0, 350, '#9aa2b8'); circ(0, 0, 300, '#b8bfd2'); for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU; circ(Math.cos(a) * 325, Math.sin(a) * 325, 14, '#6a7088'); }
+    ctx.save(); ctx.rotate(open * 3 + 0.2); for (let i = 0; i < 3; i++) { ctx.rotate(TAU / 3); fillRR(-14, -170, 28, 170, 12, '#6a7088'); circ(0, -170, 26, '#4a5068'); } circ(0, 0, 50, '#4a5068'); ctx.restore(); ctx.restore(); }
+  ctx.restore();
+}
+// floating "+1 €" popping out of Jonas while he trains: `rate` beats per second, each one rises and fades
+function euroPops(cx, cy, rate, t0, seed = 'ep') {
+  const n = Math.floor((TT - t0) * rate);
+  for (let k = Math.max(0, n - 10); k <= n; k++) { const tb = t0 + k / rate, u = (TT - tb) / 1.1; if (u < 0 || u > 1) continue; const R = RNG(seed, k);
+    const x = cx + R.n(230), y = cy - u * 300 - R.f() * 60, sc = springEase(TT - tb, 320, 12) * (0.8 + R.f() * 0.4);
+    ctx.save(); ctx.globalAlpha = u < 0.75 ? 1 : 1 - (u - 0.75) / 0.25; ctx.translate(x, y); ctx.scale(sc, sc); ctx.rotate(R.n(0.2));
+    tText('+1 €', 0, 0, 74, { color: '#41f08a', stroke: '#063d1e', strokeW: 12 }); ctx.restore(); }
 }

@@ -128,6 +128,7 @@
     waves: (t, d = 1) => { const src = ac.createBufferSource(); src.buffer = noise; src.loop = true; const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900; const g = ac.createGain();
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.06, t + d * 0.4); g.gain.exponentialRampToValueAtTime(0.0001, t + d); src.connect(f); f.connect(g); out(g, 0, 0.3); src.start(t); src.stop(t + d + 0.05); },
     grunt: (t) => { lowTone(t, 'sawtooth', 140, 110, 0.18, 0.05, 600); bp(t, 0.15, 500, 350, 3, 0.03); },
+    coinTicks: (t, d = 1, rate = 3) => { for (let k = 0; k < d * rate; k++) metal(t + k / rate, 2600 + (k % 4) * 180, 0.03, 0.22, (k % 2 ? 0.3 : -0.3)); },
     birds: (t, d = 1.5) => { for (let x = 0; x < d; x += 0.3 + RS.f() * 0.3) { const f = 2800 + RS.f() * 1500; tone(t + x, 'sine', f, f * 1.3, 0.08, 0.025, RS.n(0.6)); tone(t + x + 0.1, 'sine', f * 1.2, f, 0.06, 0.02, RS.n(0.6)); } },
   });
   const play = (t, name, ...a) => { if (SFX[name]) SFX[name](t, ...a); };

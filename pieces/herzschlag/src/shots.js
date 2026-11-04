@@ -23,7 +23,7 @@ function iconCard(x, y, top, big, sub, col, t0, icon) {
   fillRR(-w / 2 + 22, -h / 2 + 62, w - 44, 170, 18, 'rgba(10,8,30,0.30)');
   const ik = springEase(TT - t0 - 0.12, 280, 12), bob = Math.sin(TT * 3 + x) * 4;
   ctx.save(); ctx.beginPath(); ctx.roundRect(-w / 2 + 22, -h / 2 + 62, w - 44, 170, 18); ctx.clip(); ctx.translate(0, -h / 2 + 150 + bob); ctx.scale(ik, ik);
-  if (icon === 'cash') { glow(0, 0, 200, '#a6f0b4', 0.35); briefcase(0, 70, 0.42, 1); }
+  if (icon === 'cash') { glow(0, 0, 200, '#ffe9a6', 0.35); moneyPyramid(0, 70, 0.42, 1); }
   else { const kk = 1 + 0.2 * Math.max(0, 1 - ((TT % 0.85) / 0.85) * 6); heartIcon(-70, 0, 60 * kk); coin(100, 10, 40, { sx: Math.cos(TT * 4), label: '1€' }); }
   ctx.restore();
   tText(big, 0, h / 2 - 92, 46, { color: '#fff', maxW: w - 36 }); tText(sub, 0, h / 2 - 40, 28, { color: 'rgba(255,255,255,0.95)', shadow: false, weight: 800 });
@@ -39,14 +39,14 @@ S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.0], [1.2, 540, 1010, 1.03]
   sfx: [[0.0, 'sting'], [0.03, 'pop', 1], [0.15, 'pop', 1.2]] });
 // ---- 2 · insert: 35 million
 S(1.2, { tr: 'zoomIn', cam: [[1.2, 540, 960, 1.0], [2.45, 540, 960, 1.1]],
-  draw() { rays('#0e8a45', '#14a956', { cy: 940 }); briefcase(540, 1200, 1.3, EZ.o3(clamp((TT - 1.25) / 0.4))); billRain('m2', 1.3, 30, { burst: [540, 1000], spread: 0.3, w: 120 }); },
+  draw() { rays('#0e8a45', '#14a956', { cy: 940 }); vault(540, 1000, 1.05, EZ.io(clamp((TT - 1.25) / 0.6)), 1); twinkles('v2', 200, 600, 680, 800, 8, { s: 26, c: '#fff3b0' }); },
   ui() { const k = springEase(TT - 1.25, 300, 14); ctx.save(); ctx.translate(540, 470); ctx.scale(k, k); tText('35.000.000 €', 0, 0, 120, { color: '#fff', stroke: '#064d26', strokeW: 22, maxW: 1000 }); ctx.restore(); },
-  sfx: [[1.25, 'cashReg'], [1.3, 'moneyRain', 0.9]] });
+  sfx: [[1.25, 'creak', 0.7], [1.5, 'cashReg'], [1.55, 'sparkle']] });
 // ---- 3 · insert: 1 € for every heartbeat
 S(2.45, { tr: 'whipL', cam: [[2.45, 540, 960, 1.08], [4.0, 540, 960, 1.0]],
-  draw() { rays('#2a1150', '#3d1a70', { cy: 940 }); glow(540, 900, 520, '#ff3b5c', 0.35); const per = 0.85, k = 1 + 0.25 * Math.max(0, 1 - ((TT % per) / per) * 6); heartIcon(540, 900, 240 * k);
+  draw() { rays('#ffc21a', '#ffd84d', { cy: 940 }); const per = 0.85, k = 1 + 0.25 * Math.max(0, 1 - ((TT % per) / per) * 6); heartIcon(540, 900, 240 * k);
     for (let i = 0; i < 4; i++) { const t0 = 2.6 + i * 0.85, y = bounceY(TT - t0, 1000, 1430, 4800, 0.3); if (TT > t0) coin(300 + i * 160, y, 46, { sx: Math.cos(TT * 5 + i), label: '1€' }); } },
-  ui() { tText('1 € PRO HERZSCHLAG', 540, 380, 84, { color: '#fff', stroke: '#5a0a18', strokeW: 18, maxW: 1000 }); },
+  ui() { tText('1 € PRO HERZSCHLAG', 540, 380, 84, { color: '#fff', stroke: '#7a1020', strokeW: 18, maxW: 1000 }); },
   sfx: [[2.5, 'heartbeat', 1.6], [2.62, 'coin', 1.4], [3.47, 'coin', 1.5]] });
 // ---- 4 · insert: one year
 S(4.0, { tr: 'flash', cam: [[4.0, 540, 960, 1.0], [5.62, 540, 940, 1.08]],
@@ -62,10 +62,10 @@ S(5.62, { tr: 'whipR', lift: 90, cam: [[5.62, 320, 1140, 1.55], [7.5, 310, 1110,
   sfx: [[5.95, 'whooshUp', 1.2], [6.6, 'slam'], [6.7, 'buzzerWin']] });
 // ---- 6 · "35 million. Now. Give it here!"
 S(7.5, { tr: 'cut', cam: [[7.5, 540, 1000, 1.25], [10.0, 540, 980, 1.35]],
-  draw() { setStudio({ blur: 6 }); char('kevin', 540, FLOOR + 60, 0.95, { pose: [[0, 'holdBoth']], emo: [[7.5, 'grin'], [9.4, 'laugh']], look: [0, 0.5], holdR: () => {}, holdL: () => {} });
-    const open = EZ.o3(clamp((TT - 8.75) / 0.4)); briefcase(540, FLOOR - 300, 0.62, open); if (open > 0) confetti('c6', 8.8, 50, { x: 540, y: 900 }); },
+  draw() { setStudio({ blur: 6 }); const fill = clamp((TT - 8.75) / 0.6); if (fill > 0) moneyPyramid(540, FLOOR + 40, 1.25, fill);
+    char('kevin', 540, FLOOR + 60, 0.95, { pose: [[7.5, 'holdBoth'], [8.75, 'cheer']], emo: [[7.5, 'grin'], [9.4, 'laugh']], look: [0, 0.5], holdR: () => {}, holdL: () => {} }); if (fill > 0) confetti('c6', 8.8, 50, { x: 540, y: 900 }); },
   ui() { hudKevin({ y: 260, t0: 7.6 }); info('HER DAMIT!', 9.45, { y: 470, bg: PAL.green, size: 62 }); },
-  sfx: [[8.75, 'creak', 1.3], [8.8, 'cashCannon'], [9.45, 'pop', 1]] });
+  sfx: [[8.75, 'coinPour', 0.6], [8.8, 'cashCannon'], [9.45, 'pop', 1]] });
 // ---- 7 · HAHAHA
 S(10.0, { tr: 'flash', lift: 280, cam: [[10.0, 540, 1080, 1.1], [11.14, 540, 1050, 1.18]],
   draw() { setStudio(); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'neutral']], look: [-0.7, -0.2] });
@@ -101,7 +101,7 @@ S(18.5, { tr: 'whipL', lift: 260, cam: [[18.5, 540, 1150, 1.05], [21.2, 540, 112
   sfx: [[18.7, 'popHi', 1], [19.1, 'popHi', 1.2], [20.5, 'thud'], [20.55, 'punch']] });
 // ---- 12 · BUMM — 1 €. BUMM — another 1 €.
 S(21.2, { tr: 'zoomIn', cam: [[21.2, 540, 960, 1.0], [23.82, 540, 960, 1.1]],
-  draw() { rays('#2a1150', '#3d1a70', { cy: 940 }); glow(540, 900, 520, '#ff3b5c', 0.35); const beats = [21.2, 22.5], last = beats.filter((t) => TT >= t).pop() ?? 0, k = 1 + 0.35 * Math.max(0, 1 - (TT - last) * 5); heartIcon(540, 900, 210 * k);
+  draw() { rays('#ffc21a', '#ffd84d', { cy: 940 }); const beats = [21.2, 22.5], last = beats.filter((t) => TT >= t).pop() ?? 0, k = 1 + 0.35 * Math.max(0, 1 - (TT - last) * 5); heartIcon(540, 900, 210 * k);
     beats.forEach((t, i) => { if (TT > t + 0.1) coin(300 + i * 480, bounceY(TT - t - 0.1, 600, 1180, 4800, 0.3), 70, { label: '1€', sx: Math.cos(TT * 5 + i) }); }); },
   ui() { popText('BUMM!', 540, 520, 21.2, 110, '#ffffff', -0.05, 0); if (TT > 22.5) popText('BUMM!', 540, 520, 22.5, 120, '#ffffff', 0.05, 0); hud('KONTO · JONAS', [[0, 0], [21.85, 1], [23.3, 2]], { y: 260, scale: 0.9 }); },
   sfx: [[21.2, 'heartbeat', 0.5], [21.85, 'coin', 1.4], [22.5, 'heartbeat', 0.5], [23.3, 'coin', 1.6]] });
@@ -136,29 +136,29 @@ S(32.7, { tr: 'zoomIn', cam: [[32.7, 540, 1000, 1.65], [35.34, 540, 980, 1.8]], 
   sfx: [[34.7, 'bling'], [34.75, 'pop', 1]] });
 // ---- 18 · meanwhile Jonas trains: jogging
 S(35.34, { tr: 'glitch', lift: 260, cam: [[35.34, 540, 1150, 1.0], [37.0, 540, 1130, 1.05]],
-  draw() { setStreet({ blur: 2 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], look: [0.6, 0], walk: 1.3 }); speedLines(16, 0.25, 'jog'); },
+  draw() { setStreet({ blur: 2 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], look: [0.6, 0], walk: 1.3 }); speedLines(16, 0.25, 'jog'); euroPops(540, 900, 2.6, 35.4, 'j1'); },
   ui() { info('WÄHRENDDESSEN…', 35.4, { y: 360, size: 54 }); heartMonitor(820, 560, 360, 200, { speed: 1.6 }); },
-  sfx: [[35.4, 'pop', 0.9], [35.5, 'footsteps', 1.5], [35.8, 'heartbeat', 1.0]] });
+  sfx: [[35.4, 'pop', 0.9], [35.5, 'footsteps', 1.5], [35.8, 'heartbeat', 1.0], [35.4, 'coinTicks', 1.6, 2.6]] });
 S(37.0, { tr: 'whipR', lift: 260, cam: [[37.0, 540, 1150, 1.0], [38.26, 540, 1130, 1.05]],
-  draw() { setLeoRoom({ blur: 3 }); char('jonas', 540 + Math.sin(TT * 12) * 6, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.4, extras: { sweat: 1 } }); },
+  draw() { setLeoRoom({ blur: 3 }); char('jonas', 540 + Math.sin(TT * 12) * 6, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.4, extras: { sweat: 1 } }); euroPops(540, 900, 3.0, 37.0, 'j2'); },
   ui() { info('JOGGEN', 37.05, { y: 360, bg: PAL.green, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 1.9 }); },
-  sfx: [[37.05, 'pop', 1], [37.1, 'footsteps', 1.1], [37.4, 'coin', 1.5]] });
+  sfx: [[37.05, 'pop', 1], [37.1, 'footsteps', 1.1], [37.0, 'coinTicks', 1.26, 3.0]] });
 // ---- 19 · push-ups
 S(38.26, { tr: 'whipL', cam: [[38.26, 540, 1050, 1.0], [39.3, 540, 1030, 1.08]],
-  draw() { setLeoDesk({ blur: 6 }); pushups(520, 1200, 1.1); },
+  draw() { setLeoDesk({ blur: 6 }); pushups(520, 1200, 1.1); euroPops(560, 960, 3.4, 38.26, 'j3'); },
   ui() { info('LIEGESTÜTZE', 38.3, { y: 360, bg: PAL.orange, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 2.2 }); },
-  sfx: [[38.3, 'pop', 1.1], [38.5, 'grunt'], [38.95, 'grunt'], [38.7, 'coin', 1.6]] });
+  sfx: [[38.3, 'pop', 1.1], [38.5, 'grunt'], [38.95, 'grunt'], [38.26, 'coinTicks', 1.04, 3.4]] });
 // ---- 20 · sprinting up the stairs
 S(39.3, { tr: 'whipU', cam: [[39.3, 540, 1000, 1.0], [40.6, 540, 940, 1.05]],
   draw() { ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#dfe5f5'], [1, '#aab3cc']]); ctx.fillRect(-600, -400, 2300, 2800); stairs(540, 1550, 1.0); const u = clamp((TT - 39.3) / 1.3), x = lerp(120, 900, u), y = lerp(1550, 830, u);
-    char('jonas', x, y, 0.75, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.6, extras: { sweat: 1 } }); },
+    char('jonas', x, y, 0.75, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.6, extras: { sweat: 1 } }); euroPops(x, y - 520, 3.8, 39.3, 'j4'); },
   ui() { info('TREPPEN-SPRINT', 39.35, { y: 360, bg: PAL.purple, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 2.6 }); },
-  sfx: [[39.35, 'pop', 1.2], [39.4, 'footsteps', 1.2], [39.8, 'heartbeat', 0.8]] });
+  sfx: [[39.35, 'pop', 1.2], [39.4, 'footsteps', 1.2], [39.8, 'heartbeat', 0.8], [39.3, 'coinTicks', 1.3, 3.8]] });
 // ---- 21 · every beat rings his account (counter visibly running, unreadable)
 S(40.6, { tr: 'zoomIn', cam: [[40.6, 540, 960, 1.0], [42.92, 540, 960, 1.08]],
-  draw() { rays('#0c7a3e', '#11954c', { cy: 940 }); for (let i = 0; i < 18; i++) { const u = ((TT * 0.9 + i / 18) % 1); coin(160 + (i * 211) % 760, 300 + u * 1200, 36, { sx: Math.cos(TT * 5 + i), label: '1€' }); } blurCounter(540, 930, 820, 300, 'KONTO · JONAS'); },
+  draw() { rays('#0c7a3e', '#11954c', { cy: 940 }); for (let i = 0; i < 18; i++) { const u = ((TT * 0.9 + i / 18) % 1); coin(160 + (i * 211) % 760, 300 + u * 1200, 36, { sx: Math.cos(TT * 5 + i), label: '1€' }); } blurCounter(540, 930, 820, 300, 'KONTO · JONAS'); euroPops(540, 700, 4, 40.6, 'j5'); },
   ui() { info('JEDER SCHLAG = +1 €', 40.7, { y: 400, bg: PAL.green, size: 52 }); heartMonitor(540, 1250, 520, 200, { speed: 2.4 }); },
-  sfx: [[40.7, 'pop', 1], [41.2, 'coinPour', 1.3], [41.68, 'cashReg', 0.7]] });
+  sfx: [[40.7, 'pop', 1], [40.6, 'coinTicks', 2.3, 4.0], [41.68, 'cashReg', 0.7]] });
 // ---- 22 · one morning Kevin wakes up...
 S(42.92, { tr: 'zoomOut', cam: [[42.92, 540, 1000, 1.0], [44.72, 540, 990, 1.06]],
   draw() { ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#ffe6b0'], [1, '#f6c48a']]); ctx.fillRect(-600, -400, 2300, 2800); windowFrame(640, 260, 320, 320, () => { ctx.fillStyle = '#7cc6ff'; ctx.fillRect(640, 260, 320, 320); circ(820, 380, 60, '#fff3a6'); });
