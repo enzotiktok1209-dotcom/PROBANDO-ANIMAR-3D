@@ -136,23 +136,23 @@ S(32.7, { tr: 'zoomIn', cam: [[32.7, 540, 1000, 1.65], [35.34, 540, 980, 1.8]], 
   sfx: [[34.7, 'bling'], [34.75, 'pop', 1]] });
 // ---- 18 · meanwhile Jonas trains: jogging
 S(35.34, { tr: 'glitch', lift: 260, cam: [[35.34, 540, 1150, 1.0], [37.0, 540, 1130, 1.05]],
-  draw() { setStreet({ blur: 2 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], look: [0.6, 0], walk: 1.3 }); speedLines(16, 0.25, 'jog'); euroPops(540, 900, 2.6, 35.4, 'j1'); },
-  ui() { info('WÄHRENDDESSEN…', 35.4, { y: 360, size: 54 }); heartMonitor(820, 560, 360, 200, { speed: 1.6 }); },
+  draw() { setStreet({ blur: 2 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.35 + 0.28 * Math.sin(TT * 10.5), -1.95 - 0.35 * Math.sin(TT * 10.5)], ra: [0.35 - 0.28 * Math.sin(TT * 10.5), -1.95 + 0.35 * Math.sin(TT * 10.5)] }]], emo: [[0, 'happy']], look: [0, 0], run: 1 }); speedLines(16, 0.25, 'jog'); euroPops(540, 900, 2.6, 35.4, 'j1'); },
+  ui() { info('WÄHRENDDESSEN…', 35.4, { y: 360, size: 54 }); heartMonitor(830, 230, 340, 170, { speed: 1.6 }); },
   sfx: [[35.4, 'pop', 0.9], [35.5, 'footsteps', 1.5], [35.8, 'heartbeat', 1.0], [35.4, 'coinTicks', 1.6, 2.6]] });
 S(37.0, { tr: 'whipR', lift: 260, cam: [[37.0, 540, 1150, 1.0], [38.26, 540, 1130, 1.05]],
-  draw() { setLeoRoom({ blur: 3 }); char('jonas', 540 + Math.sin(TT * 12) * 6, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.4, extras: { sweat: 1 } }); euroPops(540, 900, 3.0, 37.0, 'j2'); },
-  ui() { info('JOGGEN', 37.05, { y: 360, bg: PAL.green, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 1.9 }); },
+  draw() { setLeoRoom({ blur: 3 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.35 + 0.28 * Math.sin(TT * 10.5), -1.95 - 0.35 * Math.sin(TT * 10.5)], ra: [0.35 - 0.28 * Math.sin(TT * 10.5), -1.95 + 0.35 * Math.sin(TT * 10.5)] }]], emo: [[0, 'happy']], run: 1, extras: { sweat: 1 } }); euroPops(540, 900, 3.0, 37.0, 'j2'); },
+  ui() { info('JOGGEN', 37.05, { y: 360, bg: PAL.green, size: 56 }); heartMonitor(830, 230, 340, 170, { speed: 1.9 }); },
   sfx: [[37.05, 'pop', 1], [37.1, 'footsteps', 1.1], [37.0, 'coinTicks', 1.26, 3.0]] });
 // ---- 19 · push-ups
 S(38.26, { tr: 'whipL', cam: [[38.26, 540, 1050, 1.0], [39.3, 540, 1030, 1.08]],
   draw() { setLeoDesk({ blur: 6 }); pushups(520, 1200, 1.1); euroPops(560, 960, 3.4, 38.26, 'j3'); },
-  ui() { info('LIEGESTÜTZE', 38.3, { y: 360, bg: PAL.orange, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 2.2 }); },
+  ui() { info('LIEGESTÜTZE', 38.3, { y: 360, bg: PAL.orange, size: 56 }); heartMonitor(830, 230, 340, 170, { speed: 2.2 }); },
   sfx: [[38.3, 'pop', 1.1], [38.5, 'grunt'], [38.95, 'grunt'], [38.26, 'coinTicks', 1.04, 3.4]] });
 // ---- 20 · sprinting up the stairs
 S(39.3, { tr: 'whipU', cam: [[39.3, 540, 1000, 1.0], [40.6, 540, 940, 1.05]],
-  draw() { ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#dfe5f5'], [1, '#aab3cc']]); ctx.fillRect(-600, -400, 2300, 2800); stairs(540, 1550, 1.0); const u = clamp((TT - 39.3) / 1.3), x = lerp(120, 900, u), y = lerp(1550, 830, u);
-    char('jonas', x, y, 0.75, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.6, extras: { sweat: 1 } }); euroPops(x, y - 520, 3.8, 39.3, 'j4'); },
-  ui() { info('TREPPEN-SPRINT', 39.35, { y: 360, bg: PAL.purple, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 2.6 }); },
+  draw() { ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#dfe5f5'], [1, '#aab3cc']]); ctx.fillRect(-600, -400, 2300, 2800); stairs(540, 1550, 1.0); const u = clamp((TT - 39.3) / 1.3), sx = lerp(0.3, 7.7, u), i = Math.floor(sx), f = sx - i, x = 40 + 110 * sx + 55, y = 1550 - 90 * i - Math.sin(f * Math.PI) * 50 - (f > 0.5 ? 90 * (f - 0.5) * 2 * 0 : 0);
+    char('jonas', x, y, 0.75, { pose: [[0, { la: [0.35 + 0.28 * Math.sin(TT * 10.5), -1.95 - 0.35 * Math.sin(TT * 10.5)], ra: [0.35 - 0.28 * Math.sin(TT * 10.5), -1.95 + 0.35 * Math.sin(TT * 10.5)] }]], emo: [[0, 'happy']], run: 1, extras: { sweat: 1 } }); euroPops(x, y - 520, 3.8, 39.3, 'j4'); },
+  ui() { info('TREPPEN-SPRINT', 39.35, { y: 360, bg: PAL.purple, size: 56 }); heartMonitor(830, 230, 340, 170, { speed: 2.6 }); },
   sfx: [[39.35, 'pop', 1.2], [39.4, 'footsteps', 1.2], [39.8, 'heartbeat', 0.8], [39.3, 'coinTicks', 1.3, 3.8]] });
 // ---- 21 · every beat rings his account (counter visibly running, unreadable)
 S(40.6, { tr: 'zoomIn', cam: [[40.6, 540, 960, 1.0], [42.92, 540, 960, 1.08]],

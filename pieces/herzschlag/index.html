@@ -888,7 +888,11 @@ function char(id, x, y, s, T = {}) {
   const wk = T.walk ? track(T.walk) : 0, wph = TT * 9;
   const lgL = [0.06 + Math.sin(wph) * 0.42 * wk, Math.max(0, -Math.sin(wph)) * 0.5 * wk], lgR = [0.06 - Math.sin(wph) * 0.42 * wk, Math.max(0, Math.sin(wph)) * 0.5 * wk];
   ctx.translate(0, -Math.abs(Math.sin(wph)) * 14 * wk);
-  leg(L, -1, lgL); leg(L, 1, lgR);
+  const run = T.run ? track(T.run) : 0;
+  if (run > 0) {   // running towards camera: knees lift alternately (foreshortened), the body bounces
+    const ph = TT * 10.5, lL = Math.max(0, Math.sin(ph)) * run, lR = Math.max(0, -Math.sin(ph)) * run;
+    ctx.translate(0, -Math.abs(Math.sin(ph)) * 22 * run); leg(L, -1, [0.05, 0], lL); leg(L, 1, [0.05, 0], lR);
+  } else { leg(L, -1, lgL); leg(L, 1, lgR); }
   // body leans about the hips
   ctx.translate(0, -330); ctx.rotate(lean); ctx.scale(1 + breath * 0.5, 1 + breath);
   const front = [];
@@ -899,14 +903,14 @@ function char(id, x, y, s, T = {}) {
   for (const side of front) arm(L, side, P[side < 0 ? 'la' : 'ra'], side < 0 ? T.holdL : T.holdR, id, ex);
   ctx.restore();
 }
-function leg(L, side, [a1, a2]) {
+function leg(L, side, [a1, a2], lift = 0) {
   const hx = side * 40, hy = -330, l1 = 168, l2 = 160;
-  const d1 = [side * Math.sin(a1), Math.cos(a1)], kx = hx + d1[0] * l1, ky = hy + d1[1] * l1;
-  const d2 = [side * Math.sin(a1 - a2), Math.cos(a1 - a2)], fx = kx + d2[0] * l2, fy = ky + d2[1] * l2;
+  const d1 = [side * Math.sin(a1), Math.cos(a1)], kx = hx + d1[0] * l1, ky = hy + d1[1] * l1 * (1 - 0.5 * lift);
+  const d2 = [side * Math.sin(a1 - a2), Math.cos(a1 - a2)], fx = kx + d2[0] * l2 - side * lift * 12, fy = ky + d2[1] * l2 * (1 - 0.8 * lift);
   line(hx, hy, kx, ky, 64, L.pants); line(kx, ky, fx, fy, 58, L.pants);
   line(hx + side * 14, hy + 20, kx + side * 12, ky, 14, L.pantsD);
   // shoe
-  ctx.save(); ctx.translate(fx, fy); ctx.scale(side, 1);
+  ctx.save(); ctx.translate(fx, fy); ctx.scale(side, 1 - 0.4 * lift);
   fillRR(-34, -16, 86, 38, 18, L.shoe); fillRR(-34, 10, 88, 14, 7, L.sole); fillRR(-20, -14, 26, 22, 8, L.shoeD);
   ctx.restore();
 }
@@ -1860,7 +1864,10 @@ function moneyPyramid(x, y, s, k = 1) {
 function vault(x, y, s, open = 0, fill = 1) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   fillRR(-420, -420, 840, 840, 40, '#3a3f52'); circ(0, 0, 360, '#1b1d26');
-  ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 350, 0, TAU); ctx.clip(); ctx.fillStyle = rad(0, 0, 40, 380, [[0, '#ffe9a6'], [1, '#6a5a2a']]); ctx.fillRect(-360, -360, 720, 720); moneyPyramid(0, 230, 0.75, fill); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 350, 0, TAU); ctx.clip(); ctx.fillStyle = rad(0, 0, 40, 380, [[0, '#ffe9a6'], [1, '#6a5a2a']]); ctx.fillRect(-360, -360, 720, 720);
+  for (let r = 0; r < 11; r++) for (let i = -3; i <= 3; i++) { const bx = i * 150 + (r % 2) * 75, by = -350 + r * 68; fillRR(bx - 72, by, 144, 64, 6, r % 3 ? PAL.cash : '#58c776'); fillRR(bx - 72, by, 144, 14, 4, PAL.cashD); fillRR(bx - 13, by, 26, 64, 2, '#f2e6c0'); }
+  ctx.fillStyle = rad(0, 0, 120, 360, [[0, 'rgba(255,240,180,0.25)'], [1, 'rgba(40,30,10,0.45)']]); ctx.fillRect(-360, -360, 720, 720);
+  moneyPyramid(0, 330, 1.05, fill); ctx.restore();
   // the door swings open (narrows towards its hinge on the right)
   const w = 1 - open * 0.92; if (w > 0.05) { ctx.save(); ctx.translate(350, 0); ctx.scale(w, 1); ctx.translate(-350, 0);
     circ(0, 0, 350, '#9aa2b8'); circ(0, 0, 300, '#b8bfd2'); for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU; circ(Math.cos(a) * 325, Math.sin(a) * 325, 14, '#6a7088'); }
@@ -2176,23 +2183,23 @@ S(32.7, { tr: 'zoomIn', cam: [[32.7, 540, 1000, 1.65], [35.34, 540, 980, 1.8]], 
   sfx: [[34.7, 'bling'], [34.75, 'pop', 1]] });
 // ---- 18 · meanwhile Jonas trains: jogging
 S(35.34, { tr: 'glitch', lift: 260, cam: [[35.34, 540, 1150, 1.0], [37.0, 540, 1130, 1.05]],
-  draw() { setStreet({ blur: 2 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], look: [0.6, 0], walk: 1.3 }); speedLines(16, 0.25, 'jog'); euroPops(540, 900, 2.6, 35.4, 'j1'); },
-  ui() { info('WÄHRENDDESSEN…', 35.4, { y: 360, size: 54 }); heartMonitor(820, 560, 360, 200, { speed: 1.6 }); },
+  draw() { setStreet({ blur: 2 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.35 + 0.28 * Math.sin(TT * 10.5), -1.95 - 0.35 * Math.sin(TT * 10.5)], ra: [0.35 - 0.28 * Math.sin(TT * 10.5), -1.95 + 0.35 * Math.sin(TT * 10.5)] }]], emo: [[0, 'happy']], look: [0, 0], run: 1 }); speedLines(16, 0.25, 'jog'); euroPops(540, 900, 2.6, 35.4, 'j1'); },
+  ui() { info('WÄHRENDDESSEN…', 35.4, { y: 360, size: 54 }); heartMonitor(830, 230, 340, 170, { speed: 1.6 }); },
   sfx: [[35.4, 'pop', 0.9], [35.5, 'footsteps', 1.5], [35.8, 'heartbeat', 1.0], [35.4, 'coinTicks', 1.6, 2.6]] });
 S(37.0, { tr: 'whipR', lift: 260, cam: [[37.0, 540, 1150, 1.0], [38.26, 540, 1130, 1.05]],
-  draw() { setLeoRoom({ blur: 3 }); char('jonas', 540 + Math.sin(TT * 12) * 6, FLOOR + 40, 0.9, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.4, extras: { sweat: 1 } }); euroPops(540, 900, 3.0, 37.0, 'j2'); },
-  ui() { info('JOGGEN', 37.05, { y: 360, bg: PAL.green, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 1.9 }); },
+  draw() { setLeoRoom({ blur: 3 }); char('jonas', 540, FLOOR + 40, 0.9, { pose: [[0, { la: [0.35 + 0.28 * Math.sin(TT * 10.5), -1.95 - 0.35 * Math.sin(TT * 10.5)], ra: [0.35 - 0.28 * Math.sin(TT * 10.5), -1.95 + 0.35 * Math.sin(TT * 10.5)] }]], emo: [[0, 'happy']], run: 1, extras: { sweat: 1 } }); euroPops(540, 900, 3.0, 37.0, 'j2'); },
+  ui() { info('JOGGEN', 37.05, { y: 360, bg: PAL.green, size: 56 }); heartMonitor(830, 230, 340, 170, { speed: 1.9 }); },
   sfx: [[37.05, 'pop', 1], [37.1, 'footsteps', 1.1], [37.0, 'coinTicks', 1.26, 3.0]] });
 // ---- 19 · push-ups
 S(38.26, { tr: 'whipL', cam: [[38.26, 540, 1050, 1.0], [39.3, 540, 1030, 1.08]],
   draw() { setLeoDesk({ blur: 6 }); pushups(520, 1200, 1.1); euroPops(560, 960, 3.4, 38.26, 'j3'); },
-  ui() { info('LIEGESTÜTZE', 38.3, { y: 360, bg: PAL.orange, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 2.2 }); },
+  ui() { info('LIEGESTÜTZE', 38.3, { y: 360, bg: PAL.orange, size: 56 }); heartMonitor(830, 230, 340, 170, { speed: 2.2 }); },
   sfx: [[38.3, 'pop', 1.1], [38.5, 'grunt'], [38.95, 'grunt'], [38.26, 'coinTicks', 1.04, 3.4]] });
 // ---- 20 · sprinting up the stairs
 S(39.3, { tr: 'whipU', cam: [[39.3, 540, 1000, 1.0], [40.6, 540, 940, 1.05]],
-  draw() { ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#dfe5f5'], [1, '#aab3cc']]); ctx.fillRect(-600, -400, 2300, 2800); stairs(540, 1550, 1.0); const u = clamp((TT - 39.3) / 1.3), x = lerp(120, 900, u), y = lerp(1550, 830, u);
-    char('jonas', x, y, 0.75, { pose: [[0, { la: [0.9, -1.3], ra: [0.9, -1.3] }]], emo: [[0, 'happy']], walk: 1.6, extras: { sweat: 1 } }); euroPops(x, y - 520, 3.8, 39.3, 'j4'); },
-  ui() { info('TREPPEN-SPRINT', 39.35, { y: 360, bg: PAL.purple, size: 56 }); heartMonitor(820, 560, 360, 200, { speed: 2.6 }); },
+  draw() { ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#dfe5f5'], [1, '#aab3cc']]); ctx.fillRect(-600, -400, 2300, 2800); stairs(540, 1550, 1.0); const u = clamp((TT - 39.3) / 1.3), sx = lerp(0.3, 7.7, u), i = Math.floor(sx), f = sx - i, x = 40 + 110 * sx + 55, y = 1550 - 90 * i - Math.sin(f * Math.PI) * 50 - (f > 0.5 ? 90 * (f - 0.5) * 2 * 0 : 0);
+    char('jonas', x, y, 0.75, { pose: [[0, { la: [0.35 + 0.28 * Math.sin(TT * 10.5), -1.95 - 0.35 * Math.sin(TT * 10.5)], ra: [0.35 - 0.28 * Math.sin(TT * 10.5), -1.95 + 0.35 * Math.sin(TT * 10.5)] }]], emo: [[0, 'happy']], run: 1, extras: { sweat: 1 } }); euroPops(x, y - 520, 3.8, 39.3, 'j4'); },
+  ui() { info('TREPPEN-SPRINT', 39.35, { y: 360, bg: PAL.purple, size: 56 }); heartMonitor(830, 230, 340, 170, { speed: 2.6 }); },
   sfx: [[39.35, 'pop', 1.2], [39.4, 'footsteps', 1.2], [39.8, 'heartbeat', 0.8], [39.3, 'coinTicks', 1.3, 3.8]] });
 // ---- 21 · every beat rings his account (counter visibly running, unreadable)
 S(40.6, { tr: 'zoomIn', cam: [[40.6, 540, 960, 1.0], [42.92, 540, 960, 1.08]],

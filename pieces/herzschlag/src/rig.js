@@ -110,7 +110,11 @@ function char(id, x, y, s, T = {}) {
   const wk = T.walk ? track(T.walk) : 0, wph = TT * 9;
   const lgL = [0.06 + Math.sin(wph) * 0.42 * wk, Math.max(0, -Math.sin(wph)) * 0.5 * wk], lgR = [0.06 - Math.sin(wph) * 0.42 * wk, Math.max(0, Math.sin(wph)) * 0.5 * wk];
   ctx.translate(0, -Math.abs(Math.sin(wph)) * 14 * wk);
-  leg(L, -1, lgL); leg(L, 1, lgR);
+  const run = T.run ? track(T.run) : 0;
+  if (run > 0) {   // running towards camera: knees lift alternately (foreshortened), the body bounces
+    const ph = TT * 10.5, lL = Math.max(0, Math.sin(ph)) * run, lR = Math.max(0, -Math.sin(ph)) * run;
+    ctx.translate(0, -Math.abs(Math.sin(ph)) * 22 * run); leg(L, -1, [0.05, 0], lL); leg(L, 1, [0.05, 0], lR);
+  } else { leg(L, -1, lgL); leg(L, 1, lgR); }
   // body leans about the hips
   ctx.translate(0, -330); ctx.rotate(lean); ctx.scale(1 + breath * 0.5, 1 + breath);
   const front = [];
@@ -121,14 +125,14 @@ function char(id, x, y, s, T = {}) {
   for (const side of front) arm(L, side, P[side < 0 ? 'la' : 'ra'], side < 0 ? T.holdL : T.holdR, id, ex);
   ctx.restore();
 }
-function leg(L, side, [a1, a2]) {
+function leg(L, side, [a1, a2], lift = 0) {
   const hx = side * 40, hy = -330, l1 = 168, l2 = 160;
-  const d1 = [side * Math.sin(a1), Math.cos(a1)], kx = hx + d1[0] * l1, ky = hy + d1[1] * l1;
-  const d2 = [side * Math.sin(a1 - a2), Math.cos(a1 - a2)], fx = kx + d2[0] * l2, fy = ky + d2[1] * l2;
+  const d1 = [side * Math.sin(a1), Math.cos(a1)], kx = hx + d1[0] * l1, ky = hy + d1[1] * l1 * (1 - 0.5 * lift);
+  const d2 = [side * Math.sin(a1 - a2), Math.cos(a1 - a2)], fx = kx + d2[0] * l2 - side * lift * 12, fy = ky + d2[1] * l2 * (1 - 0.8 * lift);
   line(hx, hy, kx, ky, 64, L.pants); line(kx, ky, fx, fy, 58, L.pants);
   line(hx + side * 14, hy + 20, kx + side * 12, ky, 14, L.pantsD);
   // shoe
-  ctx.save(); ctx.translate(fx, fy); ctx.scale(side, 1);
+  ctx.save(); ctx.translate(fx, fy); ctx.scale(side, 1 - 0.4 * lift);
   fillRR(-34, -16, 86, 38, 18, L.shoe); fillRR(-34, 10, 88, 14, 7, L.sole); fillRR(-20, -14, 26, 22, 8, L.shoeD);
   ctx.restore();
 }

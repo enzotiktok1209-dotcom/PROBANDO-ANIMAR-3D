@@ -70,7 +70,10 @@ function moneyPyramid(x, y, s, k = 1) {
 function vault(x, y, s, open = 0, fill = 1) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   fillRR(-420, -420, 840, 840, 40, '#3a3f52'); circ(0, 0, 360, '#1b1d26');
-  ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 350, 0, TAU); ctx.clip(); ctx.fillStyle = rad(0, 0, 40, 380, [[0, '#ffe9a6'], [1, '#6a5a2a']]); ctx.fillRect(-360, -360, 720, 720); moneyPyramid(0, 230, 0.75, fill); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 350, 0, TAU); ctx.clip(); ctx.fillStyle = rad(0, 0, 40, 380, [[0, '#ffe9a6'], [1, '#6a5a2a']]); ctx.fillRect(-360, -360, 720, 720);
+  for (let r = 0; r < 11; r++) for (let i = -3; i <= 3; i++) { const bx = i * 150 + (r % 2) * 75, by = -350 + r * 68; fillRR(bx - 72, by, 144, 64, 6, r % 3 ? PAL.cash : '#58c776'); fillRR(bx - 72, by, 144, 14, 4, PAL.cashD); fillRR(bx - 13, by, 26, 64, 2, '#f2e6c0'); }
+  ctx.fillStyle = rad(0, 0, 120, 360, [[0, 'rgba(255,240,180,0.25)'], [1, 'rgba(40,30,10,0.45)']]); ctx.fillRect(-360, -360, 720, 720);
+  moneyPyramid(0, 330, 1.05, fill); ctx.restore();
   // the door swings open (narrows towards its hinge on the right)
   const w = 1 - open * 0.92; if (w > 0.05) { ctx.save(); ctx.translate(350, 0); ctx.scale(w, 1); ctx.translate(-350, 0);
     circ(0, 0, 350, '#9aa2b8'); circ(0, 0, 300, '#b8bfd2'); for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU; circ(Math.cos(a) * 325, Math.sin(a) * 325, 14, '#6a7088'); }
