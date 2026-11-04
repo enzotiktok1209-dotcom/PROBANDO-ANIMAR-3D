@@ -11,7 +11,7 @@ const shots = await p.evaluate('window.SHOTS'); const set = new Set();
 for (const n of (full || '').split(',').filter(Boolean).map(Number)) { const [a, b] = shots[n - 1]; for (let f = Math.ceil(a * 30); f < Math.ceil(b * 30); f++) set.add(f); }
 const TRW = { W: 3, Z: 3, F: 2, S: 3, R: 4, I: 5, C: 4 };
 for (const [a, b, tr] of shots) if (tr && (trs || '').split(',').includes(tr)) { const c = Math.round(b * 30); for (let f = c - TRW[tr] - 1; f <= c + TRW[tr] + 1; f++) set.add(f); }
-const list = [...set].filter(f => f >= 0 && f < 5035).sort((x, y) => x - y); console.log('rehaciendo', list.length);
+const list = [...set].filter(f => f >= 0 && f < 4524).sort((x, y) => x - y); console.log('rehaciendo', list.length);
 const el = await p.$('#stage');
 for (const f of list) { await p.evaluate(t => window.renderAt(t), f / 30); await el.screenshot({ path: `${dir}/f${String(f).padStart(5, '0')}.png` }); }
 await br.close(); console.log('hecho');
