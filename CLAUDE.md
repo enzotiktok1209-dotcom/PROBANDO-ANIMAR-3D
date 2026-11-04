@@ -13,6 +13,7 @@ Reglas fijas de este formato:
 - **Transiciones variadas entre planos** (barrido, zoom, destello, deslizamiento, giro, iris, golpe de zoom), cada una con su efecto de sonido; zooms con su efecto.
 - Efectos de sonido realistas y variados para cada acción, **≥1 cada 1,5 s**.
 - Zooms de velocidades distintas. **Zoom lento = riser de tensión + viñeta que se cierra + golpe dramático al final**; golpes de zoom rápidos con impacto.
+- **Risers + golpe dramático en los momentos clave** (el gancho siempre, revelaciones, frases importantes), con zoom lento y viñeta. Van en una **pista de tensión aparte** (−27 LUFS, ducking suave ratio 1.5): se oyen claros de principio a fin sin tapar la narración.
 - Música de fondo del usuario a velocidad original, en bucle si hace falta, cortada al final del video, a **−24 LUFS** (≈14 dB por debajo de la voz; el usuario la bajó después de que TikTok silenciara un video). Entregar también una versión **sin música** (voz + efectos) para poner un sonido de la biblioteca de TikTok desde la app: una canción con derechos de autor puede hacer que TikTok silencie el audio aunque esté baja.
 - **Los efectos de sonido nunca tapan la narración**: −30 LUFS, banda de voz recortada y ducking; ≥14 dB por debajo de la voz incluso en su pico. Mezclar con `mezclar.sh`.
 - Personajes articulados (codos, rodillas, cuello) con físicas y gestos reales; la emoción se ve en la cara.

@@ -126,7 +126,7 @@ shot(0, 'C', null, L => { roomDay(); atMirror(emil); applyPose(emil, { ...idlePo
   roomMirror(M => fireHall(M, {}, { eyes: 'open', mouth: 'frown' }));
   const k = easeOut(clamp(L.lt / .35)); cam([lerp(RX + 10, RX - 3.6, k), lerp(14, 6.6, k), lerp(16, 1.6, k)], [RX - 6, 5.6, -10], lerp(60, 42, k) * (1 - .04 * clamp((L.lt - .35) / 1.5))); }, [[0, 'zoom_fast', 1], [.35, 'impact', .8], [.6, 'fire_crackle', .5]]);
 // 2 el reflejo: en llamas y lleno de sangre (espejo de cerca)
-shot(1.90, 'W', null, L => { roomDay(); roomMirror(M => fireHall(M, { headX: .1 }, { eyes: 'open', mouth: 'flat', brows: -.2 })); cm([RX - 6, 5.6, -3.4, RX - 6, 5.6, -10, 44], [RX - 6, 5.6, -5.4, RX - 6, 5.6, -10, 40], L.k); }, [[0, 'fire_crackle', .6], [.6, 'heartbeat', .6]]);
+shot(1.90, 'W', 'slowv', L => { roomDay(); roomMirror(M => fireHall(M, { headX: .1 }, { eyes: 'open', mouth: 'flat', brows: -.2 })); cm([RX - 6, 5.6, -3.4, RX - 6, 5.6, -10, 44], [RX - 6, 5.6, -5.4, RX - 6, 5.6, -10, 40], L.k); }, [[0, 'fire_crackle', .6], [.6, 'heartbeat', .6]]);
 // 3 …y yo sin un rasguño: se mira los brazos
 shot(4.00, 'S', null, L => { roomDay(); put(emil, RX - 2, 0, -2, .3); applyPose(emil, { aLx: 1.3, aRx: 1.3, aLe: 1.1, aRe: 1.1, headX: .45, lean: .1 }); face(emil, { eyes: 'wide', mouth: 'o', brows: -.4, look: [0, .8] }, L.T);
   onFace(emil, 6.5, 1, 2, 44, L.k, 5.4); badge('tag', 'KEIN KRATZER', W / 2, H * .16, L.lt - .4); }, [[.3, 'cloth', .5], [.45, 'pop', .4]]);
@@ -185,7 +185,7 @@ shot(27.33, 'S', null, L => { roomDay(); put(emil, RX - 1, 0, 0, 0); kp(emil, L.
 shot(28.85, 'W', null, L => { roomDay(); room.digits[0].visible = true; const z = lerp(2, -4.6, easeInOut(L.k)); put(emil, RX - 6, 0, z, Math.PI); applyPose(emil, { ...walkPose(L.T, .7, .6), aLz: 1.8, aRz: 1.8, aLe: 1.6, aRe: 1.6 }); face(emil, { eyes: 'closed', mouth: 'yawn' }, 99);
   cm([RX + 4, 8, 6, RX - 6, 4, z, 50], [RX + 3.4, 8, 5, RX - 6, 4, z, 48], L.k); badge('tag', 'DIENSTAG · 07:00', W / 2, H * .14, L.lt - .2); }, [[0, 'alarm', .4], [.4, 'yawn_m', .7], [1.2, 'steps', .4]]);
 // 21 …y el reflejo estaba en el pasillo de la escuela
-shot(31.19, 'Z', null, L => { roomDay(); atMirror(emil); applyPose(emil, { lean: -.05, aLx: .3, aRx: .3 }); face(emil, scared, L.T); roomMirror(M => fireHall(M));
+shot(31.19, 'Z', 'slow', L => { roomDay(); atMirror(emil); applyPose(emil, { lean: -.05, aLx: .3, aRx: .3 }); face(emil, scared, L.T); roomMirror(M => fireHall(M));
   cm([RX - 3.6, 6.6, 1.6, RX - 6, 5.6, -10, 44], [RX - 4.6, 6, -1.6, RX - 6, 5.6, -10, 36], L.k); }, [[0, 'fire_crackle', .6], [.3, 'riser_short', .4]]);
 // 22 todo ardía
 shot(33.59, 'C', null, L => { fireHall(L); ref.root.visible = false; cm([HX + 5, 4, 6, HX - 2, 7, -40, 56], [HX + 4.5, 4.4, 4, HX - 2, 7, -40, 54], L.k); }, [[0, 'fire_roar', .8]]);
@@ -215,7 +215,7 @@ shot(46.58, 'W', null, L => { roomDay(); roomMirror(M => fireHall(M, { headX: .2
 // 33 pero esta vez el reflejo me miraba — ZOOM LENTO
 shot(47.97, 'C', 'slow', L => { fireHall(L, { headX: -.05 }, { eyes: 'open', mouth: 'flat', brows: .2, look: [0, 0] }); onFace(ref, 7, 0, 0, 40, L.k, 3.4); }, []);
 // 34 levanta lentamente una hoja
-shot(50.30, 'S', null, L => { const k = easeInOut(clamp(L.lt / 1.4)); fireHall(L, { aLx: lerp(.2, 1.8, k), aRx: lerp(.2, 1.8, k), aLe: .4, aRe: .4 }, { eyes: 'open', mouth: 'flat' });
+shot(50.30, 'S', 'slow', L => { const k = easeInOut(clamp(L.lt / 1.4)); fireHall(L, { aLx: lerp(.2, 1.8, k), aRx: lerp(.2, 1.8, k), aLe: .4, aRe: .4 }, { eyes: 'open', mouth: 'flat' });
   paper.visible = true; paper.position.copy(ref.aL.hand.getWorldPosition(V(0, 0, 0))).lerp(ref.aR.hand.getWorldPosition(V(0, 0, 0)), .5).add(V(0, .6, .45)); onFace(ref, 9, -.6, 1.5, 46, L.k, 8); }, [[0, 'paper', .7]]);
 shot(52.02, 'C', null, L => { fireHall(L, { aLx: 1.8, aRx: 1.8, aLe: .4, aRe: .4 }); paper.visible = true; const p = ref.aL.hand.getWorldPosition(V(0, 0, 0)).lerp(ref.aR.hand.getWorldPosition(V(0, 0, 0)), .5).add(V(0, .6, .45)); paper.position.copy(p);
   cam([p.x, p.y, p.z + 4.6], [p.x, p.y, p.z], 44 * punch(L.lt, .02, .25)); }, [[0, 'impact', .7], [.1, 'braam_short', .5]]);
@@ -242,7 +242,7 @@ shot(65.00, 'W', null, L => { use('bath'); day(0); hemi.intensity = .25; bath.g.
 const handOn = { aRx: 1.55, aRe: .1, aRz: -.05 };
 shot(65.75, 'C', null, L => { use('bath'); day(0); hemi.intensity = .25; mirror(bmir, [HX + .3, 4.6, -16.2], [HX, 4, -20], 46, M => fireHall(M, { ...handOn, lean: .1 }, { eyes: 'open', mouth: 'frown', brows: .3 }));
   const mp = bmir.plane.getWorldPosition(V(0, 0, 0)); cm([mp.x, mp.y, mp.z + 5.4, mp.x, mp.y, mp.z, 50], [mp.x, mp.y, mp.z + 4.2, mp.x, mp.y, mp.z, 46], L.k); }, [[0, 'hand_glass', .9]]);
-shot(67.40, 'S', null, L => { use('bath'); day(0); hemi.intensity = .2; put(emil, BX + 8, 0, -3.8, Math.PI); applyPose(emil, { lean: .1 }); face(emil, scared, L.T); mirror(bmir, FH.P, FH.Tg, FH.fov, M => fireHall(M, handOn));
+shot(67.40, 'S', 'slowv', L => { use('bath'); day(0); hemi.intensity = .2; put(emil, BX + 8, 0, -3.8, Math.PI); applyPose(emil, { lean: .1 }); face(emil, scared, L.T); mirror(bmir, FH.P, FH.Tg, FH.fov, M => fireHall(M, handOn));
   const L2 = bath.g.children.find(o => o.isPointLight); if (L2) { L2.intensity = 160; L2.color.setRGB(1, .45, .2); L2.position.set(8, 7, -8); }
   const h = hp(emil); cm([h.x + 1.2, h.y + .6, h.z - 4.4, h.x, h.y + .4, h.z, 44], [h.x + 1, h.y + .6, h.z - 3.8, h.x, h.y + .4, h.z, 42], L.k); }, [[0, 'whisper', .6]]);
 // 46 "Escucha. Mañana muere tu hermana."
@@ -380,9 +380,10 @@ for (let i = 0; i < S.length; i++) S[i].t1 = i + 1 < S.length ? S[i + 1].t0 : DU
 const TRW = { W: 3, Z: 3, F: 2, S: 3, R: 4, I: 5, C: 4 }, TR_SFX = { W: 'whoosh', Z: 'swoosh_up', F: 'flash', S: 'swipe', R: 'whirl', I: 'iris_pop', C: 'thump' };
 const CUES = [];
 S.forEach((s, i) => { for (const [lt, n, g] of s.sfx) CUES.push({ t: +(s.t0 + lt).toFixed(3), s: n, g: g ?? 1 });
-  if (s.zoom === 'slow') { CUES.push({ t: s.t0 + .05, s: 'riser', g: .9, d: +(s.t1 - s.t0 - .05).toFixed(3) }); CUES.push({ t: s.t1 - .02, s: 'braam', g: 1 }); }
+  if (s.zoom === 'slowv') { } else if (s.zoom === 'slow') { CUES.push({ t: s.t0 + .05, s: 'riser', g: .9, d: +(s.t1 - s.t0 - .05).toFixed(3) }); CUES.push({ t: s.t1 - .02, s: 'braam', g: 1 }); }
   else if (i > 0) CUES.push({ t: s.t0 + .05, s: ['zoom_in', 'whoosh_soft', 'zoom_out'][i % 3], g: .35 });
   if (s.tr) CUES.push({ t: +(s.t1 - TRW[s.tr] / FPS).toFixed(3), s: TR_SFX[s.tr], g: .8 }); });
+for (const [a, b] of [[.05, 3.98], [65.8, 69.0]]) { CUES.push({ t: a, s: 'riser', g: .9, d: +(b - a).toFixed(3) }); CUES.push({ t: b, s: 'braam', g: 1 }); }
 CUES.sort((a, b) => a.t - b.t);
 const shotAt = T => { for (let i = 0; i < S.length; i++) if (T < S[i].t1) return i; return S.length - 1; };
 function renderShot(i, T, tr, a) {
@@ -390,7 +391,7 @@ function renderShot(i, T, tr, a) {
   hideAll(); BAD.length = 0; s.fn(L);
   if (MIR) { const M = MIR; hideAll(); M.prep(L); mcam.aspect = M.m.w / M.m.h; mcam.fov = M.fov; mcam.position.set(...M.P); mcam.up.set(0, 1, 0); mcam.lookAt(...M.Tg); mcam.updateProjectionMatrix();
     renderer.setRenderTarget(rt); renderer.clear(); renderer.render(scene, mcam); renderer.setRenderTarget(null); hideAll(); BAD.length = 0; s.fn(L); M.m.plane.material = mirMat; MIR = null; }
-  if (s.zoom === 'slow') { const e = easeIn(L.k); grade.uniforms.vig.value = lerp(grade.uniforms.vig.value, .85, e); camera.fov *= lerp(1, .92, e); }
+  if (s.zoom && s.zoom.startsWith('slow')) { const e = easeIn(L.k); grade.uniforms.vig.value = lerp(grade.uniforms.vig.value, .85, e); camera.fov *= lerp(1, .92, e); }
   let sh = 0; for (const c of CUES) { if (c.t > T) break; if (['impact', 'thump', 'braam', 'slam', 'kick', 'explosion', 'collapse', 'thud'].includes(c.s) && T - c.t < .12) sh = 1 - (T - c.t) / .12; }
   if (sh) { const r = RNG(Math.floor(T * FPS) + 1); camera.position.x += (r() - .5) * .22 * sh; camera.position.y += (r() - .5) * .22 * sh; }
   camera.updateProjectionMatrix();

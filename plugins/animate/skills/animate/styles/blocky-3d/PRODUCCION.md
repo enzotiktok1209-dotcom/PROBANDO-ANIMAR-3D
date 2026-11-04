@@ -72,3 +72,8 @@ Objetos que aparecen en escena entran animados (no de golpe): escalado con muell
 - Sujeto principal centrado y sin subtítulo encima en cada plano (hoja de contactos).
 - Texto en el idioma correcto en todos los carteles.
 - Sonoridad medida.
+
+## 9. Risers en los momentos clave (regla del usuario)
+- El **gancho** siempre lleva riser desde el primer segundo hasta el golpe dramático; también cada revelación o frase decisiva.
+- Riser + golpe dramático (braam) + zoom lento + viñeta que se cierra, sincronizados: el golpe cae justo en la palabra/corte de la revelación.
+- Mezcla: risers y golpes van en una **pista de tensión separada** a −27 LUFS con ducking suave (ratio 1.5) y −3 dB en 1,5 kHz: se oyen enteros, de principio a fin, sin hacer ininteligible la narración. El resto de efectos sigue a −30 LUFS con ducking fuerte.

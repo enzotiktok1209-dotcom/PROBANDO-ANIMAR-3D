@@ -340,12 +340,14 @@ if __name__ == '__main__':
     cues_f, voice_f, music_f, out_f = sys.argv[1:5]
     cues = json.load(open(cues_f)); DUR = 150.8
     cues = fill_gaps(cues, DUR); print(len(cues), 'efectos; hueco máximo', max(np.diff(sorted([0] + [c['t'] for c in cues] + [DUR]))).round(2))
-    sfx = render(cues, DUR); sfx = norm(sfx, 0.9)
-    w = wave.open('/tmp/_sfx.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((sfx * 32767).astype('<i2').tobytes()); w.close()
-    # la pista de efectos se guarda aparte y la mezcla la hace mezclar.sh (niveles aprobados por el usuario:
-    # efectos que nunca tapan la narración, música de fondo bien audible por debajo)
+    TEN = {'riser', 'braam', 'riser_short', 'braam_short'}
+    ten = render([c for c in cues if c['s'] in TEN], DUR); ten = norm(ten, 0.9)
+    sfx = render([c for c in cues if c['s'] not in TEN], DUR); sfx = norm(sfx, 0.9)
+    for arr, fn in ((sfx, '/tmp/_sfx.wav'), (ten, '/tmp/_ten.wav')):
+        w = wave.open(fn, 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((arr * 32767).astype('<i2').tobytes()); w.close()
+    subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', '/tmp/_ten.wav', out_f.replace('.wav', '-tension.wav')], check=True)
     sfx_f = out_f.replace('.wav', '-sfx.wav')
     subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', '/tmp/_sfx.wav', sfx_f], check=True)
     import os
-    subprocess.run([os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mezclar.sh'), voice_f, music_f, sfx_f, out_f], check=True)
+    subprocess.run([os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mezclar.sh'), voice_f, music_f, sfx_f, out_f], check=True, env={**os.environ, 'TENSION': out_f.replace('.wav', '-tension.wav')})
     print('ok', out_f)
