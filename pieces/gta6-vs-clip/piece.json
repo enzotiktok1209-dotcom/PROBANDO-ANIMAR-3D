@@ -1,0 +1,42 @@
+{
+  "name": "gta6-vs-clip",
+  "title": "GTA 6 als Einziger vs eine B\u00fcroklammer (DE)",
+  "format": {
+    "width": 1440,
+    "height": 2560,
+    "fps": 30,
+    "duration": 89.5,
+    "frames": 2685
+  },
+  "storyFormat": "beat-cut character comedy, a cut every ~2 s, voice-over clock",
+  "style": "flat-toon (in src/toon.js)",
+  "build": [
+    "src/head.html",
+    "src/data.js",
+    "kit/core.js",
+    "src/toon.js",
+    "src/rig.js",
+    "src/props.js",
+    "src/sets.js",
+    "src/props2.js",
+    "src/props3.js",
+    "src/main.js",
+    "src/shots.js",
+    "src/timeline.js",
+    "kit/score-head.js",
+    "src/score.js",
+    "src/score-tail.js"
+  ],
+  "voice": {
+    "file": "voice/vo.wav",
+    "music": -6
+  },
+  "review": {
+    "safe": {
+      "top": 220,
+      "bottom": 380,
+      "right": 120
+    },
+    "deadMax": 4
+  }
+}
