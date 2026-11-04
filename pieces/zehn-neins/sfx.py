@@ -242,6 +242,35 @@ LIB.update({
  'trash_hit': (lambda s, c: seq([(bell(310, 1.0, (1, 2.3, 3.7, 5.1), 6), 0), (impact(0.4, 140, 60, 1.5, s), 0)], 1.0), .7),
 })
 
+LIB.update({
+ 'alarm_soft': (lambda s, c: norm(np.tile(sine(880, .25) * adsr(.25, .01, .05), 3)), .25),
+ 'bark': (lambda s, c: seq([(voice([420, 520, 300], [A, A, O], .18, .6, s), 0), (voice([400, 500, 280], [A, A, O], .16, .6, s + 1), .22)], .5), .6),
+ 'braam_short': (lambda s, c: _braam(.8, s), .6),
+ 'briefcase': (lambda s, c: seq([(click(.04, 1800, s), 0), (click(.05, 1200, s + 1), .03), (impact(.3, 200, 90, 1.2, s), .02)], .4), .8),
+ 'chew': (lambda s, c: seq([(lp(noise(.08, s + i), 1200) * np.exp(-T(.08) * 30), i * .14) for i in range(5)], .8), .4),
+ 'clock_tick': (lambda s, c: seq([(tick(2200, s), 0), (tick(1700, s + 1), .5)], .6), .35),
+ 'coin_flip': (lambda s, c: seq([(bell(3800, .3, (1, 2.4, 3.9), 10), 0), (bell(4100, .2, (1, 2.4), 14), .12), (coins(3, .4, s), .25)], .8), .5),
+ 'cough': (lambda s, c: seq([(norm(bp(noise(.12, s), 300, 2000) * np.exp(-T(.12) * 20)), 0), (norm(bp(noise(.1, s + 1), 300, 2000) * np.exp(-T(.1) * 25)), .18)], .4), .35),
+ 'creepy_ting': (lambda s, c: norm(bell(1244, 1.5, (1, 2.76, 5.4), 1.6) + bell(1318, 1.5, (1, 2.76), 1.6) * .7), .35),
+ 'door_open': (lambda s, c: seq([(click(.05, 1500, s), 0), (creak(.7, 330, s), .05)], .8), .5),
+ 'firework': (lambda s, c: seq([(whoosh(.6, True, 800, 6000, s) * .5, 0), (impact(.6, 90, 40, 1.2, s), .6), (bp(noise(.8, s), 2000, 8000) * np.exp(-T(.8) * 4) * .4, .62)], 1.5), .45),
+ 'gasp_f': (lambda s, c: voice([400, 480], [A, O], .3, 1.2, s), .45),
+ 'glitch': (lambda s, c: norm(saw(np.repeat([300, 900, 450, 1200, 200], int(.04 * SR)), .2) * .5), .3),
+ 'house_pop': (lambda s, c: seq([(sine(glide(180, 700, .12), .12) * np.exp(-T(.12) * 10), 0), (impact(.35, 140, 60, 1.0, s), .08), (bell(1568, .4, (1, 2, 3), 8) * .4, .1)], .6), .55),
+ 'knock': (lambda s, c: impact(.18, 240, 110, 1.4, s), .7),
+ 'plate_slide': (lambda s, c: norm(bp(noise(.4, s), 1500, 5000) * adsr(.4, .02, .1)), .35),
+ 'riser_short': (lambda s, c: riser(.8, s), .4),
+ 'sad_tone': (lambda s, c: norm(sum(sine(glide(f, f * .94, 1.2), 1.2) * np.exp(-T(1.2) * 2) for f in (440, 523.3, 659.3))), .3),
+ 'shiver': (lambda s, c: norm(voice([140, 150, 140, 150], [U, U, U, U], .7, .8, s) * (1 + .6 * np.sign(np.sin(2 * np.pi * 18 * T(.7))))), .3),
+ 'shovel': (lambda s, c: seq([(bp(noise(.3, s), 400, 3000) * np.exp(-T(.3) * 8), 0), (click(.05, 1200, s), .02)], .4), .45),
+ 'splash': (lambda s, c: norm(bp(noise(.6, s), 500, 6000) * np.exp(-T(.6) * 6)), .4),
+ 'steps_snow': (lambda s, c: seq([(lp(noise(.12, s + i), 900) * np.exp(-T(.12) * 18), i * .4) for i in range(4)], 1.8), .45),
+ 'tick_down': (lambda s, c: seq([(click(.03, 2600, s), 0), (sine(glide(900, 500, .12), .12) * np.exp(-T(.12) * 18) * .6, .01)], .2), .55),
+ 'tug': (lambda s, c: seq([(bp(noise(.12, s + i), 600, 3000) * np.exp(-T(.12) * 20), i * .16) for i in range(3)], .5), .3),
+ 'whisper': (lambda s, c: norm(bp(noise(.6, s), 1500, 6000) * adsr(.6, .1, .2)), .3),
+ 'whoosh_down': (lambda s, c: norm(whoosh(.7, False, 200, 2500, s) + sine(glide(300, 60, .7), .7) * np.exp(-T(.7) * 2) * .5), .5),
+})
+
 def render(cues, dur):
     out = np.zeros(int((dur + 3) * SR))
     for i, c in enumerate(cues):
@@ -264,7 +293,7 @@ def fill_gaps(cues, dur, maxgap=1.4):
 
 if __name__ == '__main__':
     cues_f, voice_f, music_f, out_f = sys.argv[1:5]
-    cues = json.load(open(cues_f)); DUR = 135.17
+    cues = json.load(open(cues_f)); DUR = 167.83
     cues = fill_gaps(cues, DUR); print(len(cues), 'efectos; hueco máximo', max(np.diff(sorted([0] + [c['t'] for c in cues] + [DUR]))).round(2))
     sfx = render(cues, DUR); sfx = norm(sfx, 0.9)
     w = wave.open('/tmp/_sfx.wav', 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((sfx * 32767).astype('<i2').tobytes()); w.close()
