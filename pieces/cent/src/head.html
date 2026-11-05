@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1 Million vs 1 Cent pro Sekunde</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0d0b14; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { height: min(100vh, calc(100vw * 16 / 9)); width: auto; aspect-ratio: 9 / 16; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1440" height="2560"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  1 MILLION SOFORT vs 1 CENT PRO SEKUNDE – 1 JAHR  (German, 9:16, 30 fps)
+//  Flat cartoon look (no outlines, soft shading, ray backdrops), a cut about every 2 s,
+//  every cut joined by a transition with its own sound, karaoke captions timed to the voice.
+//  Parts: data.js (voice timing) · kit/core.js · toon.js (look) · rig.js (characters) · props.js · sets.js
+//         shots-*.js (the 63 shots) · main.js (camera, transitions, captions, grade) · score (sfx + music)
+// =====================================================================
+const FPS = 30, W = 1080, H = 1920;   // the layout space; frames render at 1440p:
+const SC = 4 / 3, PW = 1440, PH = 2560;   // output 1440 x 2560 (1440p vertical), drawn natively at that size
+const DURATION = 91.0;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 220, bottom: 380, right: 120 };
+const HAND = '"Inter", "Segoe UI", Arial, sans-serif';
+const CX = 540;
+const FONT = '"Inter", "Inter Display", "Segoe UI Black", "Arial Black", Arial, sans-serif';
