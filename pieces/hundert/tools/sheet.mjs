@@ -8,7 +8,7 @@ await p.goto('file://' + path.resolve('index.html')); await p.waitForFunction(()
 let T = times.length ? times : await p.evaluate(() => TIMELINE.shots.map((s) => +(s.t0 + Math.min(0.9, (s.t1 - s.t0) * 0.6)).toFixed(2)));
 for (const t of T) {
   let d; try { d = await p.evaluate((t) => { window.renderFrame(t); return document.getElementById('c').toDataURL('image/jpeg', 0.8); }, t); } catch (e) { errs.push(t + ': ' + e.message.split('\n')[0]); continue; }
-  (await import('node:fs')).writeFileSync(`review5/s_${t.toFixed(2).padStart(6, '0')}.jpg`, Buffer.from(d.split(',')[1], 'base64'));
+  (await import('node:fs')).writeFileSync(`review6/s_${t.toFixed(2).padStart(6, '0')}.jpg`, Buffer.from(d.split(',')[1], 'base64'));
 }
 console.log(T.length, 'frames; errors:', errs.slice(0, 10));
 await b.close();

@@ -43,9 +43,10 @@ const plus1 = (cx, cy, rate, t0, seed) => euroPops(cx, cy, rate, t0, seed);
 
 // =====================================================================  THE HOOK
 // ---- 1 · the choice: 100 million now — or 1 € a second
-S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.0], [1.28, 540, 1010, 1.04]],
+S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.45], [0.28, 540, 1020, 1.0], [1.28, 540, 1010, 1.04]], shake: [[0.02, 26, 0.45]], punch: [[0.3, 0.07]],
   draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, -0.4], jump: [[0, 0], [0.3, 16, 0.12], [0.45, 0, 0.12]] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'calm']], look: [-0.3, -0.3], extras: { glasses: true } }); studioPodiums(); },
-  ui() { tText('WAS NIMMST DU?', 540, 200, 66, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
+  ui() { if (TT < 0.16) { ctx.save(); ctx.globalAlpha = 1 - TT / 0.16; ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+    tText('WAS NIMMST DU?', 540, 200, 66, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
     iconCard(285, 462, 'OPTION 1', '100 MIO. €', 'SOFORT', PAL.green, 0.03, 'cash'); iconCard(795, 462, 'OPTION 2', '1 € / SEKUNDE', '4 JAHRE LANG', PAL.orange, 0.18, 'watch'); tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
   sfx: [[0.03, 'pop', 1], [0.18, 'pop', 1.2], [0.5, 'applause', 0.7], [0.9, 'sparkle']] });
 // ---- 2 · insert: the briefcase snaps open — 100.000.000 €

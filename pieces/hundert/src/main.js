@@ -155,7 +155,7 @@ function renderFrame(t, target) {
   out.save(); out.translate(W / 2, H / 2); out.scale(cutK, cutK); out.drawImage(M, -W / 2, -H / 2, W, H); out.restore();
   out.filter = 'none';
   captions(out);
-  ctx = out; vignette(0.42);
+  ctx = out; vignette(0.62, 0.4);
   out.setTransform(SC, 0, 0, SC, 0, 0);
   out.save(); out.globalAlpha = 0.045; out.globalCompositeOperation = 'overlay'; const R = RNG('gofs', F);
   out.translate(-R.f() * 256, -R.f() * 256); out.fillStyle = out.createPattern(grainTile(), 'repeat'); out.fillRect(0, 0, W + 256, H + 256); out.restore();

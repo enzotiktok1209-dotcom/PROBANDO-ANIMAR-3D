@@ -207,9 +207,8 @@
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.035 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
   const KEYS = [
-    [1.45, 1.4, 1.1],    // hook, first phrase: the briefcase bursts open — 100.000.000 €
-    [5.02, 1.0, 0.9],    // end of the hook question -> Kevin
-    [6.62, 0.6, 0.8],    // the slam
+    [6.0, 5.85, 1.25],   // one long riser through the whole hook (briefcase, coin, years, Kevin winds up) -> back on the two at their buttons
+    [6.62, 0.3, 0.7],    // the slam
     [12.6, 0.6, 0.7],    // the stopwatch starts
     [27.5, 1.0, 0.9],    // "trotzdem 90 Millionen"
     [40.2, 1.3, 1.0],    // heimlich Millionär
@@ -220,7 +219,10 @@
     [75.25, 1.2, 1.0],   // the question
   ];
   for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
-  dramaHit(0.02, 0.7);
+  // the hook hit on the very first frame: a swoosh slamming into a buzz-boom
+  dramaHit(0.0, 1.15); SFX.whooshDown(0.0, 1.4); SFX.bassDrop(0.02); SFX.glitch(0.0);
+  { const o = osc('sawtooth', 110, 0, 0.45), o2 = osc('square', 116, 0, 0.45), lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1400; const g = ac.createGain(); env(g, 0.0, 0.004, 0.09, 0.42); o.connect(lp); o2.connect(lp); lp.connect(g); out(g, 0, 0.3); }
+  noiseHit(0.0, 0.35, 'bandpass', 900, 0.8, 0.12, 0, 0.4, 4000);
   {
     const E = [0.02];
     for (const sh of SHOTS) { if (sh.i) E.push(sh.t0 - (TR_DUR[sh.tr] ?? 0) / 2, sh.t0); for (const [t] of sh.sfx || []) E.push(t); for (const [t] of sh.punch || []) E.push(t); }
