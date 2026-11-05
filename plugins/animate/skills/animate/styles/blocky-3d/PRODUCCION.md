@@ -77,3 +77,13 @@ Objetos que aparecen en escena entran animados (no de golpe): escalado con muell
 - El **gancho** siempre lleva riser desde el primer segundo hasta el golpe dramático; también cada revelación o frase decisiva.
 - Riser + golpe dramático (braam) + zoom lento + viñeta que se cierra, sincronizados: el golpe cae justo en la palabra/corte de la revelación.
 - Mezcla: risers y golpes van en una **pista de tensión separada** a −27 LUFS con ducking suave (ratio 1.5) y −3 dB en 1,5 kHz: se oyen enteros, de principio a fin, sin hacer ininteligible la narración. El resto de efectos sigue a −30 LUFS con ducking fuerte.
+
+## 10. Encargo ampliado (Bodensteuer, noviembre 2026)
+- **Render a 1080×1920 nativo** (motor con `W = 1080, H = 1920`), 30 fps. Los textos 2D se escalan con `U = W / 720`.
+- **En cada plano siempre hay personajes haciendo una acción**, también en los insertos (teléfono, pantalla, placa, máquina): alguien sostiene, mira, señala, toca o reacciona en el mismo encuadre.
+- **Cada personaje con aspecto distinto**: color de ropa, prenda (chaqueta, sudadera, traje), peinado (pinchos, flequillo, rizos, moño, coleta, largo, calvo), color de pelo, tono de piel y accesorio (gafas, gorra, auriculares, chistera, cadena). Nunca dos extras iguales en el mismo plano.
+- **Más detalle que la referencia** en todo: ropa con cremallera, cuello, bolsillos, botones y solapas; accesorios con piezas; fachadas con alféizares con flores, contraventanas, toldos con flecos, rótulos de tienda en el idioma del video; interiores llenos (estanterías, pósters, lámparas, vajilla, herramientas).
+- **Cambio de entorno cada ~2 s** (no solo de encuadre): calle, interior, cielo, despacho, sala secreta... alternando día/noche cuando la historia lo pide.
+- **Teléfonos y pantallas**: el teléfono se sostiene delante del pecho con la cara del personaje visible encima; nunca tapa la cara ni queda debajo del subtítulo.
+- **Pop-ups pegados al mundo**: se proyectan después de colocar la cámara, encima de la cabeza del personaje que paga, con el aro brillante en el suelo.
+- **Transcripción**: si no hay faster-whisper con modelo, el modelo Whisper small (CTranslate2) está publicado en npm como `@skillninja/shortmovie-telop-model-p0…p3` (se concatenan las 4 partes de `model.bin`).
