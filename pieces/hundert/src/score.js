@@ -219,10 +219,12 @@
     [75.25, 1.2, 1.0],   // the question
   ];
   for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
-  // the hook hit on the very first frame: a swoosh slamming into a buzz-boom
-  dramaHit(0.0, 1.15); SFX.whooshDown(0.0, 1.4); SFX.bassDrop(0.02); SFX.glitch(0.0);
-  { const o = osc('sawtooth', 110, 0, 0.45), o2 = osc('square', 116, 0, 0.45), lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1400; const g = ac.createGain(); env(g, 0.0, 0.004, 0.09, 0.42); o.connect(lp); o2.connect(lp); lp.connect(g); out(g, 0, 0.3); }
-  noiseHit(0.0, 0.35, 'bandpass', 900, 0.8, 0.12, 0, 0.4, 4000);
+  // dramatic accents where the picture had room to breathe
+  for (const [t, name, ...a] of [[18.85, 'impact'], [22.3, 'bassDrop'], [26.95, 'whooshUp', 1.2], [28.52, 'bassDrop'], [34.2, 'dun'], [37.6, 'riserShort', 1.0],
+    [38.62, 'dun'], [44.8, 'engine'], [54.28, 'dun'], [57.8, 'tension', 0.8], [72.2, 'dun'], [74.1, 'impact']]) play(t, name, ...a);
+  for (const t of [64.9, 65.62, 66.46, 67.14]) dramaHit(t, 0.55);   // Sekunden, Minuten, Tage, Jahre: one hit each
+  // the hook: a fast zoom on the first frame with its swoosh (the riser starts right under it)
+  SFX.whooshDown(0.0, 1.4); SFX.whoosh(0.02, 1.2, 0);
   {
     const E = [0.02];
     for (const sh of SHOTS) { if (sh.i) E.push(sh.t0 - (TR_DUR[sh.tr] ?? 0) / 2, sh.t0); for (const [t] of sh.sfx || []) E.push(t); for (const [t] of sh.punch || []) E.push(t); }
