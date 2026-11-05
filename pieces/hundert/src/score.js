@@ -207,7 +207,7 @@
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.035 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
   const KEYS = [
-    [6.0, 5.85, 1.25],   // one long riser through the whole hook (briefcase, coin, years, Kevin winds up) -> back on the two at their buttons
+    [1.28, 1.2, 1.1],    // a short riser over the first scene (the two at their buttons) into the cut
     [6.62, 0.3, 0.7],    // the slam
     [12.6, 0.6, 0.7],    // the stopwatch starts
     [27.5, 1.0, 0.9],    // "trotzdem 90 Millionen"
