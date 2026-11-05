@@ -5,8 +5,8 @@
     "width": 1440,
     "height": 2560,
     "fps": 30,
-    "duration": 91.0,
-    "frames": 2730
+    "duration": 87.8,
+    "frames": 2634
   },
   "storyFormat": "beat-cut character comedy, a cut every ~2 s, voice-over clock",
   "style": "flat-toon (in src/toon.js)",

@@ -23,7 +23,7 @@
 // =====================================================================
 const FPS = 30, W = 1080, H = 1920;   // the layout space; frames render at 1440p:
 const SC = 4 / 3, PW = 1440, PH = 2560;   // output 1440 x 2560 (1440p vertical), drawn natively at that size
-const DURATION = 91.0;
+const DURATION = 87.8;
 const NFRAMES = Math.round(DURATION * FPS);
 const LOOP_T = NFRAMES / FPS;
 const SAFE = { top: 220, bottom: 380, right: 120 };
@@ -2303,26 +2303,40 @@ S(48.64, { tr: 'cut', cam: [[48.64, 540, 960, 1.0], [49.5, 540, 960, 1.08]],
   draw() { rays('#c4520a', '#e86c0e', { cy: 940 }); for (let i = 0; i < 8; i++) { const t0 = 48.66 + i * 0.1; if (TT > t0) copperCent(320 + (i % 4) * 150, bounceY(TT - t0, 300, 900 + Math.floor(i / 4) * 200, 5200, 0.3), 60, { sx: Math.cos(TT * 6 + i) }); } },
   ui() { info('CENT FÜR CENT', 48.7, { y: 360, bg: PAL.orange, size: 56 }); },
   sfx: [[48.7, 'coinPour', 0.8]] });
-// ---- 28 · 6 months later: Kevin pulls up in the sports car
-S(49.5, { tr: 'zoomOut', lift: 230, cam: [[49.5, 540, 1150, 1.0], [51.74, 560, 1130, 1.07]],
-  draw() { setLeoRoom(); char('jonas', 820, FLOOR + 40, 0.86, { emo: [[0, 'calm']], look: [-0.6, 0], extras: { glasses: true } });
-    const x = lerp(-600, 330, EZ.o3(clamp((TT - 49.55) / 1.2))); supercar(x, 1690, 0.75, { col: '#e8262f', wheelSpin: x / 80 });
-    if (TT > 50.8) char('kevin', 360, FLOOR + 40, 0.86, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: { chain: 1, shades: 1 } }); },
+// the street in front of Jonas' house (day): his house, a fence, trees, the sidewalk and the road
+function setJonasFront(o = {}) {
+  withBlur(o.blur, () => {
+    ctx.fillStyle = lin(0, 0, 0, 1240, [[0, '#7cc6ff'], [1, '#d8f0ff']]); ctx.fillRect(-600, -400, 2300, 1700);
+    for (let i = 0; i < 3; i++) ell(((180 + i * 380 + TT * 14) % 1500) - 200, 260 + i * 70, 120, 38, '#ffffff');
+    for (const [tx, ts] of [[80, 1.0], [1060, 0.9]]) { ctx.save(); ctx.translate(tx, 1240); ctx.scale(ts, ts); fillRR(-26, -420, 52, 420, 14, '#7a4a2a'); for (const [cx, cy, r] of [[0, -520, 170], [-110, -430, 120], [110, -430, 120], [0, -400, 130]]) circ(cx, cy, r, '#3fbf6a'); circ(-40, -560, 70, '#5bd47f'); ctx.restore(); }
+    houseIcon(780, 1240, 1.12, 0); fillRR(740, 1180, 80, 60, 6, '#c9b8a0');
+    for (let i = 0; i < 14; i++) fillRR(-100 + i * 90, 1150, 16, 90, 6, '#ffffff'); fillRR(-100, 1170, 1300, 12, 4, '#ffffff'); fillRR(-100, 1210, 1300, 12, 4, '#ffffff');
+    ctx.fillStyle = '#c9cbd8'; ctx.fillRect(-600, 1240, 2300, 70); for (let i = 0; i < 12; i++) line(-500 + i * 160, 1240, -500 + i * 160, 1310, 3, 'rgba(0,0,0,0.12)');
+    ctx.fillStyle = '#3d3a4f'; ctx.fillRect(-600, 1310, 2300, 1100); for (let i = 0; i < 8; i++) fillRR(-500 + i * 300, 1520, 160, 18, 9, '#f5e9a8');
+  });
+}
+// ---- 28 · 6 months later: Kevin pulls up in front of Jonas' house and gets out
+S(49.5, { tr: 'zoomOut', lift: 0, cam: [[49.5, 540, 1000, 1.0], [51.74, 560, 990, 1.05]],
+  draw() { setJonasFront();
+    char('jonas', 780, 1250, 0.52, { pose: [[0, 'idle'], [51.0, 'armsCross']], emo: [[0, 'calm']], look: [-0.7, 0], extras: { glasses: true } });
+    const out = EZ.o2(clamp((TT - 50.9) / 0.4)); if (TT > 50.85) { ctx.save(); ctx.beginPath(); ctx.rect(-200, 0, 1500, 1262); ctx.clip(); char('kevin', 380, 1255 + (1 - out) * 230, 0.62, { pose: [[0, 'hips']], emo: [[0, 'smug']], look: [0.7, 0], extras: { chain: 1, shades: 1 } }); ctx.restore(); }
+    const x = lerp(-900, 300, EZ.o3(clamp((TT - 49.55) / 1.15))); supercar(x, 1330, 1.15, { col: '#e8262f', wheelSpin: x / 90 });
+    if (TT > 50.82 && TT < 51.0) { ctx.save(); ctx.globalAlpha = 0.6; poly([[260, 1050], [420, 1060], [430, 1290], [250, 1280]], '#ffffff'); ctx.restore(); } },
   ui() { info('6 MONATE SPÄTER', 49.55, { y: 360, size: 56 }); },
-  sfx: [[49.55, 'pop', 1], [49.6, 'engine'], [50.6, 'skid'], [50.85, 'carDoor']] });
+  sfx: [[49.55, 'pop', 1], [49.6, 'engine'], [50.6, 'skid'], [50.85, 'carDoor'], [51.3, 'footsteps', 0.4]] });
 // ---- 29 · "I still have over half a million"
 S(51.74, { tr: 'cut', cam: [[51.74, 540, 1000, 1.65], [54.5, 540, 980, 1.78]],
-  draw() { setLeoRoom({ blur: 9 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[51.74, 'pointR'], [53.0, 'hips']], emo: [[0, 'smug']], extras: { chain: 1, shades: 1 } }); },
+  draw() { setJonasFront({ blur: 9 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[51.74, 'pointR'], [53.0, 'hips']], emo: [[0, 'smug']], extras: { chain: 1, shades: 1 } }); },
   ui() { hudKevin({ y: 240, scale: 0.85 }); info('ÜBER 1/2 MILLION', 53.94, { y: 420, bg: PAL.green, size: 54 }); },
   sfx: [[51.8, 'swish', 0.9], [53.94, 'pop', 1], [54.0, 'cashReg', 0.7]] });
 // ---- 30 · "Giving up already?" (white flag)
 S(54.5, { tr: 'whipL', cam: [[54.5, 540, 1000, 1.6], [55.4, 540, 990, 1.68]],
-  draw() { setLeoRoom({ blur: 9 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[0, 'waveR']], emo: [[0, 'laugh']], extras: { chain: 1, shades: 1 } }); whiteFlag(800, 980, 1.0); },
+  draw() { setJonasFront({ blur: 9 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[0, 'waveR']], emo: [[0, 'laugh']], extras: { chain: 1, shades: 1 } }); whiteFlag(800, 980, 1.0); },
   ui() { popText('AUFGEBEN? 🏳️', 540, 400, 54.6, 60, '#ffffff', -0.04, 10); },
   sfx: [[54.55, 'swish', 1.1], [54.6, 'popHi', 1]] });
 // ---- 31 · "In the end only the last day counts."
 S(55.4, { tr: 'zoomIn', cam: [[55.4, 540, 1000, 1.75], [57.24, 540, 980, 1.9]],
-  draw() { setLeoRoom({ blur: 10 }); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[0, 'armsCross']], emo: [[0, 'smug']], extras: { glasses: true } }); },
+  draw() { setJonasFront({ blur: 10 }); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[0, 'armsCross']], emo: [[0, 'smug']], extras: { glasses: true } }); },
   ui() { info('DER LETZTE TAG ZÄHLT', 56.5, { y: 400, bg: PAL.blue, size: 52 }); },
   sfx: [[55.5, 'tension', 1.5], [56.5, 'pop', 1], [56.9, 'ting']] });
 // ---- 32 · nevertheless Kevin books a yacht trip (phone)
@@ -2408,13 +2422,6 @@ S(85.0, { tr: 'zoomIn', capY: 1790, cam: [[85.0, 540, 960, 1.0], [87.8, 540, 960
     line(-200, 960, 1280, 960, 16, '#ffffff'); },
   ui() { hud('KONTO · KEVIN', [[0, 420000]], { x: 700, y: 520, scale: 0.95 }); blurCounter(700, 1380, 560, 230, 'KONTO · JONAS', { q: true }); },
   sfx: [[85.05, 'heartbeat', 1.4]] });
-// ---- 46 · end card
-S(87.8, { tr: 'zoomOut', noCap: true, cam: [[87.8, 540, 960, 1.0], [91.0, 540, 960, 1.05]],
-  draw() { setLeoRoom({ blur: 18 }); ctx.fillStyle = 'rgba(10,6,24,0.66)'; ctx.fillRect(-600, -400, 2300, 2800); copperCent(540, 1400, 70, { sx: Math.cos(TT * 3) }); },
-  ui() { const k = springEase(TT - 87.9, 220, 15); ctx.save(); ctx.translate(540, 660); ctx.scale(k, k); tText('WIE VIEL HAT JONAS?', 0, -60, 76, { color: '#fff', stroke: '#140c22', strokeW: 14, maxW: 1000 }); tText('WER GEWINNT DIE WETTE?', 0, 50, 76, { color: PAL.yellow, stroke: '#140c22', strokeW: 14, maxW: 1000 }); ctx.restore();
-    sticker('1 CENT × SEKUNDE × 1 JAHR = ???', 540, 920, 88.3, { bg: PAL.orange, size: 44 });
-    if (TT > 88.9) { const p = 1 + 0.05 * Math.sin(TT * 8); ctx.save(); ctx.translate(540, 1080); ctx.scale(p, p); sticker('SCHREIB\'S IN DIE KOMMENTARE 👇', 0, 0, 88.9, { bg: PAL.purple, size: 42 }); ctx.restore(); } },
-  sfx: [[88.3, 'pop', 1], [88.9, 'pop', 1.2], [89.6, 'coin', 0.9]] });
 // =====================================================================
 //  timeline.js — TIMELINE for the tools (export, review) and the score
 // =====================================================================
@@ -2785,8 +2792,7 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
   drone(66.98, 71.2, 49, 0.07, { att: 0.3, rel: 0.05 });
   groove(71.4, 75.9, { prog: CMAJ, kick: false, clapV: 0.8 });          // Kevin's 420.000
   pad(75.96, 82.3, ['D3', 'A3', 'F4'], 0.025, { cut: 900, att: 0.2 }); drone(75.96, 82.3, 73.4, 0.05);   // Jonas, smug
-  pad(82.38, 87.75, ['A2', 'E3', 'Bb3'], 0.022, { cut: 700 }); for (let t = 82.5; t < 87.6; t += BT / 2) hat(t, 0.5);   // counting...
-  pad(87.85, 90.9, ['D3', 'A3', 'D4', 'F4'], 0.035, { cut: 1400, att: 0.2, rel: 0.6 });
+  pad(82.38, 87.8, ['A2', 'E3', 'Bb3'], 0.022, { cut: 700, rel: 0.05 }); for (let t = 82.5; t < 87.7; t += BT / 2) hat(t, 0.5);   // counting...
   // ---- risers into dramatic hits on the key / reveal moments
   to = 's';
   // a cinematic "braam": a low detuned saw chord through a closing filter, a sub drop and a reverb burst
@@ -2809,7 +2815,6 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
     [71.26, 2.2, 1.3],   // the reveal: 420.000 €
     [77.35, 1.0, 1.0],   // "Setz dich lieber hin, Kevin."
     [85.0, 1.2, 1.0],    // the question
-    [87.82, 1.0, 1.1],   // end card
   ];
   for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
   dramaHit(0.02, 0.7);

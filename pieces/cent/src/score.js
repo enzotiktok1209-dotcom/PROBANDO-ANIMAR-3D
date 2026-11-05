@@ -194,8 +194,7 @@
   drone(66.98, 71.2, 49, 0.07, { att: 0.3, rel: 0.05 });
   groove(71.4, 75.9, { prog: CMAJ, kick: false, clapV: 0.8 });          // Kevin's 420.000
   pad(75.96, 82.3, ['D3', 'A3', 'F4'], 0.025, { cut: 900, att: 0.2 }); drone(75.96, 82.3, 73.4, 0.05);   // Jonas, smug
-  pad(82.38, 87.75, ['A2', 'E3', 'Bb3'], 0.022, { cut: 700 }); for (let t = 82.5; t < 87.6; t += BT / 2) hat(t, 0.5);   // counting...
-  pad(87.85, 90.9, ['D3', 'A3', 'D4', 'F4'], 0.035, { cut: 1400, att: 0.2, rel: 0.6 });
+  pad(82.38, 87.8, ['A2', 'E3', 'Bb3'], 0.022, { cut: 700, rel: 0.05 }); for (let t = 82.5; t < 87.7; t += BT / 2) hat(t, 0.5);   // counting...
   // ---- risers into dramatic hits on the key / reveal moments
   to = 's';
   // a cinematic "braam": a low detuned saw chord through a closing filter, a sub drop and a reverb burst
@@ -218,7 +217,6 @@
     [71.26, 2.2, 1.3],   // the reveal: 420.000 €
     [77.35, 1.0, 1.0],   // "Setz dich lieber hin, Kevin."
     [85.0, 1.2, 1.0],    // the question
-    [87.82, 1.0, 1.1],   // end card
   ];
   for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
   dramaHit(0.02, 0.7);
