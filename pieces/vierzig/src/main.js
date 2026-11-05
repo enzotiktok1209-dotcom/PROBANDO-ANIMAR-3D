@@ -32,6 +32,7 @@ function camAt(s) {
   }
   y += s.lift || 0;
   for (const [t, a] of s.punch || []) z *= 1 + a * springEase(TT - t, 340, 17);
+  if (s.tense) z *= 1 + 0.07 * EZ.io(clamp((TT - s.t0) / Math.max(0.3, s.t1 - s.t0)));
   let sx = 0, sy = 0;
   for (const [t, amp, dur = 0.4] of s.shake || []) { const u = (TT - t) / dur; if (u < 0 || u > 1) continue; const R = RNG('shk', Math.round(TT * FPS)); sx += R.n(amp) * (1 - u); sy += R.n(amp) * (1 - u); }
   return { x, y, z, sx, sy };
@@ -156,6 +157,7 @@ function renderFrame(t, target) {
   out.filter = 'none';
   captions(out);
   ctx = out; vignette(0.62, 0.4);
+  if (s.tense) { const k = EZ.io(clamp((t - s.t0) / Math.max(0.4, (s.t1 - s.t0) * 0.8))); vignette(0.55 * k, 0.28); }
   out.setTransform(SC, 0, 0, SC, 0, 0);
   out.save(); out.globalAlpha = 0.045; out.globalCompositeOperation = 'overlay'; const R = RNG('gofs', F);
   out.translate(-R.f() * 256, -R.f() * 256); out.fillStyle = out.createPattern(grainTile(), 'repeat'); out.fillRect(0, 0, W + 256, H + 256); out.restore();

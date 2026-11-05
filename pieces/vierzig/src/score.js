@@ -203,26 +203,40 @@
   function dramaHit(t, v = 1) {
     ['D1', 'D2', 'A2', 'D3', 'F3'].forEach((n, i) => { for (const det of [-9, 9]) { const o = osc('sawtooth', nz(n), t, t + 1.7); o.detune.value = det + i * 2;
       const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 3; lp.frequency.setValueAtTime(2600, t); lp.frequency.exponentialRampToValueAtTime(260, t + 1.4);
-      const g = ac.createGain(); env(g, t, 0.01, 0.045 * v, 1.6); o.connect(lp); lp.connect(g); out(g, (i - 2) * 0.15, 0.5); } });
+      const g = ac.createGain(); env(g, t, 0.01, 0.06 * v, 1.6); o.connect(lp); lp.connect(g); out(g, (i - 2) * 0.15, 0.5); } });
     sub(t, 0.6 * v); noiseHit(t, 1.2, 'lowpass', 900, 0.7, 0.22 * v, 0, 0.7, 120); noiseHit(t, 0.06, 'highpass', 2500, 0.7, 0.18 * v);
   }
   // a rising build that ends exactly on the hit
-  function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.035 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
+  function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.06 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
   const KEYS = [
-    [1.7, 1.35, 1.1],    // a short riser over the first scene (the two at their buttons) into the first cut
-    [5.15, 0.5, 0.8],    // the slam
-    [12.95, 0.8, 0.7],   // the alarm is set: 1 year
-    [20.5, 0.8, 0.8],    // the island rises out of the sea
-    [31.2, 1.0, 0.8],    // the diamond necklace price
-    [37.6, 0.8, 0.8],    // "Konto schläft nie"
-    [49.45, 1.2, 0.9],   // über 1 Million
-    [60.7, 1.0, 0.9],    // "solange du noch kannst"
-    [64.45, 1.2, 1.0],   // the alarm rings
-    [71.0, 1.0, 1.0],    // "Jetzt wird abgerechnet"
+    [0.8, 0.75, 1.15],   // a short riser over the first scene (the two at their buttons) into the 40 million
+    [5.15, 0.6, 0.85],   // the slam
+    [10.4, 0.7, 0.75],   // Jonas grins
+    [12.95, 1.2, 0.8],   // the alarm is set: 1 year
+    [17.3, 0.6, 0.75],   // Multimillionär
+    [20.5, 0.8, 0.85],   // the island rises out of the sea
+    [31.2, 1.4, 0.9],    // the diamond necklace price
+    [37.6, 0.8, 0.85],   // "Konto schläft nie"
+    [49.45, 1.4, 0.95],  // über 1 Million
+    [50.78, 0.6, 0.7],   // 6 Monate später
+    [60.7, 1.3, 0.95],   // "solange du noch kannst"
+    [64.45, 1.6, 1.05],  // the alarm rings
+    [68.35, 0.8, 0.85],  // "Zeig her!"
+    [71.0, 1.3, 1.05],   // "Jetzt wird abgerechnet"
     [73.35, 1.4, 1.1],   // Kevin: 35 Mio.
-    [76.3, 1.0, 1.0],    // the question
+    [76.3, 1.0, 1.05],   // the question
   ];
   for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
+  // every sticker, pop-text and price tag that springs in gets its own sound (unless the shot already has one there)
+  {
+    const POPS = ['pop', 'popHi', 'swish'];
+    for (const sh of SHOTS) {
+      const src = String(sh.ui || ''), own = (sh.sfx || []).map(([t]) => t), seen = [];
+      const re = /(?:info|popText)\((['"`])(?:\\.|(?!\1).)*\1,\s*(?:[^,]+,\s*[^,]+,\s*)?([\d.]+)|springEase\(TT - ([\d.]+)/g;
+      let m; while ((m = re.exec(src))) { const t = parseFloat(m[2] ?? m[3]); if (!(t >= sh.t0 - 0.05 && t < sh.t1) || own.some((u) => Math.abs(u - t) < 0.1) || seen.some((u) => Math.abs(u - t) < 0.1)) continue;
+        seen.push(t); const k = Math.round(t * 10) % 3; play(t, POPS[k], 0.9 + (k * 0.15)); if (k === 2) SFX.pop(t + 0.03, 1.2); }
+    }
+  }
   // dramatic accents where the picture had room to breathe
   for (const [t, name, ...a] of [[23.18, 'impact'], [25.6, 'bassDrop'], [28.6, 'dun'], [33.7, 'bassDrop'], [42.5, 'dun'], [47.95, 'whooshUp', 1.1], [53.4, 'dun'],
     [63.62, 'boom'], [66.75, 'dun'], [69.8, 'dun']]) play(t, name, ...a);
