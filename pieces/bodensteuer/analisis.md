@@ -28,12 +28,12 @@ Referencia: 576×1024 (9:16), 30 fps, 145 s, 71 planos (plano medio ≈2,0 s). E
 6. **Ritmo de cortes de 2 s** y subtítulo de una palabra: no hay un solo momento muerto.
 7. **Final en giro y circular**: vuelve a la misma idea (pagar por algo básico), pero peor. Corta en seco, lo que invita a volver a verlo y a pedir parte 2.
 
-## Cambios en la versión alemana
-- Gancho idéntico en alemán: **"In dieser Stadt kostet es zehn Euro, den Boden zu berühren."** (con "In dieser Stadt", como los videos anteriores).
-- **Conectores causales** para la retención: *denn, deshalb, genau deshalb, weil, also, dadurch, und genau das, warum?*
+## Cambios en la versión alemana (v2, recortada)
+- Gancho idéntico en alemán: **"In dieser Stadt kostet es zehn Euro, den Boden zu berühren."**
+- **12 conectores causales**: Denn, genau deshalb, Darum, Weil, Deshalb, weil das so gut, Dadurch (×2), Und genau das, Warum?, Also (×2). El original en inglés tiene unos 3 (*You see, because, so*).
 - Dólar → euro, "a single dollar" → "einen einzigen Cent", Mason → **Max**.
-- Frases más cortas; se añade el "Aber für mich schon" (puente entre los ricos y su invento) y la pregunta "Warum?" antes de la investigación.
-- Final natural en alemán: "Das ist doch nicht euer Ernst."
-- 429 palabras ≈ 2:20 al ritmo de 3,1 palabras/s.
+- Añadido: "Aber für mich schon" (puente ricos → invento) y "Warum?" (pregunta abierta antes de la investigación).
+- Recortado por no aportar retención: "el peor parte fue", "toda la tarde construyendo", el altavoz, la caída en la piscina, "y sus guardias", "uno de sus coches", "miré alrededor", "la gente saltó de las sillas", "Ground tax disabled", "abrí la notificación", "me quedé mirando el teléfono".
+- 368 palabras (antes 429; el original ≈ 400) ≈ 2:00 a 3,1 palabras/s.
 
 Guion completo: `skript.txt`.
