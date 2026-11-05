@@ -316,6 +316,18 @@ LIB.update({
  'zoom_fast': (lambda s, c: norm(whoosh(.35, True, 400, 8000, s) + sine(glide(200, 1600, .35), .35) * .3 * np.sin(np.pi * T(.35) / .35)), .7),
 })
 
+LIB.update({
+ 'cricket': (lambda s, c: norm(sine(4800, 1.2) * (np.sin(2 * np.pi * 30 * T(1.2)) > .3) * (np.sin(2 * np.pi * 2 * T(1.2)) > 0)), .25),
+ 'magic_hit': (lambda s, c: norm(seq([(impact(.6, 120, 50, .6, s), 0), (music_box([12, 16, 19, 24], .04, .8, 1046.5), 0), (whoosh(.5, True, 800, 8000, s) * .5, 0)], 1.0)), .75),
+ 'money_rain': (lambda s, c: norm(bp(noise(1.6, s), 1500, 7000) * (.5 + .5 * np.abs(np.sin(2 * np.pi * 9 * T(1.6)))) * adsr(1.6, .1, .4) + coins(6, 1.6, s) * .5), .4),
+ 'pan_sizzle': (lambda s, c: norm(hp(noise(1.6, s), 3000) * (.6 + .4 * np.random.default_rng(s).random(int(1.6 * SR))) * adsr(1.6, .2, .4)), .25),
+ 'party_horn': (lambda s, c: norm(saw(glide(500, 700, .8), .8) * adsr(.8, .02, .2) + bp(noise(.8, s), 400, 2000) * .2), .4),
+ 'sniff': (lambda s, c: seq([(bp(noise(.15, s + i), 800, 4000) * np.sin(np.pi * T(.15) / .15), i * .25) for i in range(2)], .5), .4),
+ 'switch': (lambda s, c: seq([(click(.03, 1600, s), 0), (click(.02, 900, s + 1), .03)], .1), .55),
+ 'water_bloop': (lambda s, c: norm(sine(glide(300, 900, .25), .25) * np.exp(-T(.25) * 8) + lp(noise(.25, s), 1500) * .3 * np.exp(-T(.25) * 12)), .55),
+ 'whinny': (lambda s, c: voice([700, 900, 600, 800, 500], [E, I_, E, A, U], .9, .3, s, .12), .4),
+})
+
 def render(cues, dur):
     out = np.zeros(int((dur + 3) * SR))
     for i, c in enumerate(cues):
@@ -338,7 +350,7 @@ def fill_gaps(cues, dur, maxgap=1.4):
 
 if __name__ == '__main__':
     cues_f, voice_f, music_f, out_f = sys.argv[1:5]
-    cues = json.load(open(cues_f)); DUR = 150.8
+    cues = json.load(open(cues_f)); DUR = 66.08
     cues = fill_gaps(cues, DUR); print(len(cues), 'efectos; hueco máximo', max(np.diff(sorted([0] + [c['t'] for c in cues] + [DUR]))).round(2))
     TEN = {'riser', 'braam', 'riser_short', 'braam_short'}
     ten = render([c for c in cues if c['s'] in TEN], DUR); ten = norm(ten, 0.9)
