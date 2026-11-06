@@ -2617,8 +2617,16 @@ S(1.9, { tr: 'whipL', cam: [[1.9, 540, 960, 1.04], [3.46, 540, 960, 1.0]],
 S(3.46, { tr: 'whipL', lift: 110, cam: [[3.46, 540, 1020, 1.08], [5.7, 540, 1010, 1.0]],
   draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, -0.4] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'happy']], look: [-0.3, -0.3], extras: { glasses: true } }); studioPodiums(); cash('h3', 4.12, 18); },
   ui() { tText('WAS NIMMST DU?', 540, 200, 66, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
-    iconCard(285, 462, 'OPTION 1', 'GTA 6 ZOCKEN', '1 € / SEKUNDE', PAL.pink, 3.5, 'pad'); iconCard(795, 462, 'OPTION 2', '1 MIO. €', 'SOFORT', PAL.green, 3.9, 'cash'); tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
-  sfx: [[3.5, 'pop', 1], [3.9, 'pop', 1.2], [4.12, 'cashCannon'], [4.8, 'applause', 0.8]] });
+    iconCard(285, 462, 'OPTION 1', 'GTA 6 ZOCKEN', '1 € / SEKUNDE', PAL.pink, 3.5, 'pad'); iconCard(795, 462, 'OPTION 2', '1 MIO. €', 'SOFORT', PAL.green, 3.62, 'cash'); tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
+  sfx: [[3.5, 'pop', 1], [3.7, 'pop', 1.2]] });
+// ---- 3b · "…1 Million Euro sofort?" — the million itself: a briefcase snaps open, stacks of cash, bills flying everywhere
+S(3.9, { tr: 'zoomIn', cam: [[3.9, 540, 960, 1.0], [5.7, 540, 950, 1.1]],
+  draw() { rays('#0e8a45', '#14a956', { cy: 940, spin: 0.25 }); glow(540, 1000, 600, '#a6f0b4', 0.35); const k = springEase(TT - 3.92, 220, 13), op = EZ.o3(clamp((TT - 4.05) / 0.25));
+    ctx.save(); ctx.translate(540, 1240); ctx.scale(k, k); briefcase(0, 0, 1.35, op); ctx.restore();
+    for (let i = 0; i < 6; i++) { const t0 = 4.1 + i * 0.12; if (TT > t0) { const u = TT - t0, R = RNG('stk', i); euro100(540 + R.n(320) + u * R.n(200), 1000 - u * 700 + u * u * 500, 220, R.n(0.8) + u * R.n(3)); } }
+    cash('m3b', 4.1, 40); },
+  ui() { popText('1.000.000 €', 540, 560, 4.15, 104, PAL.yellow, -0.04, 0); info('SOFORT!', 4.8, { y: 360, bg: PAL.red, size: 64 }); },
+  sfx: [[3.92, 'whooshDown', 1.1], [4.05, 'click'], [4.12, 'cashCannon'], [4.2, 'moneyRain', 1.4], [4.6, 'cashReg'], [4.8, 'pop', 1.1], [5.2, 'bling']] });
 
 // =====================================================================  JONAS IS FASTER
 // ---- 4 · this time Jonas is faster — he slams the pink button before Kevin can move
