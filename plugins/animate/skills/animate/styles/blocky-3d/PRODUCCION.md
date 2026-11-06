@@ -87,3 +87,9 @@ Objetos que aparecen en escena entran animados (no de golpe): escalado con muell
 - **Teléfonos y pantallas**: el teléfono se sostiene delante del pecho con la cara del personaje visible encima; nunca tapa la cara ni queda debajo del subtítulo.
 - **Pop-ups pegados al mundo**: se proyectan después de colocar la cámara, encima de la cabeza del personaje que paga, con el aro brillante en el suelo.
 - **Transcripción**: si no hay faster-whisper con modelo, el modelo Whisper small (CTranslate2) está publicado en npm como `@skillninja/shortmovie-telop-model-p0…p3` (se concatenan las 4 partes de `model.bin`).
+
+## 11. Encargo ampliado (Meins, noviembre 2026)
+- **Arranque**: el primer fotograma ya es un golpe de zoom rápido con un "ding".
+- **Sin neblina y con color**: niebla mínima (densidad ≤ 0,001), saturación ×1,45, interiores con luz moderada (hemisférica ≈ 1, puntos ≈ 240) para que nada se queme a blanco.
+- **Velocidad de render**: sin AO en exteriores (y donde no aporta), sombras 2048, capturas JPEG calidad 95. Script `resume` idempotente + comprobación programada cada 20 min para reanudar si el contenedor se reinicia.
+- **Bocadillos de cómic** con la palabra que dice un personaje (en el idioma del video), anclados encima de su cabeza.
