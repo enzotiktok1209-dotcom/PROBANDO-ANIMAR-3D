@@ -193,7 +193,7 @@ const walkers = (T, lt, n = 6, z0 = -30, pays = true) => { for (let i = 0; i < n
 // 1 gancho: dron aéreo sobre la avenida
 shot(0, 'W', null, L => { use('G'); const cut = wt('kostet'); walkers(L.T, L.lt, 6, -36);
   if (L.T < cut) { const k = L.T / cut; cm([0, 80, 40, 0, 4, -60, 56], [1.5, 3.2, -12, 0, 3.6, -40, 50], k, q => 1 - Math.pow(1 - q, 2.2)); }
-  else { const k = (L.T - cut) / (L.t1 - cut); cam([12 - k * 2, 1.6, -30 + k * 3.6], [0, 3.4, -40 + k * 3.6], 48 * (L.T - cut < .18 ? 1 - .12 * (1 - (L.T - cut) / .18) : 1)); } RH.flag.rotation.y = Math.sin(L.T * 3) * .2; FT.userData.update(L.T); sh(V(0, 0, -60), 90); badge('big', '10 €', W / 2, H * .16, L.lt - .5); }, [[0, 'whoosh', .7], [wt('kostet') - .02, 'impact_soft', .7], [.95, 'cash_reg', .6], [1.3, 'coins', .5], [1.6, 'cash_reg', .5]]);
+  else { const k = (L.T - cut) / (L.t1 - cut); cam([-1.5, .8, -22 + k * 2.4], [-.5, 3.6, -38 + k * 2.4], 58 * (L.T - cut < .18 ? 1 - .12 * (1 - (L.T - cut) / .18) : 1)); } RH.flag.rotation.y = Math.sin(L.T * 3) * .2; FT.userData.update(L.T); sh(V(0, 0, -60), 90); badge('big', '10 €', W / 2, H * .16, L.lt - .5); }, [[0, 'whoosh', .7], [wt('kostet') - .02, 'impact_soft', .7], [.95, 'cash_reg', .6], [1.3, 'coins', .5], [1.6, 'cash_reg', .5]]);
 // 2 a ras de suelo: cada paso, -10 €
 shot(wt('den', 1), 'Z', null, L => { use('G'); walkTo(ex[0], -11, -26, 0, L.T, L.lt, 2.2, false, .55); face(ex[0], { eyes: 'open', mouth: 'frown', brows: -.3 }, L.T); pay(ex[0], L.lt, 2.2, 0);
   const p = ex[0].root.position; cm([p.x + 1.5, .8, p.z + 9, p.x, 3.2, p.z, 56], [p.x + 1.2, .8, p.z + 8, p.x, 3.4, p.z, 54], L.k); sh(p, 20); }, stepCues(0, 2, 2.2));
