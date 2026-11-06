@@ -368,8 +368,8 @@ def render(cues, dur):
         at(out, x * lvl * c.get('g', 1), max(0, c['t']))
     return out[:int(dur * SR)]
 
-def fill_gaps(cues, dur, maxgap=1.4):
-    ts = sorted(c['t'] for c in cues); extra = []; fill = ['sparkle', 'whoosh_soft', 'paper', 'cloth', 'pop', 'ding_soft']
+def fill_gaps(cues, dur, maxgap=1.1):
+    ts = sorted(c['t'] for c in cues); extra = []; fill = ['cloth', 'steps', 'whoosh_soft', 'pop', 'steps_heavy', 'paper']
     prev = 0.0
     for t in ts + [dur]:
         while t - prev > maxgap: prev += maxgap * 0.75; extra.append({'t': round(prev, 3), 's': fill[len(extra) % len(fill)], 'g': 0.6})

@@ -11,23 +11,23 @@ const WORDS = await (await fetch('./audio/words.json')).json();
 const DUR = 121.5, U = W / 720;
 const stage = document.getElementById('stage'); const renderer = makeRenderer(stage); renderer.domElement.style.display = 'none';
 const out = document.createElement('canvas'); out.width = W; out.height = H; stage.appendChild(out); const octx = out.getContext('2d');
-const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0xbfe3ff, .0035);
-const camera = new THREE.PerspectiveCamera(50, W / H, .2, 4000); const { composer, bloom, grade, ao } = makeComposer(renderer, scene, camera);
-const sky = nightSky(scene); sky.clouds.forEach((c, i) => c.position.set(-800 + i * 170, 360 + (i % 3) * 70, -1400));
+const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0xbfe3ff, .001);
+const camera = new THREE.PerspectiveCamera(50, W / H, .6, 2500); const { composer, bloom, grade, ao } = makeComposer(renderer, scene, camera);
+const sky = nightSky(scene); sky.sky.material.depthWrite = true; sky.clouds.forEach((c, i) => c.position.set(-800 + i * 170, 360 + (i % 3) * 70, -1400));
 const hemi = new THREE.HemisphereLight(0xcfe6ff, 0x8a8070, 1.7); scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xfff0d8, 2.7); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096); sun.shadow.bias = -.0004; sun.shadow.normalBias = .3; sun.shadow.radius = 5; scene.add(sun, sun.target);
 const rim = rimLight(scene);
-function sh(p, s = 30) { const c = sun.shadow.camera; Object.assign(c, { left: -s, right: s, top: s, bottom: -s, near: 1, far: 700 }); c.updateProjectionMatrix(); sun.target.position.copy(p); sun.position.copy(p).add(V(-70, 140, 90)); rim.target.position.copy(p); rim.position.copy(p).add(V(60, 40, -90)); }
+function sh(p0, s = 30) { const q = 2 * s / 4096 * 4, p = V(Math.round(p0.x / q) * q, Math.round(p0.y / q) * q, Math.round(p0.z / q) * q); const c = sun.shadow.camera; Object.assign(c, { left: -s, right: s, top: s, bottom: -s, near: 1, far: 700 }); c.updateProjectionMatrix(); sun.target.position.copy(p); sun.position.copy(p).add(V(-70, 140, 90)); rim.target.position.copy(p); rim.position.copy(p).add(V(60, 40, -90)); }
 
 // ---------- ciudad ----------
 const G = new THREE.Group(); scene.add(G);
 const gr = new THREE.Mesh(new THREE.PlaneGeometry(900, 900), mat(0xffffff, { roughness: 1, map: noiseTex('#5fbf4a', ['#4fa83c', '#6cc858', '#3f9a34'], 2400, 2, 90) })); gr.rotation.x = -Math.PI / 2; gr.receiveShadow = true; G.add(gr);
 const asphalt = noiseTex('#264174', ['#20386a', '#2c4a80', '#30508a'], 3000, 2, 1); asphalt.repeat.set(2, 60);
-const road = new THREE.Mesh(new THREE.PlaneGeometry(16, 260), mat(0xffffff, { roughness: .9, map: asphalt })); road.rotation.x = -Math.PI / 2; road.position.set(0, .03, -60); road.receiveShadow = true; G.add(road);
-for (let z = 60; z > -170; z -= 7) box(.4, .02, 3.4, mat(0xe8d23a, { emissive: 0xe8d23a, emissiveIntensity: .15 }), 0, G, 0, .05, z);
+const road = new THREE.Mesh(new THREE.PlaneGeometry(16, 260), mat(0xffffff, { roughness: .9, map: asphalt })); road.rotation.x = -Math.PI / 2; road.position.set(0, .07, -60); road.receiveShadow = true; G.add(road);
+for (let z = 60; z > -170; z -= 7) box(.4, .04, 3.4, mat(0xe8d23a, { emissive: 0xe8d23a, emissiveIntensity: .15 }), 0, G, 0, .1, z);
 const tiles = canvasTex(128, 128, (c, w, h) => { c.fillStyle = '#e4e0d8'; c.fillRect(0, 0, w, h); c.strokeStyle = '#c4beb4'; c.lineWidth = 3; for (let i = 0; i <= w; i += 32) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i, h); c.moveTo(0, i); c.lineTo(w, i); c.stroke(); } }, true); tiles.repeat.set(2, 70);
 for (const s of [-1, 1]) { const sw = box(7.6, .3, 260, mat(0xffffff, { map: tiles, roughness: .9 }), .05, G, s * 11.8, .15, -60); sw.castShadow = false; box(.4, .4, 260, mat(0xbab6ae), .05, G, s * 8.1, .2, -60); }
-const plazaT = tiles.clone(); plazaT.repeat.set(16, 8); const plaza = new THREE.Mesh(new THREE.PlaneGeometry(80, 44), mat(0xffffff, { map: plazaT })); plaza.rotation.x = -Math.PI / 2; plaza.position.set(0, .32, -182); plaza.receiveShadow = true; G.add(plaza);
+const plazaT = tiles.clone(); plazaT.repeat.set(16, 8); const plaza = new THREE.Mesh(new THREE.PlaneGeometry(80, 44), mat(0xffffff, { map: plazaT })); plaza.rotation.x = -Math.PI / 2; plaza.position.set(0, .42, -182); plaza.receiveShadow = true; G.add(plaza);
 const shops = []; let bi = 0;
 for (let z = 52; z > -160; z -= 16) for (const s of [-1, 1]) { if (s < 0 && z === -84) { bi++; continue; } shops.push(building(G, s * 15.6, z, s, bi, 14 + ((bi * 7) % 4) * 4.4)); bi++; }
 const lampBulbs = []; for (let z = 44; z > -160; z -= 32) for (const s of [-1, 1]) { lampBulbs.push(lamp(G, s * 9.4, z, s)); hydrant(G, s * 10, z - 6); tree(G, s * 12.6, z - 16, .9); bench(G, s * 13.6, z - 8, s > 0 ? -Math.PI / 2 : Math.PI / 2); }
@@ -128,15 +128,15 @@ const leafP = []; for (let k = 0; k < 30; k++) leafP.push(box(.5, .1, .4, mat(0x
 const PROPS = [phone, ...chairs, WM, ...drones, LIMO, ruler, ...bills, ...confetti, ...rings, ...smoke, ...leafP, benchShoes, ...sparks];
 
 // ---------- utilidades ----------
-const use = (...n) => { for (const k of n) (SETG[k] || [SETS[k]]).forEach(o => o.visible = true); if (n.includes('SEC')) { bloom.strength = .16; L2.color.setRGB(.25, 1, .7); } };
+const use = (...n) => { for (const k of n) (SETG[k] || [SETS[k]]).forEach(o => o.visible = true); if (n.includes('G')) ao.enabled = false; if (n.includes('SEC')) { bloom.strength = .16; L2.color.setRGB(.25, 1, .7); } };
 function day(k) { const u = sky.sky.material.uniforms; u.top.value.setRGB(.02 + .24 * k, .03 + .58 * k, .12 + .87 * k); u.mid.value.setRGB(.05 + .45 * k, .08 + .72 * k, .25 + .75 * k); u.hor.value.setRGB(.15 + .6 * k, .2 + .69 * k, .4 + .6 * k); sky.moon.material.opacity = 1 - k; sky.moon.position.set(-200, 380, -1400);
-  hemi.intensity = .2 + 1.5 * k; hemi.color.setRGB(.5 + .31 * k, .55 + .35 * k, 1); sun.intensity = .4 + 2.3 * k; sun.color.setRGB(.6 + .4 * k, .7 + .24 * k, 1 - .15 * k); rim.intensity = 2.2 - .8 * k; scene.fog.color.setRGB(.05 + .7 * k, .08 + .81 * k, .2 + .8 * k); scene.fog.density = .005 - .0015 * k;
-  lampBulbs.forEach(b => b.material.emissiveIntensity = .1 + (1 - k) * 3); shops.forEach((s, i) => { s.wins[0].emissiveIntensity = (1 - k) * 1.4 * ((i % 3) ? 1 : .3); s.show.emissiveIntensity = .25 + (1 - k) * 1.5; }); bloom.strength = .38 + (1 - k) * .45; }
+  hemi.intensity = .2 + 1.5 * k; hemi.color.setRGB(.5 + .31 * k, .55 + .35 * k, 1); sun.intensity = .4 + 2.3 * k; sun.color.setRGB(.6 + .4 * k, .7 + .24 * k, 1 - .15 * k); rim.intensity = 2.2 - .8 * k; scene.fog.color.setRGB(.05 + .7 * k, .08 + .81 * k, .2 + .8 * k); scene.fog.density = .0024 - .0016 * k;
+  lampBulbs.forEach(b => b.material.emissiveIntensity = .1 + (1 - k) * 3); shops.forEach((s, i) => { s.wins[0].emissiveIntensity = (1 - k) * 1.4 * ((i % 3) ? 1 : .3); s.show.emissiveIntensity = .25 + (1 - k) * 1.5; }); bloom.strength = .26 + (1 - k) * .4; }
 function hideAll() {
   for (const c of POOLC) { c.root.visible = false; c.root.rotation.set(0, 0, 0); c.root.scale.setScalar(c.spec.scale || 1); applyPose(c, {}); c.setFlame && c.setFlame(0); c.head.scale.set(1, 1, 1); }
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); }
   rings.forEach(r => r.rotation.x = Math.PI / 2); for (const k in SETS) SETS[k].visible = false; graph.visible = false; phone.parent !== scene && scene.attach(phone);
-  grade.uniforms.vig.value = .32; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.28; day(1); ao.enabled = true; drawBB(false); max.props.goggles.visible = true; }
+  grade.uniforms.vig.value = .32; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.48; day(1); ao.enabled = true; drawBB(false); max.props.goggles.visible = true; }
 function put(ch, x, y, z, ry = 0) { ch.root.visible = true; ch.root.position.set(x, y, z); ch.root.rotation.set(0, ry, 0); return ch; }
 function face(ch, f, T) { const s = { ...f }; if (blinking(T, ch.seed) && !['closed', 'happy'].includes(s.eyes)) s.eyes = 'closed'; ch.setFace(s); }
 function kp(ch, lt, keys, extra = {}) { let p = keys[0][1]; for (let i = 0; i < keys.length - 1; i++) { const [t0, a] = keys[i], [t1, b] = keys[i + 1]; if (lt >= t0 && lt <= t1) { p = mixPose(a, b, easeInOut((lt - t0) / (t1 - t0))); break; } if (lt > t1) p = b; } applyPose(ch, { ...p, ...extra }); }
@@ -191,7 +191,9 @@ const S = []; const shot = (t0, tr, zoom, fn, sfx = []) => S.push({ t0, tr, zoom
 const walkers = (T, lt, n = 6, z0 = -30, pays = true) => { for (let i = 0; i < n; i++) { const e = ex[i + 2], s = i % 2 ? 1 : -1; walkTo(e, s * (3 + (i % 3) * 3.6), z0 - i * 5, i % 3 === 2 ? Math.PI : 0, T + i * .3, lt, 2.2); face(e, { eyes: 'open', mouth: pays ? 'frown' : 'grin', brows: pays ? -.4 : 0 }, T); if (pays && i < 3) pay(e, lt + i * .2, 2.2, 0, '-10 €', 'pay', i + 1); } };
 
 // 1 gancho: dron aéreo sobre la avenida
-shot(0, 'W', null, L => { use('G'); walkers(L.T, L.lt, 6, -40, false); cm([0, 70, 70, 0, 6, -120, 52], [0, 46, 40, 0, 8, -140, 50], L.k, easeOut); RH.flag.rotation.y = Math.sin(L.T * 3) * .2; FT.userData.update(L.T); sh(V(0, 0, -60), 90); badge('big', '10 €', W / 2, H * .16, L.lt - .5); }, [[0, 'wind', .5], [.6, 'cash_reg', .6]]);
+shot(0, 'W', null, L => { use('G'); const cut = wt('kostet'); walkers(L.T, L.lt, 6, -36);
+  if (L.T < cut) { const k = L.T / cut; cm([0, 80, 40, 0, 4, -60, 56], [1.5, 3.2, -12, 0, 3.6, -40, 50], k, q => 1 - Math.pow(1 - q, 2.2)); }
+  else { const k = (L.T - cut) / (L.t1 - cut); cam([12 - k * 2, 1.6, -30 + k * 3.6], [0, 3.4, -40 + k * 3.6], 48 * (L.T - cut < .18 ? 1 - .12 * (1 - (L.T - cut) / .18) : 1)); } RH.flag.rotation.y = Math.sin(L.T * 3) * .2; FT.userData.update(L.T); sh(V(0, 0, -60), 90); badge('big', '10 €', W / 2, H * .16, L.lt - .5); }, [[0, 'whoosh', .7], [wt('kostet') - .02, 'impact_soft', .7], [.95, 'cash_reg', .6], [1.3, 'coins', .5], [1.6, 'cash_reg', .5]]);
 // 2 a ras de suelo: cada paso, -10 €
 shot(wt('den', 1), 'Z', null, L => { use('G'); walkTo(ex[0], -11, -26, 0, L.T, L.lt, 2.2, false, .55); face(ex[0], { eyes: 'open', mouth: 'frown', brows: -.3 }, L.T); pay(ex[0], L.lt, 2.2, 0);
   const p = ex[0].root.position; cm([p.x + 1.5, .8, p.z + 9, p.x, 3.2, p.z, 56], [p.x + 1.2, .8, p.z + 8, p.x, 3.4, p.z, 54], L.k); sh(p, 20); }, stepCues(0, 2, 2.2));
@@ -376,16 +378,18 @@ const CUES = [];
 S.forEach((s, i) => { for (const [lt, n, g] of s.sfx) CUES.push({ t: +(s.t0 + lt).toFixed(3), s: n, g: g ?? 1 });
   if (s.zoom === 'slow') { CUES.push({ t: s.t0 + .05, s: 'riser', g: .9, d: +(s.t1 - s.t0 - .05).toFixed(3) }); CUES.push({ t: s.t1 - .02, s: 'braam', g: 1 }); }
   else if (i > 0) CUES.push({ t: s.t0 + .05, s: ['zoom_in', 'whoosh_soft', 'zoom_out'][i % 3], g: .35 });
+  if (!s.zoom && i > 1 && i % 3 === 0) { const d = (S[i + 1]?.t0 ?? DUR) - s.t0; CUES.push({ t: +(s.t0 + d * .45).toFixed(3), s: ['impact_soft', 'thump', 'zoom_in'][(i / 3) % 3], g: .6 }); }
   if (s.tr) CUES.push({ t: +(s.t1 - TRW[s.tr] / FPS).toFixed(3), s: TR_SFX[s.tr], g: .8 }); });
 CUES.push({ t: .05, s: 'riser', g: .9, d: 3.3 }); CUES.push({ t: 3.42, s: 'braam', g: 1 });   // gancho
 CUES.sort((a, b) => a.t - b.t);
 const shotAt = T => { for (let i = 0; i < S.length; i++) if (T < S[i].t1) return i; return S.length - 1; };
 function renderShot(i, T, tr, a) {
-  const s = S[i], lt = T - s.t0, d = s.t1 - s.t0, L = { lt, k: clamp(lt / d), T, d };
-  hideAll(); BAD.length = 0; s.fn(L);
+  const s = S[i], lt = T - s.t0, d = s.t1 - s.t0, L = { lt, k: clamp(lt / d), T, d, t1: s.t1 };
+  hideAll(); BAD.length = 0; s.fn(L); if (location.search.includes('noao')) ao.enabled = false;
   if (s.zoom === 'slow' || (i === 0 || i === 1)) { const e = s.zoom === 'slow' ? easeIn(L.k) : easeIn(clamp(T / 3.4)); grade.uniforms.vig.value = lerp(grade.uniforms.vig.value, .85, e); camera.fov *= lerp(1, .92, e); }
   let sh_ = 0; for (const c of CUES) { if (c.t > T) break; if (['impact', 'thump', 'braam', 'boom', 'table_bang', 'crash_wood'].includes(c.s) && T - c.t < .14) sh_ = 1 - (T - c.t) / .14; }
   if (sh_) { const r = RNG(Math.floor(T * FPS) + 1); camera.position.x += (r() - .5) * .25 * sh_; camera.position.y += (r() - .5) * .25 * sh_; }
+  if (!s.zoom && i > 1 && i % 3 === 0) camera.fov *= punch(lt, d * .45, .16, .16);
   camera.updateProjectionMatrix();
   if (tr === 'W' || tr === 'S') { grade.uniforms.blurAmt.value = a * .07; grade.uniforms.dir.value.set(tr === 'W' ? 1 : 0, tr === 'W' ? 0 : 1); } else grade.uniforms.blurAmt.value = 0;
   if (tr === 'F') grade.uniforms.flash.value = Math.max(grade.uniforms.flash.value, a * .95);
