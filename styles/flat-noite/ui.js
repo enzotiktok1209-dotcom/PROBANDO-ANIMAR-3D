@@ -7,10 +7,12 @@ const SUB_COL = { y: FN.yellow, r: FN.red, g: '#33d16a', b: FN.blueL, p: FN.pink
 // subtitles from TIMELINE.subs = [{ t0, t1, lines: [[{ w, t0, c }...], ...] }]
 function fnSubtitles() {
   const S = (TIMELINE.subs || []).find((s) => TT >= s.t0 - 1e-6 && TT < s.t1 - 1e-6); if (!S) return;
-  const k = clamp((TT - S.t0) / 0.12), sc = 0.82 + 0.18 * EZ.back(k);
+  const k = clamp((TT - S.t0) / 0.12); let sc = 0.82 + 0.18 * EZ.back(k);
   ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.font = `900 ${SUB_SIZE}px ${FONT_SUB}`; ctx.textBaseline = 'alphabetic'; ctx.lineJoin = 'round';
   const LH = SUB_SIZE * 1.02, y0 = SUB_Y - (S.lines.length - 1) * LH / 2;
+  const maxW = Math.max(...S.lines.map((line) => line.reduce((a, t) => a + ctx.measureText(t.w + ' ').width, 0))); const fit = Math.min(1, 940 / maxW);
+  sc *= fit;
   S.lines.forEach((line, li) => {
     const sp = ctx.measureText(' ').width * 0.85, ws = line.map((t) => ctx.measureText(t.w).width), tot = ws.reduce((a, b) => a + b, 0) + sp * (line.length - 1);
     let x = W / 2 - tot / 2 * sc; const y = y0 + li * LH;
@@ -36,8 +38,8 @@ function fnHUD(label, o = {}) {
   ctx.fillStyle = FN.win; ctx.fillText(label, W / 2, y + 30);
   if (o.men !== false) {
     const blink = 0.75 + 0.25 * (mod(TT, 4) < 0.15 ? 0 : 1);
-    fnRR(36, 196, 300, 40, 6, 'rgba(11,15,36,0.75)'); ctx.lineWidth = 2; ctx.strokeStyle = FN.blue; ctx.beginPath(); ctx.roundRect(36, 196, 300, 40, 6); ctx.stroke();
-    ctx.textAlign = 'left'; ctx.font = `700 22px ${FONT_MONO}`; ctx.fillStyle = `rgba(160,200,255,${blink})`; ctx.fillText('HOMENS: 1', 52, 217);
+    ctx.font = `700 22px ${FONT_MONO}`; const cw = Math.max(300, ctx.measureText(o.counter || 'HOMENS: 1').width + 34); fnRR(36, 196, cw, 40, 6, 'rgba(11,15,36,0.75)'); ctx.lineWidth = 2; ctx.strokeStyle = FN.blue; ctx.beginPath(); ctx.roundRect(36, 196, cw, 40, 6); ctx.stroke();
+    ctx.textAlign = 'left'; ctx.font = `700 22px ${FONT_MONO}`; ctx.fillStyle = `rgba(160,200,255,${blink})`; ctx.fillText(o.counter || 'HOMENS: 1', 52, 217);
   }
   if (o.extra) o.extra.forEach(([txt, col], i) => { const yy = 246 + i * 44; fnRR(36, yy, 300, 38, 6, 'rgba(11,15,36,0.75)'); ctx.lineWidth = 2; ctx.strokeStyle = col; ctx.beginPath(); ctx.roundRect(36, yy, 300, 38, 6); ctx.stroke(); ctx.font = `700 21px ${FONT_MONO}`; ctx.fillStyle = col; ctx.fillText(txt, 52, yy + 20); });
   ctx.restore();

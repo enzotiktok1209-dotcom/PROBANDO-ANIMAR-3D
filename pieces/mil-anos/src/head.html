@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E se todo mundo dormisse 1000 anos?</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05070f; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { height: min(100vh, calc(100vw * 16 / 9)); width: auto; aspect-ratio: 9 / 16; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  E SE TODO MUNDO DORMISSE 1000 ANOS? 9:16, 30fps. The voice is the clock (voice/voice.wav, 92.22s, no silences).
+//  A cut every ~1.2–2.3s, a camera move in every shot (fast snaps, slow vignetted push-ins with a riser → hit),
+//  a transition with its own sound on every cut. Content in y 260–1180 (subtitles in 1180–1420).
+// =====================================================================
+const FPS = 30, W = 1080, H = 1920;
+const BPM = 112.5, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = 92.8;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 250, bottom: 420, right: 140 };
+const HAND = '"Inter", sans-serif';
+const CX = 540;
+const PHR = [
+  [0.00, 1.55, 'IMAGINA / ACORDAR AMANHÃ:y'], [1.55, 5.19, 'E DESCOBRIR QUE / VOCÊ DORMIU // PELOS PRÓXIMOS / MIL:y ANOS.:y'],
+  [5.19, 6.17, 'PARECE BOM, / NÉ?:g'], [6.18, 8.14, 'SEM TRABALHO,:r / SEM BOLETO,:r'], [8.14, 10.12, 'SEM DESPERTADOR:r / TODA SEGUNDA.'],
+  [10.12, 11.06, 'BOM… / MENOS UM.:y'], [11.05, 13.96, 'ESSE ESTÁ / PROGRAMADO // PRO ANO / 3026.:y'],
+  [13.96, 16.20, 'A HUMANIDADE / INTEIRA // ENTRA EM / BUNKERS,:b'], [16.20, 17.84, 'COM ROBÔS:b PRA / TE MANTER VIVO.'],
+  [17.84, 19.26, 'VOCÊ DEITA / NA CÁPSULA…:b'], [19.25, 20.49, 'E FECHA / OS OLHOS.:p'],
+  [20.50, 23.61, '8 BILHÕES:y / DE PESSOAS // SOMEM:r DA / SUPERFÍCIE.'], [23.60, 26.31, 'E A TERRA / VAI FICAR // MUITO / INTERESSANTE.:y'],
+  [26.31, 28.80, '24 HORAS:y / DEPOIS, // A ENERGIA / CAI.:r'], [28.80, 31.09, 'AS CIDADES / APAGAM,:r // A INTERNET / SOME.:r'],
+  [31.10, 34.97, 'SEU CELULAR, / PELA PRIMEIRA // VEZ, NÃO TEM / NENHUMA // NOTIFICAÇÃO.:y'],
+  [34.98, 36.63, 'SÓ LAS VEGAS:p / SEGUE ACESA:'], [36.63, 38.80, 'CASSINO / LOTADO DE… // NINGUÉM.:r'],
+  [38.81, 41.73, 'UMA SEMANA:y / DEPOIS, // TEM UM GUAXINIM:g / NA SUA COZINHA.'], [41.74, 44.15, 'A GELADEIRA / PAROU,:r // E ELE ACHOU / SEUS BISCOITOS.:y'],
+  [44.15, 45.83, 'PARABÉNS: / NOVO MORADOR.:g'], [45.83, 48.01, 'E O SEU GATO? // DORMINDO:p / DO SEU LADO.'],
+  [48.01, 50.96, 'UM MÊS:y / DEPOIS, // AS CIDADES / FICAM SELVAGENS.:g'], [50.97, 53.77, 'MATO NAS / RACHADURAS,:g // PÁSSAROS / NOS PRÉDIOS.:g'],
+  [53.76, 56.01, 'UM LEÃO:y PARA // NA FRENTE DE / UM RESTAURANTE.'], [56.00, 57.94, 'FECHADO.:r // ATENDIMENTO / PÉSSIMO.:r'],
+  [57.94, 62.10, 'UM ANO:y / DEPOIS, // NAVIOS GIGANTES / FICAM À DERIVA // E BATEM / NO CAIS.:r'], [62.10, 64.13, 'GAIVOTAS / BRIGAM // POR / SALGADINHO.:y'],
+  [64.13, 66.79, 'NA SUA / CAFETERIA // FAVORITA, NASCE / UMA ÁRVORE.:g'], [66.79, 69.06, 'E O GUAXINIM / JÁ SE MUDOU // PRA UM LUGAR / MELHOR.:y'],
+  [69.07, 74.20, 'CINCO ANOS:y / DEPOIS, // TREPADEIRAS:g / COBREM OS PRÉDIOS // E RAÍZES QUEBRAM / AS CALÇADAS.:r'],
+  [74.20, 76.96, 'NA TIMES / SQUARE, // NO LUGAR / DO TRÂNSITO, // PASSARINHO.:g'], [76.96, 78.81, 'NO LUGAR / DOS TELÕES, // FOLHA.:g'],
+  [78.81, 82.13, 'E A ESTAÇÃO / ESPACIAL:b // CAI DO CÉU // COMO UM RISCO / DE FOGO…:r'], [82.14, 83.94, 'E NINGUÉM ESTÁ / ACORDADO // PRA VER.:p'],
+  [83.94, 86.72, 'DEZ ANOS:y / DEPOIS… // ISSO É SÓ / O COMEÇO.:r'], [86.72, 89.99, 'FALTAM 990 / ANOS:y // PRO DESPERTADOR / TOCAR.:r'],
+  [89.98, 92.22, 'COMENTA O QUE / VOCÊ ACHA // QUE SOBRA / DO MUNDO…:y'],
+];
+function buildSubs() {
+  const subs = [];
+  PHR.forEach(([t0, t1, txt]) => {
+    const chunks = txt.split(' // ').map((c) => c.split(' / ').map((l) => l.split(' ').filter(Boolean).map((w) => { const [ww, c2] = w.split(/:(?=[a-z]$)/); return { w: ww, c: c2 || 'w' }; })));
+    const all = chunks.flat(2), tot = all.reduce((a, w) => a + w.w.length + 2, 0); let acc = 0;
+    all.forEach((w) => { w.t0 = t0 + (t1 - t0) * acc / tot * 0.92; acc += w.w.length + 2; });
+    chunks.forEach((lines) => subs.push({ t0: lines[0][0].t0, lines }));
+  });
+  subs.forEach((s, i) => { s.t1 = i + 1 < subs.length ? subs[i + 1].t0 : DURATION; });
+  return subs;
+}
+const C0 = [540, 760];
+const SN = (z0, z1) => ({ z: [z0, z1], p: [540, 760], m: 'snap' }), SL = (z0, z1, vig) => ({ z: [z0, z1], p: [540, 760], m: 'slow', vig }), OUT = (z0) => ({ z: [z0, 1.0], p: [540, 760], m: 'out' }), DR = (z0, z1) => ({ z: [z0, z1], p: [540, 760], m: 'drift' });
+const SHOT_LIST = [
+  [0.00, 'wake', SN(0.55, 1.1), 'none'], [1.55, 'calendar', SL(1.0, 1.25, 0.6), 'zoomblur'], [3.40, 'oldroom', SN(1.0, 1.25), 'whip'],
+  [5.19, 'smile', SN(1.0, 1.3), 'flash'], [6.18, 'bills', DR(1.0, 1.12), 'whip'], [8.14, 'smash', SN(1.0, 1.3), 'zoomblur'],
+  [10.12, 'oneclock', SL(1.0, 1.3, 0.75), 'dip'], [11.05, 'alarm3026', SN(1.0, 1.25), 'flash'], [12.50, 'alarmzoom', SL(1.0, 1.35, 0.95), 'zoomblur'],
+  [13.96, 'bunker', OUT(1.4), 'whipdown'], [16.20, 'robots', DR(1.05, 1.15), 'wipe'], [17.84, 'pod', SL(1.0, 1.2, 0.55), 'whip'],
+  [19.25, 'eyes', SL(1.0, 1.3, 0.95), 'zoomblur'], [20.50, 'counter', SN(1.0, 1.2), 'dip'], [22.10, 'emptycity', SL(1.0, 1.15, 0.6), 'whip'],
+  [23.60, 'earth', SL(1.0, 1.35, 0.85), 'zoomblur'], [26.31, 'tag24', SN(1.4, 1.0), 'flash'], [27.10, 'power', SN(1.0, 1.25), 'glitch'],
+  [28.80, 'blackout', OUT(1.3), 'dip'], [30.00, 'wifi', SN(1.0, 1.25), 'glitch'], [31.10, 'phone', SL(1.0, 1.25, 0.6), 'whip'],
+  [33.00, 'nonotif', SN(1.0, 1.3), 'zoomblur'], [34.98, 'vegas', OUT(1.35), 'flash'], [36.63, 'casino', SN(1.0, 1.25), 'whip'],
+  [37.80, 'nobody', SL(1.0, 1.25, 0.85), 'zoomblur'], [38.81, 'tag1w', SN(1.4, 1.0), 'flash'], [39.60, 'raccoon', DR(1.0, 1.15), 'wipe'],
+  [41.74, 'fridge', SN(1.0, 1.25), 'whip'], [42.90, 'cookies', SN(1.0, 1.3), 'zoomblur'], [44.15, 'resident', OUT(1.35), 'flash'],
+  [45.83, 'cat', SL(1.0, 1.25, 0.6), 'dip'], [48.01, 'tag1m', SN(1.4, 1.0), 'flash'], [48.80, 'wildcity', DR(1.0, 1.12), 'whip'],
+  [50.97, 'cracks', SN(1.0, 1.3), 'zoomblur'], [52.30, 'birds', SL(1.0, 1.2, 0.5), 'whipup'], [53.76, 'lion', DR(1.05, 1.15), 'whip'],
+  [56.00, 'closed', SN(1.0, 1.3), 'hard'], [57.94, 'tag1y', SN(1.4, 1.0), 'flash'], [58.80, 'ship', SL(1.0, 1.2, 0.65), 'whip'],
+  [60.60, 'crash', OUT(1.3), 'zoomblur'], [62.10, 'gulls', SN(1.0, 1.25), 'whip'], [64.13, 'cafe', SL(1.0, 1.15, 0.5), 'wipe'],
+  [65.40, 'tree', SN(1.0, 1.3), 'zoomblur'], [66.79, 'beach', OUT(1.3), 'flash'], [69.07, 'tag5y', SN(1.4, 1.0), 'flash'],
+  [69.90, 'vines', SL(1.0, 1.2, 0.55), 'whipup'], [72.20, 'roots', SN(1.0, 1.3), 'zoomblur'], [74.20, 'times', DR(1.0, 1.12), 'whip'],
+  [75.70, 'birds2', SN(1.0, 1.25), 'glitch'], [76.96, 'leaves', SL(1.0, 1.25, 0.6), 'zoomblur'], [78.81, 'iss', SL(1.0, 1.3, 0.95), 'dip'],
+  [80.50, 'fire', SN(1.0, 1.2), 'flash'], [82.14, 'nobody2', SL(1.0, 1.2, 0.85), 'whipdown'], [83.94, 'tag10y', SN(1.4, 1.0), 'flash'],
+  [85.30, 'begin', OUT(1.35), 'zoomblur'], [86.72, 'countdown', SN(1.0, 1.25), 'glitch'], [88.40, 'sleeping', SL(1.0, 1.3, 0.9), 'zoomblur'],
+  [89.98, 'cta', OUT(1.12), 'tapestop'],
+];
+const SCENE = {};
+const ERA_LIST = SHOT_LIST.map(([t0, sc], i) => [t0, i + 1 < SHOT_LIST.length ? SHOT_LIST[i + 1][0] : DURATION, () => (SCENE[sc] || scenePlaceholder)(sc)]);
+const SHOTS = SHOT_LIST.map(([t0, sc], i) => ({ id: i + 1, key: sc, era: i, t0, t1: ERA_LIST[i][1], title: sc }));
+const HUD_AT = [[0, 'ANO 2026 · HOJE'], [13.96, 'ANO 2026 · DIA 0'], [26.31, 'ANO 2026 · +24 H'], [38.81, 'ANO 2026 · +1 SEMANA'], [48.01, 'ANO 2026 · +1 MÊS'],
+  [57.94, 'ANO 2027'], [69.07, 'ANO 2031'], [83.94, 'ANO 2036'], [89.98, 'SUA VEZ']];
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'beat-cut', shots: SHOTS, cuts: SHOT_LIST.slice(1).map(([t0]) => t0), morphs: [],
+  subs: buildSubs(),
+  narration: PHR.map(([t0, t1, txt]) => ({ t0, t1, text: txt.replace(/:[a-z](?=\s|$)/g, '').replace(/ \/\/ | \/ /g, ' ') })),
+  acts: [{ name: 'Gancho', role: 'build', t0: 0, t1: 13.96 }, { name: 'Bunkers', role: 'journey', t0: 13.96, t1: 26.31 }, { name: 'Linha do tempo', role: 'peak', t0: 26.31, t1: 78.81 },
+    { name: 'Estação', role: 'gift', t0: 78.81, t1: 83.94 }, { name: 'Fim', role: 'goodbye', t0: 83.94, t1: DURATION }],
+  board: [],
+};
+window.TIMELINE = TIMELINE;
+const SHOT_T = (k) => SHOT_LIST.find((s) => s[1] === k)[0];
+function scenePlaceholder(k) { fnSky(FN.navy2, FN.navy0); fnBold(k.toUpperCase(), 540, 760, 90, '#ffffff'); }
