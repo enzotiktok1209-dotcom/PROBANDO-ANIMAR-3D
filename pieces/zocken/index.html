@@ -2595,7 +2595,7 @@ function splitTopBottom(top, bottom) {
 
 // =====================================================================  THE HOOK
 // ---- 1 · the two at their buttons and both options — a fast zoom with its swoosh (short riser into the first cut)
-S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.45], [0.28, 540, 1020, 1.0], [0.75, 540, 1015, 1.03]],
+S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.14], [0.2, 540, 1020, 1.0], [0.75, 540, 1015, 1.03]],
   draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, -0.4] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'happy']], look: [-0.3, -0.3], extras: { glasses: true } }); studioPodiums(); },
   ui() { tText('WAS NIMMST DU?', 540, 200, 66, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
     iconCard(285, 462, 'OPTION 1', 'GTA 6 ZOCKEN', '1 € / SEKUNDE', PAL.pink, 0.03, 'pad'); iconCard(795, 462, 'OPTION 2', '1 MIO. €', 'SOFORT', PAL.green, 0.12, 'cash'); tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
