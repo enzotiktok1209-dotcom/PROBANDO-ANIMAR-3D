@@ -357,6 +357,8 @@ LIB.update({
 })
 
 LIB['locker'] = LIB['metal_hit']
+LIB['fire_whoosh'] = (lambda s, c: norm(mx(bp(noise(1.0, s), 200, 3000) * adsr(1.0, .03, .5), lp(noise(1.0, s + 1), 120) * adsr(1.0, .01, .4) * 1.5)), .55)
+LIB['zap'] = (lambda s, c: norm(saw(glide(900, 200, .35), .35) * env(.35, .002, .2) + hp(noise(.35, s), 3000)[:int(.35 * SR)] * env(.35, .002, .1) * .6), .45)
 def render(cues, dur):
     out = np.zeros(int((dur + 3) * SR))
     for i, c in enumerate(cues):

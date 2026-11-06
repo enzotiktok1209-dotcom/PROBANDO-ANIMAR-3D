@@ -1,11 +1,12 @@
 // Meins — colegio, guardería, hospital, ambulancia; reparto y efectos de poderes.
 import { THREE, mat, box, cyl, sphere, canvasTex, textPlane, checkTex, RNG } from './engine.js';
-import { mk, hairS, glasses, cap, mustache, hoodie, suit, jacket, noiseTex, stripes, txt, screen, building, tree, lamp, hydrant } from './props.js';
+import { bench, mk, hairS, glasses, cap, mustache, hoodie, suit, jacket, noiseTex, stripes, txt, screen, building, tree, lamp, hydrant } from './props.js';
 
 const rep = (t, a, b) => { t.repeat.set(a, b); return t; };
 const neon = c => new THREE.MeshBasicMaterial({ color: new THREE.Color(...c), toneMapped: false });
 export function room(scene, x, w, d, h, wallM, floorM, ceilLights = true) { const g = new THREE.Group(); g.position.x = x; scene.add(g); const f = new THREE.Mesh(new THREE.PlaneGeometry(w, d), floorM); f.rotation.x = -Math.PI / 2; f.receiveShadow = true; g.add(f);
   box(w, h, .6, wallM, 0, g, 0, h / 2, -d / 2); for (const s of [-1, 1]) box(.6, h, d, wallM, 0, g, s * w / 2, h / 2, 0); box(w, .4, d, mat(0xf4f4f0), 0, g, 0, h, 0); box(w, 1, .7, mat(0xffffff), .05, g, 0, .5, -d / 2 + .3);
+  const fw = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallM); fw.rotation.y = Math.PI; fw.position.set(0, h / 2, d / 2); g.add(fw);
   if (ceilLights) for (let i = -1; i <= 1; i++) box(6, .2, 1.4, mat(0xffffff, { emissive: 0xffffff, emissiveIntensity: .5 }), .05, g, i * w / 3.2, h - .3, 0);
   const L = new THREE.PointLight(0xfff2e0, 240, 90, 2); L.position.set(0, h - 3, 6); g.add(L); return g; }
 const wallTex = (a, b) => rep(canvasTex(64, 64, (c, w, h) => { c.fillStyle = a; c.fillRect(0, 0, w, h * .62); c.fillStyle = b; c.fillRect(0, h * .62, w, h); c.fillStyle = 'rgba(0,0,0,.12)'; c.fillRect(0, h * .62, w, 2); }, true), 8, 1);
@@ -39,7 +40,7 @@ export function classroom(scene, X) { const g = room(scene, X, 40, 32, 20, mat(0
 
 // ---------- pasillo con taquillas (Spinde) ----------
 export function hallway(scene, X) { const g = new THREE.Group(); g.position.x = X; scene.add(g); const f = new THREE.Mesh(new THREE.PlaneGeometry(26, 120), mat(0xffffff, { map: rep(checkTex('#f2e6c8', '#d84a3a', 8), 3, 14) })); f.rotation.x = -Math.PI / 2; f.position.z = -40; f.receiveShadow = true; g.add(f);
-  const wl = mat(0xffffff, { map: rep(wallTex('#f8e8d0', '#f2c8a0'), 12, 1) }); for (const s of [-1, 1]) box(.6, 18, 120, wl, 0, g, s * 13, 9, -40); box(26, .4, 120, mat(0xf4f4f0), 0, g, 0, 18, -40); box(26, 18, .6, wl, 0, g, 0, 9, -100);
+  const wl = mat(0xffffff, { map: rep(wallTex('#f8e8d0', '#f2c8a0'), 12, 1) }); for (const s of [-1, 1]) box(.6, 18, 120, wl, 0, g, s * 13, 9, -40); box(26, .4, 120, mat(0xf4f4f0), 0, g, 0, 18, -40); box(26, 18, .6, wl, 0, g, 0, 9, -100); const fw = new THREE.Mesh(new THREE.PlaneGeometry(26, 18), wl); fw.rotation.y = Math.PI; fw.position.set(0, 9, 20); g.add(fw);
   const lockers = []; const lm = [mat(0x2ec4b6, { roughness: .35, metalness: .3 }), mat(0x28b0a4, { roughness: .35, metalness: .3 })];
   for (const s of [-1, 1]) for (let i = 0; i < 26; i++) { const z = 10 - i * 3.4; if (i % 9 === 4) { box(.3, 9, 5, mat([0xd84a3a, 0x3a6ad8][i % 2]), .05, g, s * 12.6, 4.5, z); continue; } const l = new THREE.Group(); l.position.set(s * 11.9, 0, z); l.rotation.y = -s * Math.PI / 2; g.add(l);
     box(3.2, 8.6, 2, lm[i % 2], .06, l, 0, 4.3, -.6); for (let k = 0; k < 4; k++) box(1.6, .12, .05, mat(0x1a8a80), .02, l, 0, 7.2 + k * .3, .42); box(.18, .9, .18, mat(0xcccccc, { metalness: .9 }), .04, l, 1.2, 4.4, .46); box(.5, .3, .05, mat(0xffffff), .01, l, 0, 6.4, .42); lockers.push(l); }
@@ -92,7 +93,7 @@ export function hospRoom(scene, X) { const g = room(scene, X, 34, 28, 18, mat(0x
   return { g, bed, drawMon }; }
 
 // ---------- exterior: colegio, hospital y calle ----------
-export function outdoor(scene) { const g = new THREE.Group(); scene.add(g); const gr = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), mat(0xffffff, { map: noiseTex('#5fbf4a', ['#4fa83c', '#6cc858'], 2400, 2, 80) })); gr.rotation.x = -Math.PI / 2; gr.receiveShadow = true; g.add(gr);
+export function outdoor(scene) { const g = new THREE.Group(); scene.add(g); bench(g, -9.8, -60, Math.PI / 2); const gr = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), mat(0xffffff, { map: noiseTex('#5fbf4a', ['#4fa83c', '#6cc858'], 2400, 2, 80) })); gr.rotation.x = -Math.PI / 2; gr.receiveShadow = true; g.add(gr);
   const asp = noiseTex('#2c3a5a', ['#24304e', '#344466'], 3000, 2, 1); asp.repeat.set(2, 40); const road = new THREE.Mesh(new THREE.PlaneGeometry(16, 300), mat(0xffffff, { map: asp })); road.rotation.x = -Math.PI / 2; road.position.set(0, .07, -60); g.add(road); for (let z = 80; z > -200; z -= 7) box(.4, .04, 3.4, mat(0xf4f4f4), 0, g, 0, .1, z);
   const tl = rep(canvasTex(64, 64, (c, w, h) => { c.fillStyle = '#e4e0d8'; c.fillRect(0, 0, w, h); c.strokeStyle = '#c4beb4'; c.lineWidth = 3; c.strokeRect(0, 0, w, h); }, true), 2, 80); for (const s of [-1, 1]) box(6, .3, 300, mat(0xffffff, { map: tl }), .05, g, s * 11, .15, -60);
   // casas del barrio (calle de "Nein")
