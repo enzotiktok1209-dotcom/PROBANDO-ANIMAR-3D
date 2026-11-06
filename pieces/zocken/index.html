@@ -2327,6 +2327,69 @@ function chatFlood(t0, n = 34) {
 }
 // a pizza box with one cold slice left
 function pizzaBox(x, y, s) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); shadowEll(0, 10, 200, 26, 0.3); fillRR(-190, -40, 380, 50, 6, '#c9a36a'); ctx.save(); ctx.translate(0, -40); ctx.scale(1, 0.35); circ(0, 0, 150, '#e8b45a'); poly([[0, 0], [150, -30], [140, 50]], '#d8452a'); ctx.restore(); fillRR(-190, -340, 380, 300, 6, '#d9b87a'); tText('PIZZA', 0, -200, 60, { color: '#c4520a', shadow: false }); ctx.restore(); }
+
+// Jason, drawn with human proportions (about 7 heads tall): short dark hair with a fade, a stubble beard,
+// a fitted olive tee over a broad chest, jeans and boots; one hand carries a money bag, the other is a fist at his side.
+function jasonHuman(x, y, s) {
+  const skin = '#e3ad86', skinD = '#c48b64', tee = '#5f6b46', teeD = '#46502f', jean = '#34405a', jeanD = '#252e42', hair = '#2f2118';
+  const sway = Math.sin(TT * 2.2) * 0.02, step = Math.sin(TT * 3);
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); shadowEll(0, 6, 150, 22, 0.35);
+  // legs (slightly apart, weight on one leg)
+  for (const sd of [-1, 1]) { ctx.save(); ctx.translate(sd * 46, -470); ctx.rotate(sd * 0.04);
+    poly([[-38, 0], [38, 0], [32, 450], [-30, 450]], jean); poly([[sd > 0 ? 8 : -38, 0], [sd > 0 ? 38 : -8, 0], [sd > 0 ? 32 : -12, 450], [sd > 0 ? 12 : -30, 450]], jeanD);
+    fillRR(-44, 432, 96, 46, 16, '#5a3a24'); fillRR(-44, 466, 98, 12, 6, '#2a1a10'); ctx.restore(); }
+  fillRR(-92, -500, 184, 40, 10, '#2a2218'); fillRR(-14, -500, 28, 40, 6, '#b8a060');                  // belt + buckle
+  ctx.save(); ctx.translate(0, -480); ctx.rotate(sway);
+  // torso: V-shape tee with chest and shoulder shading
+  ctx.beginPath(); ctx.moveTo(-96, 0); ctx.lineTo(-128, -300); ctx.quadraticCurveTo(-120, -350, -70, -362); ctx.lineTo(70, -362); ctx.quadraticCurveTo(120, -350, 128, -300); ctx.lineTo(96, 0); ctx.closePath(); ctx.fillStyle = tee; ctx.fill();
+  ctx.save(); ctx.clip(); poly([[40, -362], [140, -330], [110, 0], [60, 0]], teeD); line(-60, -250, 60, -250, 6, 'rgba(0,0,0,0.12)'); line(0, -250, 0, -60, 4, 'rgba(0,0,0,0.08)'); ctx.restore();
+  ctx.beginPath(); ctx.moveTo(-34, -362); ctx.quadraticCurveTo(0, -330, 34, -362); ctx.lineWidth = 8; ctx.strokeStyle = teeD; ctx.stroke();
+  // left arm: hanging, fist
+  ctx.save(); ctx.translate(-118, -330); ctx.rotate(0.12 + step * 0.03); fillRR(-30, 0, 60, 120, 26, tee); fillRR(-24, 100, 48, 170, 22, skin); line(-6, 150, -10, 250, 6, skinD); circ(0, 282, 30, skin); ctx.restore();
+  // right arm: bent, carrying the money bag
+  ctx.save(); ctx.translate(118, -330); ctx.rotate(-0.25); fillRR(-30, 0, 60, 120, 26, tee); fillRR(-24, 100, 48, 150, 22, skin); ctx.translate(0, 260); circ(0, 0, 30, skin); moneyBag(30, 90, 0.75, Math.sin(TT * 4) * 0.08); ctx.restore();
+  // neck + head
+  fillRR(-26, -400, 52, 50, 14, skinD);
+  ctx.save(); ctx.translate(0, -470);
+  ell(-58, 0, 12, 20, skinD); ell(58, 0, 12, 20, skinD);                                               // ears
+  ctx.beginPath(); ctx.moveTo(-54, -40); ctx.quadraticCurveTo(-58, 40, -36, 66); ctx.quadraticCurveTo(0, 92, 36, 66); ctx.quadraticCurveTo(58, 40, 54, -40); ctx.quadraticCurveTo(0, -84, -54, -40); ctx.fillStyle = skin; ctx.fill();
+  ctx.save(); ctx.clip(); ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(-56, 10); ctx.quadraticCurveTo(-48, 70, 0, 92); ctx.quadraticCurveTo(48, 70, 56, 10); ctx.lineTo(56, 100); ctx.lineTo(-56, 100); ctx.closePath(); ctx.fillStyle = hair; ctx.fill(); ctx.restore();   // stubble
+  poly([[-56, -30], [-50, -70], [-20, -86], [20, -86], [50, -70], [56, -30], [40, -50], [-40, -50]], hair); ell(0, -62, 52, 22, hair);   // short hair, faded sides
+  line(-34, -18, -14, -20, 6, hair); line(14, -20, 34, -18, 6, hair);                                  // brows
+  for (const ex of [-24, 24]) { ell(ex, -2, 9, 6, '#ffffff'); circ(ex + 1, -2, 4, '#3a2a1a'); }        // eyes
+  poly([[0, -2], [-7, 26], [6, 28]], skinD); line(-14, 46, 14, 44, 4, '#8a4a3a');                       // nose, mouth
+  ctx.restore(); ctx.restore(); ctx.restore();
+}
+
+// a nightclub inside the game: neon sign, bar with glowing bottles, DJ booth, an LED dance floor, lasers, a disco ball,
+// a stage with a pink spotlight, a dancing crowd in silhouette and a velvet VIP rope
+function setClubInterior(t0 = 0) {
+  ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#120626'], [1, '#05020c']]); ctx.fillRect(-100, -100, 1300, 2200);
+  // back wall panels + neon sign
+  for (let i = 0; i < 8; i++) fillRR(i * 140, 180, 120, 900, 8, i % 2 ? '#1a0b34' : '#160a2c');
+  neonSign(540, 300, 'VICE NIGHTS', '#ff4fa3'); line(200, 380, 880, 380, 6, 'rgba(106,240,255,0.7)'); glow(540, 380, 500, '#6af0ff', 0.2);
+  // bar on the left: shelves of glowing bottles
+  fillRR(-20, 560, 330, 26, 6, '#3a2a5a'); fillRR(-20, 700, 330, 26, 6, '#3a2a5a');
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) { const bx = 10 + i * 50, by = 560 + r * 140, c = ['#41f08a', '#ffd23f', '#ff4fa3', '#52b8ff'][(i + r) % 4]; fillRR(bx, by - 80, 26, 80, 8, c); fillRR(bx + 8, by - 104, 10, 26, 4, c); glow(bx + 13, by - 40, 50, c, 0.35); }
+  fillRR(-20, 900, 380, 170, 14, '#2a1a40'); fillRR(-20, 900, 380, 22, 8, '#ff4fa3'); glow(160, 910, 260, '#ff4fa3', 0.3);
+  // DJ booth in the middle, the DJ bobbing with headphones
+  const bob = Math.abs(Math.sin(TT * 7)) * 12; circ(560, 780 - bob, 48, '#0c0618'); fillRR(510, 820 - bob, 100, 140, 40, '#0c0618'); ctx.beginPath(); ctx.arc(560, 780 - bob, 58, Math.PI * 1.05, Math.PI * 1.95); ctx.lineWidth = 12; ctx.strokeStyle = '#6af0ff'; ctx.stroke();
+  fillRR(420, 900, 280, 150, 16, '#1b0f2e'); for (let i = 0; i < 2; i++) { circ(480 + i * 160, 950, 40, '#2a1d44'); circ(480 + i * 160, 950, 10 + 4 * Math.sin(TT * 18 + i), '#41f08a'); }
+  for (let i = 0; i < 10; i++) fillRR(440 + i * 26, 1010, 14, 18 + 14 * Math.abs(Math.sin(TT * 9 + i)), 3, ['#ff4fa3', '#ffd23f', '#41f08a'][i % 3]);
+  // stage on the right with a pink spotlight and a dancer in silhouette
+  fillRR(760, 960, 340, 60, 8, '#2a1a40'); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,79,163,0.28)'; ctx.beginPath(); ctx.moveTo(900, 120); ctx.lineTo(950, 120); ctx.lineTo(1080, 980); ctx.lineTo(780, 980); ctx.fill(); ctx.restore();
+  line(930, 380, 930, 965, 8, '#d9dce8'); const dz = Math.sin(TT * 4) * 10; ctx.save(); ctx.translate(930 + dz * 0.5, 960); ell(0, -280, 30, 36, '#0c0618'); poly([[-30, -250], [30, -250], [22, -140], [36, -10], [-36, -10], [-22, -140]], '#0c0618'); line(14, -230, 6 + dz, -330, 16, '#0c0618'); line(-14, -230, -50, -150, 16, '#0c0618'); ctx.restore();
+  // disco ball + lasers
+  circ(540, 140, 46, '#c0c4d4'); for (let i = 0; i < 20; i++) { const R = RNG('db', i); fillRR(540 + R.n(36) - 6, 140 + R.n(36) - 6, 12, 12, 2, (Math.floor(TT * 8) + i) % 3 ? '#e8ecff' : '#7a86b0'); }
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 8; i++) { const a = Math.sin(TT * 1.8 + i) * 0.9 + (i - 3.5) * 0.2; ctx.strokeStyle = ['rgba(106,240,255,0.5)', 'rgba(255,79,163,0.5)', 'rgba(65,240,138,0.45)'][i % 3]; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(540, 140); ctx.lineTo(540 + Math.sin(a) * 1800, 140 + Math.cos(a) * 1800); ctx.stroke(); } ctx.restore();
+  // LED dance floor
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 9; c++) { const on = (Math.floor(TT * 4) + r + c) % 3; fillRR(-20 + c * 126, 1100 + r * 120, 120, 112, 8, ['#ff4fa3', '#6af0ff', '#7a3cff'][on]); ctx.save(); ctx.globalAlpha = 0.55; fillRR(-20 + c * 126, 1100 + r * 120, 120, 112, 8, '#05020c'); ctx.restore(); }
+  // dancing crowd in silhouette (heads bob on the beat, arms up)
+  const R = RNG('crowd2'); for (let i = 0; i < 12; i++) { const cx = 40 + i * 92 + R.n(14), b = Math.abs(Math.sin(TT * 7 + i)) * 24, hy = 1330 - b - (i % 2) * 40; circ(cx, hy, 40, '#0c0618'); fillRR(cx - 48, hy + 30, 96, 300, 40, '#0c0618'); if (i % 3 !== 1) line(cx + (i % 2 ? 24 : -24), hy + 50, cx + (i % 2 ? 60 : -60), hy - 90 - b, 22, '#0c0618'); }
+  // velvet VIP rope in front
+  for (const px of [120, 960]) { fillRR(px - 12, 1560, 24, 200, 8, '#d4af37'); circ(px, 1560, 22, '#ffd86b'); } ctx.beginPath(); ctx.moveTo(120, 1580); ctx.quadraticCurveTo(540, 1700, 960, 1580); ctx.lineWidth = 22; ctx.strokeStyle = '#b8132a'; ctx.stroke();
+  fillRR(440, 1610, 200, 60, 12, '#1b0f2e'); tText('VIP', 540, 1642, 40, { color: PAL.gold, shadow: false });
+}
 // =====================================================================
 //  main.js — shots, camera, transitions, captions, grade. renderFrame(t) draws one frame.
 //  A shot: S(t0, { tr, cam, punch, shake, draw, ui, sfx, capY }) — every time is absolute (seconds).
@@ -2531,19 +2594,25 @@ function splitTopBottom(top, bottom) {
 }
 
 // =====================================================================  THE HOOK
-// ---- 1 · "GTA 6 zocken" — fast zoom onto the neon title (swoosh + short riser into the first cut)
-S(0.0, { tr: 'cut', cam: [[0, 540, 960, 1.5], [0.3, 540, 960, 1.0], [1.2, 540, 960, 1.05]],
-  draw() { setVice(); const k = springEase(TT - 0.05, 260, 12); gtaTitle(500, 760, 1.1, k); gamepad(540, 1230, 1.1 * springEase(TT - 0.3, 240, 13), Math.sin(TT * 3) * 0.06, Math.floor(TT * 6) % 4); },
-  ui() { info('ZOCKEN = KASSIEREN?', 0.6, { y: 300, bg: PAL.pink, size: 52 }); },
-  sfx: [[0.05, 'bling'], [0.3, 'pop', 1.2], [0.6, 'pop', 1], [0.8, 'click']] });
+// ---- 1 · the two at their buttons and both options — a fast zoom with its swoosh (short riser into the first cut)
+S(0.0, { tr: 'cut', lift: 110, cam: [[0, 540, 1020, 1.45], [0.28, 540, 1020, 1.0], [0.75, 540, 1015, 1.03]],
+  draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, -0.4] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'happy']], look: [-0.3, -0.3], extras: { glasses: true } }); studioPodiums(); },
+  ui() { tText('WAS NIMMST DU?', 540, 200, 66, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
+    iconCard(285, 462, 'OPTION 1', 'GTA 6 ZOCKEN', '1 € / SEKUNDE', PAL.pink, 0.03, 'pad'); iconCard(795, 462, 'OPTION 2', '1 MIO. €', 'SOFORT', PAL.green, 0.12, 'cash'); tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
+  sfx: [[0.03, 'pop', 1], [0.12, 'pop', 1.2], [0.4, 'applause', 0.4]] });
+// ---- 1b · "GTA 6 zocken" — the neon Vice City title slams in, the gamepad pops up
+S(0.75, { tr: 'zoomIn', cam: [[0.75, 540, 960, 1.12], [1.9, 540, 960, 1.0]],
+  draw() { setVice(); const k = springEase(TT - 0.78, 260, 12); gtaTitle(500, 760, 1.1, k); gamepad(540, 1230, 1.1 * springEase(TT - 0.95, 240, 13), Math.sin(TT * 3) * 0.06, Math.floor(TT * 6) % 4); },
+  ui() { info('ZOCKEN = KASSIEREN?', 1.1, { y: 300, bg: PAL.pink, size: 52 }); },
+  sfx: [[0.78, 'bling'], [0.95, 'pop', 1.2], [1.1, 'pop', 1], [1.4, 'click'], [1.6, 'click']] });
 // ---- 2 · "...und für jede Sekunde 1 Euro kassieren?" — coin after coin drops into a jar while the gamepad clicks
-const DROPS = Array.from({ length: 8 }, (_, k) => 1.3 + k * 0.24);
-S(1.2, { tr: 'zoomIn', cam: [[1.2, 540, 960, 1.04], [3.46, 540, 960, 1.0]],
-  draw() { rays('#c4520a', '#e86c0e', { cy: 940 }); glow(540, 1000, 460, '#ffe2a8', 0.4); const n = DROPS.filter((t) => TT > t + 0.57).length; coinJar(540, 1360, 1.0, 0.05 + n * 0.035);
+const DROPS = Array.from({ length: 6 }, (_, k) => 1.95 + k * 0.19);
+S(1.9, { tr: 'whipL', cam: [[1.9, 540, 960, 1.04], [3.46, 540, 960, 1.0]],
+  draw() { rays('#c4520a', '#e86c0e', { cy: 940 }); glow(540, 1000, 460, '#ffe2a8', 0.4); const n = DROPS.filter((t) => TT > t + 0.57).length; coinJar(540, 1360, 1.0, 0.05 + n * 0.04);
     DROPS.forEach((t0, k) => { if (TT < t0 || TT > t0 + 0.6) return; const R = RNG('drop', k), x = 540 + R.n(70), y = lerp(250, 1120, clamp((TT - t0) / 0.57) ** 2); coin(x, y, 54, { sx: Math.cos(TT * 9 + k), label: '1€' }); });
-    stopwatch(850, 760, 0.36 * springEase(TT - 1.25, 220, 13), (TT - 1.25) * 6); gamepad(230, 780, 0.45, -0.2, Math.floor(TT * 8) % 4); },
+    stopwatch(850, 760, 0.36 * springEase(TT - 1.92, 220, 13), (TT - 1.92) * 6); gamepad(230, 780, 0.45, -0.2, Math.floor(TT * 8) % 4); },
   ui() { tText('1 € PRO SEKUNDE', 540, 380, 88, { color: '#fff', stroke: '#6a2a00', strokeW: 18, maxW: 1000 }); DROPS.forEach((t) => popText('+1 €', 360, 1000, t + 0.57, 64, '#41f08a', 0, 120)); },
-  sfx: [[1.25, 'tick'], ...DROPS.map((t) => [t + 0.57, 'coinJar']), ...DROPS.map((t) => [t, 'tickSoft'])] });
+  sfx: [[1.92, 'tick'], ...DROPS.map((t) => [t + 0.57, 'coinJar']), ...DROPS.map((t) => [t, 'tickSoft'])] });
 // ---- 3 · "Oder 1 Million Euro sofort?" — the two at their buttons, the cards, cash flies
 S(3.46, { tr: 'whipL', lift: 110, cam: [[3.46, 540, 1020, 1.08], [5.7, 540, 1010, 1.0]],
   draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { emo: [[0, 'grin']], look: [0.4, -0.4] }); char('jonas', 780, FLOOR - 40, 0.8, { emo: [[0, 'happy']], look: [-0.3, -0.3], extras: { glasses: true } }); studioPodiums(); cash('h3', 4.12, 18); },
@@ -2628,10 +2697,9 @@ S(36.04, { tr: 'iris', lift: 0, cam: [[36.04, 540, 1050, 1.0], [37.88, 540, 1030
   sfx: [[36.1, 'pop', 0.9], [36.3, 'crickets', 0.8], [36.9, 'click'], [37.3, 'click']] });
 // ---- 17 · in the game: the neon nightclub (pink lights, a door, music bumping)
 S(37.88, { tr: 'zoomIn', lift: 0, cam: [[37.88, 540, 960, 1.0], [39.4, 540, 940, 1.1]],
-  draw() { gameTV(540, 960, 980, 1400, (x, y, w, h) => { gameNeonStreet(x, y, w, h); fillRR(x + w * 0.2, y + h * 0.32, w * 0.6, h * 0.4, 16, '#1a0830'); neonSign(540, y + h * 0.38, 'NACHTCLUB', '#ff4fa3'); fillRR(x + w * 0.42, y + h * 0.5, w * 0.16, h * 0.22, 8, '#ff4fa3');
-    for (let i = 0; i < 6; i++) { const a = Math.sin(TT * 2 + i) * 0.5; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = ['rgba(255,79,163,0.25)', 'rgba(106,240,255,0.25)'][i % 2]; ctx.beginPath(); ctx.moveTo(540, y + h * 0.5); ctx.lineTo(540 + Math.sin(a - 0.05) * 900, y + h * 0.5 - Math.cos(a - 0.05) * 900); ctx.lineTo(540 + Math.sin(a + 0.05) * 900, y + h * 0.5 - Math.cos(a + 0.05) * 900); ctx.fill(); ctx.restore(); } }); },
+  draw() { gameTV(540, 960, 980, 1400, (x, y, w, h) => { ctx.save(); ctx.translate(x, y); ctx.scale(w / 1080, h / 1920); setClubInterior(37.88); ctx.restore(); }); },
   ui() { info('IM SPIEL: NACHTCLUB 😏', 38.0, { y: 300, bg: PAL.pink, size: 50 }); },
-  sfx: [[37.9, 'carMusic', 1.5], [38.0, 'pop', 1], [38.6, 'doorbell']] });
+  sfx: [[37.9, 'carMusic', 1.5], [38.0, 'pop', 1], [38.2, 'applause', 1.0], [38.8, 'popHi', 0.9]] });
 // ---- 18 · "Natürlich nur wegen der… Musik." — Kevin, eyebrows up, a guilty grin
 S(39.4, { tr: 'cut', tense: 1, cam: CLOSE(39.4, 41.68),
   draw() { setGamerRoom({ blur: 9, dark: 0.4 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[0, 'shrug']], emo: [[39.4, 'smug'], [40.5, 'love']], look: [[39.4, [0.6, 0]], [40.5, [0, 0]]], tilt: [[39.4, 0], [40.5, 0.1]], extras: { chain: 1, blush: 1 } }); },
@@ -2651,7 +2719,7 @@ S(43.64, { tr: 'glitch', lift: 0, cam: [[43.64, 540, 1000, 1.05], [47.0, 540, 98
   sfx: [[43.8, 'liveOn'], [44.3, 'pop', 1], [45.0, 'notify'], [45.85, 'pop', 1.2], [46.3, 'donation']] });
 // ---- 21 · in the game: a bank heist with Jason (money bags fly)
 S(47.0, { tr: 'whipL', lift: 0, cam: [[47.0, 540, 960, 1.0], [48.32, 540, 950, 1.08]],
-  draw() { gameTV(540, 960, 980, 1400, (x, y, w, h) => { gameBank(x, y, w, h); char('jason', 420, y + h * 0.9, 0.85, { pose: [[0, 'holdR']], emo: [[0, 'serious']], look: [0.5, 0], holdR: () => moneyBag(0, 30, 0.5, Math.sin(TT * 6) * 0.1) }); for (let i = 0; i < 3; i++) moneyBag(700 + i * 70, y + h * 0.82 - (i % 2) * 40, 0.55); }); },
+  draw() { gameTV(540, 960, 980, 1400, (x, y, w, h) => { gameBank(x, y, w, h); jasonHuman(430, y + h * 0.92, 1.0); for (let i = 0; i < 3; i++) moneyBag(700 + i * 70, y + h * 0.82 - (i % 2) * 40, 0.55); }); },
   ui() { info('BANKÜBERFALL MIT JASON 💰', 47.05, { y: 300, bg: PAL.green, size: 46 }); },
   sfx: [[47.05, 'pop', 1], [47.2, 'alarmRing', 0.9], [47.6, 'cashReg'], [48.0, 'rustle']] });
 // ---- 22 · a car chase through Vice City (police lights behind)
@@ -3108,8 +3176,8 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
   const CMAJ = [['C3', ['C4', 'E4', 'G4']], ['A2', ['A3', 'C4', 'E4']], ['F2', ['F3', 'A3', 'C4']], ['G2', ['G3', 'B3', 'D4']]];
   const AMIN = [['A2', ['A3', 'C4', 'E4']], ['F2', ['F3', 'A3', 'C4']], ['D2', ['D3', 'F3', 'A3']], ['E2', ['E3', 'Gs3', 'B3']]];
   const FMAJ = [['F2', ['F3', 'A3', 'C4']], ['C3', ['C4', 'E4', 'G4']], ['G2', ['G3', 'B3', 'D4']], ['A2', ['A3', 'C4', 'E4']]];
-  groove(0.25, 1.15, { prog: CMAJ, kick: false, hat16: true });         // the GTA title
-  groove(1.2, 5.65, { prog: CMAJ, clapV: 0.8 });                        // 1 € a second / 1 million
+  groove(0.25, 1.85, { prog: CMAJ, kick: false, hat16: true });         // the buttons, the GTA title
+  groove(1.9, 5.65, { prog: CMAJ, clapV: 0.8 });                        // 1 € a second / 1 million
   groove(5.7, 15.15, { prog: CMAJ, hat16: true });                       // Jonas is faster, Kevin grabs the million
   groove(15.22, 25.7, { prog: CMAJ, hat16: true, clapV: 1.1 });         // the spree
   groove(25.74, 33.05, { prog: FMAJ, clap: false, pizzV: 0.8 });       // Jonas' PS5
@@ -3133,7 +3201,7 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.06 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
   const KEYS = [
-    [1.2, 1.15, 1.15],   // a short riser over the first scene (the GTA title) into the first cut
+    [0.75, 0.7, 1.15],   // a short riser over the first scene (the two at their buttons) into the GTA title
     [4.12, 0.6, 0.9],    // "1 Million Euro"
     [6.5, 0.7, 0.9],     // Jonas slams first
     [10.3, 0.5, 0.8],    // Kevin grabs the million

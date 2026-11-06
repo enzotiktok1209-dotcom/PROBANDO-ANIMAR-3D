@@ -67,3 +67,66 @@ function chatFlood(t0, n = 34) {
 }
 // a pizza box with one cold slice left
 function pizzaBox(x, y, s) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); shadowEll(0, 10, 200, 26, 0.3); fillRR(-190, -40, 380, 50, 6, '#c9a36a'); ctx.save(); ctx.translate(0, -40); ctx.scale(1, 0.35); circ(0, 0, 150, '#e8b45a'); poly([[0, 0], [150, -30], [140, 50]], '#d8452a'); ctx.restore(); fillRR(-190, -340, 380, 300, 6, '#d9b87a'); tText('PIZZA', 0, -200, 60, { color: '#c4520a', shadow: false }); ctx.restore(); }
+
+// Jason, drawn with human proportions (about 7 heads tall): short dark hair with a fade, a stubble beard,
+// a fitted olive tee over a broad chest, jeans and boots; one hand carries a money bag, the other is a fist at his side.
+function jasonHuman(x, y, s) {
+  const skin = '#e3ad86', skinD = '#c48b64', tee = '#5f6b46', teeD = '#46502f', jean = '#34405a', jeanD = '#252e42', hair = '#2f2118';
+  const sway = Math.sin(TT * 2.2) * 0.02, step = Math.sin(TT * 3);
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); shadowEll(0, 6, 150, 22, 0.35);
+  // legs (slightly apart, weight on one leg)
+  for (const sd of [-1, 1]) { ctx.save(); ctx.translate(sd * 46, -470); ctx.rotate(sd * 0.04);
+    poly([[-38, 0], [38, 0], [32, 450], [-30, 450]], jean); poly([[sd > 0 ? 8 : -38, 0], [sd > 0 ? 38 : -8, 0], [sd > 0 ? 32 : -12, 450], [sd > 0 ? 12 : -30, 450]], jeanD);
+    fillRR(-44, 432, 96, 46, 16, '#5a3a24'); fillRR(-44, 466, 98, 12, 6, '#2a1a10'); ctx.restore(); }
+  fillRR(-92, -500, 184, 40, 10, '#2a2218'); fillRR(-14, -500, 28, 40, 6, '#b8a060');                  // belt + buckle
+  ctx.save(); ctx.translate(0, -480); ctx.rotate(sway);
+  // torso: V-shape tee with chest and shoulder shading
+  ctx.beginPath(); ctx.moveTo(-96, 0); ctx.lineTo(-128, -300); ctx.quadraticCurveTo(-120, -350, -70, -362); ctx.lineTo(70, -362); ctx.quadraticCurveTo(120, -350, 128, -300); ctx.lineTo(96, 0); ctx.closePath(); ctx.fillStyle = tee; ctx.fill();
+  ctx.save(); ctx.clip(); poly([[40, -362], [140, -330], [110, 0], [60, 0]], teeD); line(-60, -250, 60, -250, 6, 'rgba(0,0,0,0.12)'); line(0, -250, 0, -60, 4, 'rgba(0,0,0,0.08)'); ctx.restore();
+  ctx.beginPath(); ctx.moveTo(-34, -362); ctx.quadraticCurveTo(0, -330, 34, -362); ctx.lineWidth = 8; ctx.strokeStyle = teeD; ctx.stroke();
+  // left arm: hanging, fist
+  ctx.save(); ctx.translate(-118, -330); ctx.rotate(0.12 + step * 0.03); fillRR(-30, 0, 60, 120, 26, tee); fillRR(-24, 100, 48, 170, 22, skin); line(-6, 150, -10, 250, 6, skinD); circ(0, 282, 30, skin); ctx.restore();
+  // right arm: bent, carrying the money bag
+  ctx.save(); ctx.translate(118, -330); ctx.rotate(-0.25); fillRR(-30, 0, 60, 120, 26, tee); fillRR(-24, 100, 48, 150, 22, skin); ctx.translate(0, 260); circ(0, 0, 30, skin); moneyBag(30, 90, 0.75, Math.sin(TT * 4) * 0.08); ctx.restore();
+  // neck + head
+  fillRR(-26, -400, 52, 50, 14, skinD);
+  ctx.save(); ctx.translate(0, -470);
+  ell(-58, 0, 12, 20, skinD); ell(58, 0, 12, 20, skinD);                                               // ears
+  ctx.beginPath(); ctx.moveTo(-54, -40); ctx.quadraticCurveTo(-58, 40, -36, 66); ctx.quadraticCurveTo(0, 92, 36, 66); ctx.quadraticCurveTo(58, 40, 54, -40); ctx.quadraticCurveTo(0, -84, -54, -40); ctx.fillStyle = skin; ctx.fill();
+  ctx.save(); ctx.clip(); ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(-56, 10); ctx.quadraticCurveTo(-48, 70, 0, 92); ctx.quadraticCurveTo(48, 70, 56, 10); ctx.lineTo(56, 100); ctx.lineTo(-56, 100); ctx.closePath(); ctx.fillStyle = hair; ctx.fill(); ctx.restore();   // stubble
+  poly([[-56, -30], [-50, -70], [-20, -86], [20, -86], [50, -70], [56, -30], [40, -50], [-40, -50]], hair); ell(0, -62, 52, 22, hair);   // short hair, faded sides
+  line(-34, -18, -14, -20, 6, hair); line(14, -20, 34, -18, 6, hair);                                  // brows
+  for (const ex of [-24, 24]) { ell(ex, -2, 9, 6, '#ffffff'); circ(ex + 1, -2, 4, '#3a2a1a'); }        // eyes
+  poly([[0, -2], [-7, 26], [6, 28]], skinD); line(-14, 46, 14, 44, 4, '#8a4a3a');                       // nose, mouth
+  ctx.restore(); ctx.restore(); ctx.restore();
+}
+
+// a nightclub inside the game: neon sign, bar with glowing bottles, DJ booth, an LED dance floor, lasers, a disco ball,
+// a stage with a pink spotlight, a dancing crowd in silhouette and a velvet VIP rope
+function setClubInterior(t0 = 0) {
+  ctx.fillStyle = lin(0, 0, 0, 1920, [[0, '#120626'], [1, '#05020c']]); ctx.fillRect(-100, -100, 1300, 2200);
+  // back wall panels + neon sign
+  for (let i = 0; i < 8; i++) fillRR(i * 140, 180, 120, 900, 8, i % 2 ? '#1a0b34' : '#160a2c');
+  neonSign(540, 300, 'VICE NIGHTS', '#ff4fa3'); line(200, 380, 880, 380, 6, 'rgba(106,240,255,0.7)'); glow(540, 380, 500, '#6af0ff', 0.2);
+  // bar on the left: shelves of glowing bottles
+  fillRR(-20, 560, 330, 26, 6, '#3a2a5a'); fillRR(-20, 700, 330, 26, 6, '#3a2a5a');
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) { const bx = 10 + i * 50, by = 560 + r * 140, c = ['#41f08a', '#ffd23f', '#ff4fa3', '#52b8ff'][(i + r) % 4]; fillRR(bx, by - 80, 26, 80, 8, c); fillRR(bx + 8, by - 104, 10, 26, 4, c); glow(bx + 13, by - 40, 50, c, 0.35); }
+  fillRR(-20, 900, 380, 170, 14, '#2a1a40'); fillRR(-20, 900, 380, 22, 8, '#ff4fa3'); glow(160, 910, 260, '#ff4fa3', 0.3);
+  // DJ booth in the middle, the DJ bobbing with headphones
+  const bob = Math.abs(Math.sin(TT * 7)) * 12; circ(560, 780 - bob, 48, '#0c0618'); fillRR(510, 820 - bob, 100, 140, 40, '#0c0618'); ctx.beginPath(); ctx.arc(560, 780 - bob, 58, Math.PI * 1.05, Math.PI * 1.95); ctx.lineWidth = 12; ctx.strokeStyle = '#6af0ff'; ctx.stroke();
+  fillRR(420, 900, 280, 150, 16, '#1b0f2e'); for (let i = 0; i < 2; i++) { circ(480 + i * 160, 950, 40, '#2a1d44'); circ(480 + i * 160, 950, 10 + 4 * Math.sin(TT * 18 + i), '#41f08a'); }
+  for (let i = 0; i < 10; i++) fillRR(440 + i * 26, 1010, 14, 18 + 14 * Math.abs(Math.sin(TT * 9 + i)), 3, ['#ff4fa3', '#ffd23f', '#41f08a'][i % 3]);
+  // stage on the right with a pink spotlight and a dancer in silhouette
+  fillRR(760, 960, 340, 60, 8, '#2a1a40'); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,79,163,0.28)'; ctx.beginPath(); ctx.moveTo(900, 120); ctx.lineTo(950, 120); ctx.lineTo(1080, 980); ctx.lineTo(780, 980); ctx.fill(); ctx.restore();
+  line(930, 380, 930, 965, 8, '#d9dce8'); const dz = Math.sin(TT * 4) * 10; ctx.save(); ctx.translate(930 + dz * 0.5, 960); ell(0, -280, 30, 36, '#0c0618'); poly([[-30, -250], [30, -250], [22, -140], [36, -10], [-36, -10], [-22, -140]], '#0c0618'); line(14, -230, 6 + dz, -330, 16, '#0c0618'); line(-14, -230, -50, -150, 16, '#0c0618'); ctx.restore();
+  // disco ball + lasers
+  circ(540, 140, 46, '#c0c4d4'); for (let i = 0; i < 20; i++) { const R = RNG('db', i); fillRR(540 + R.n(36) - 6, 140 + R.n(36) - 6, 12, 12, 2, (Math.floor(TT * 8) + i) % 3 ? '#e8ecff' : '#7a86b0'); }
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 8; i++) { const a = Math.sin(TT * 1.8 + i) * 0.9 + (i - 3.5) * 0.2; ctx.strokeStyle = ['rgba(106,240,255,0.5)', 'rgba(255,79,163,0.5)', 'rgba(65,240,138,0.45)'][i % 3]; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(540, 140); ctx.lineTo(540 + Math.sin(a) * 1800, 140 + Math.cos(a) * 1800); ctx.stroke(); } ctx.restore();
+  // LED dance floor
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 9; c++) { const on = (Math.floor(TT * 4) + r + c) % 3; fillRR(-20 + c * 126, 1100 + r * 120, 120, 112, 8, ['#ff4fa3', '#6af0ff', '#7a3cff'][on]); ctx.save(); ctx.globalAlpha = 0.55; fillRR(-20 + c * 126, 1100 + r * 120, 120, 112, 8, '#05020c'); ctx.restore(); }
+  // dancing crowd in silhouette (heads bob on the beat, arms up)
+  const R = RNG('crowd2'); for (let i = 0; i < 12; i++) { const cx = 40 + i * 92 + R.n(14), b = Math.abs(Math.sin(TT * 7 + i)) * 24, hy = 1330 - b - (i % 2) * 40; circ(cx, hy, 40, '#0c0618'); fillRR(cx - 48, hy + 30, 96, 300, 40, '#0c0618'); if (i % 3 !== 1) line(cx + (i % 2 ? 24 : -24), hy + 50, cx + (i % 2 ? 60 : -60), hy - 90 - b, 22, '#0c0618'); }
+  // velvet VIP rope in front
+  for (const px of [120, 960]) { fillRR(px - 12, 1560, 24, 200, 8, '#d4af37'); circ(px, 1560, 22, '#ffd86b'); } ctx.beginPath(); ctx.moveTo(120, 1580); ctx.quadraticCurveTo(540, 1700, 960, 1580); ctx.lineWidth = 22; ctx.strokeStyle = '#b8132a'; ctx.stroke();
+  fillRR(440, 1610, 200, 60, 12, '#1b0f2e'); tText('VIP', 540, 1642, 40, { color: PAL.gold, shadow: false });
+}

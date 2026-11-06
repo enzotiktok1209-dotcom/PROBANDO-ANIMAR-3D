@@ -190,8 +190,8 @@
   const CMAJ = [['C3', ['C4', 'E4', 'G4']], ['A2', ['A3', 'C4', 'E4']], ['F2', ['F3', 'A3', 'C4']], ['G2', ['G3', 'B3', 'D4']]];
   const AMIN = [['A2', ['A3', 'C4', 'E4']], ['F2', ['F3', 'A3', 'C4']], ['D2', ['D3', 'F3', 'A3']], ['E2', ['E3', 'Gs3', 'B3']]];
   const FMAJ = [['F2', ['F3', 'A3', 'C4']], ['C3', ['C4', 'E4', 'G4']], ['G2', ['G3', 'B3', 'D4']], ['A2', ['A3', 'C4', 'E4']]];
-  groove(0.25, 1.15, { prog: CMAJ, kick: false, hat16: true });         // the GTA title
-  groove(1.2, 5.65, { prog: CMAJ, clapV: 0.8 });                        // 1 € a second / 1 million
+  groove(0.25, 1.85, { prog: CMAJ, kick: false, hat16: true });         // the buttons, the GTA title
+  groove(1.9, 5.65, { prog: CMAJ, clapV: 0.8 });                        // 1 € a second / 1 million
   groove(5.7, 15.15, { prog: CMAJ, hat16: true });                       // Jonas is faster, Kevin grabs the million
   groove(15.22, 25.7, { prog: CMAJ, hat16: true, clapV: 1.1 });         // the spree
   groove(25.74, 33.05, { prog: FMAJ, clap: false, pizzV: 0.8 });       // Jonas' PS5
@@ -215,7 +215,7 @@
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.06 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
   const KEYS = [
-    [1.2, 1.15, 1.15],   // a short riser over the first scene (the GTA title) into the first cut
+    [0.75, 0.7, 1.15],   // a short riser over the first scene (the two at their buttons) into the GTA title
     [4.12, 0.6, 0.9],    // "1 Million Euro"
     [6.5, 0.7, 0.9],     // Jonas slams first
     [10.3, 0.5, 0.8],    // Kevin grabs the million
