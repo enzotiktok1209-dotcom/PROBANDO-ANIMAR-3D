@@ -10,6 +10,6 @@ T = [0.0] + [round(ST[k], 2) for k in keys]
 T = [t for t in T if t < 143]
 gaps = [b - a for a, b in zip(T, T[1:] + [146.15])]; assert max(gaps) <= 10, gaps
 f = ';'.join(f'[1:a]adelay={int(t*1000)}|{int(t*1000)},volume=-1.5dB[m{i}]' for i, t in enumerate(T))
-f += ';' + ''.join(f'[m{i}]' for i in range(len(T))) + f'amix=inputs={len(T)}:normalize=0[mk];[0:a][mk]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.8,volume=-0.5dB[o]'
+f += ';' + ''.join(f'[m{i}]' for i in range(len(T))) + f'amix=inputs={len(T)}:normalize=0[mk];[0:a][mk]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.8,volume=-1.1dB[o]'
 subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', mix, '-i', snd, '-filter_complex', f, '-map', '[o]', '-ar', '44100', out], check=True)
 print(len(T), 'veces:', T, '; hueco máximo', round(max(gaps), 2))
