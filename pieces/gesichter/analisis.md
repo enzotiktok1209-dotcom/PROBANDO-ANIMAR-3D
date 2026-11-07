@@ -105,7 +105,7 @@ because (×4: "because every face…", "because I was small", "because they can'
   - el corazón, que se paga con "me siento a tu izquierda";
   - "te cubro", que vuelve en boca del traidor;
   - la radio y cómo le llama mamá, que es el final.
-- **Duración:** unos 2:30 al ritmo de Mauern, o unos **2:15 con ElevenLabs a velocidad 1,1**.
+- **Versión 3 (actual): ~410 palabras.** También se quitaron "el muro cierra la puerta a tiempo", la risa sincronizada, "me había buscado", la pregunta de mamá y "¡vuelve, colega!". Duración: unos **2:00** al ritmo de Mauern.
 - **Nombres nuevos:** Jude → **Lenny** · Mr. Ames → **Herr Brandt**. El narrador sigue sin nombre (como en el original) y Mama y Papa no tienen nombre.
 
 ## 8. Personajes rediseñados (nada calcado del original)
@@ -129,53 +129,45 @@ because (×4: "because every face…", "because I was small", "because they can'
 - el muro gris con puerta de hierro en las montañas;
 - la caseta de radio de la madre.
 
-## 9. Traducción del guion al español (versión 2, para revisar)
+## 9. Traducción del guion al español (versión 3, para revisar)
 En este pueblo soy el único humano. Todos los demás solo lo parecen.
 Porque cada cara de aquí perteneció a alguien que se comieron.
-Los últimos humanos viven detrás del muro, en las montañas. Y yo soy su espía.
-Porque soy pequeño. Y a los pequeños nadie los revisa.
-Cada noche aviso por radio a mamá en cuanto salen los cazadores. Así el muro cierra la puerta a tiempo.
-"Sigo vivo." "Escóndete, cariño."
+Los últimos humanos viven detrás del muro. Y yo soy su espía, porque a los pequeños nadie los revisa.
+Cada noche aviso por radio a mamá. "Sigo vivo." "Escóndete, cariño."
 Nos copian todo. Solo que un poco mal.
-El señor Brandt corta el césped todo el día. Aunque ya no queda césped.
+El señor Brandt corta el césped, aunque ya no queda césped.
 La panadería vende el mismo pan desde hace veinte años. Nadie le ha dado nunca un mordisco.
-Todos se ríen a la vez. Y paran a la vez.
-Y por la noche se quedan de pie a oscuras, mirando a la pared. Así que yo también.
+Y por la noche todos se quedan de pie a oscuras, mirando a la pared. Así que yo también.
 Tengo dos reglas. Nunca llorar, porque ellos no pueden.
 Y que nadie oiga mi corazón, porque ellos no tienen.
-Por eso no dejo que nadie se me acerque. Excepto Lenny.
-Siempre se sienta a mi izquierda. Y es el único que se ríe en el momento justo.
+Por eso no dejo que nadie se me acerque. Excepto Lenny. Siempre se sienta a mi izquierda.
 Cuando murió nuestro perro, se me saltaron las lágrimas en clase.
-Pero antes de que nadie mirara, Lenny me tiró agua de pintar a la cara.
-"Uy." Y muy bajito: "Yo te cubro."
-Una vez al mes hay noche de festín.
-Entonces todos cuelgan sus caras en ganchos. Como abrigos.
+Pero antes de que nadie lo viera, Lenny me tiró agua de pintar a la cara.
+"Uy." Y bajito: "Yo te cubro."
+En la noche del festín, todos cuelgan sus caras en ganchos. Como abrigos.
 Debajo: negro, húmedo, solo boca.
-Los niños conservan su cara hasta los trece. Luego se la arrancan delante de todos.
+Los niños se arrancan la cara a los trece. Delante de todos.
 Y en primavera cumplo trece.
 El invierno pasado, los cazadores trajeron una jaula. Dentro iba mi papá.
-Me había estado buscando. Y ahora me veía.
-Me escupió a los pies. "Monstruos." Como si no me conociera.
+Me vio. Y me escupió a los pies. "Monstruos."
 A la mañana siguiente, un hombre se mudó enfrente. Con la cara de papá.
 Me saludó. Demasiado rato. Y yo le devolví el saludo.
 No lloré.
-Esa noche mamá me preguntó si lo había visto. "No."
-Luego llegó mi cumpleaños número trece.
-Todo el pueblo esperaba en el salón. Sin caras.
-"Arráncatela", dijeron. Todos a la vez.
+Luego llegó mi cumpleaños.
+Todo el pueblo esperaba. Sin caras.
+"¡Arráncatela!"
 Tiré. Nada. Era solo mi cara.
 Y por primera vez en dos años, lloré.
-Se abrieron todas las bocas del salón. Pero de repente alguien me agarró la mano.
-Lenny. "¡Corre!"
-Detrás, todo el pueblo gritaba: "¡Vuelve, colega!" Con la voz de papá.
+Se abrieron todas las bocas. Pero de repente Lenny me agarró la mano. "¡Corre!"
+Detrás, todo el pueblo gritaba. Con la voz de papá.
 Nos escondimos en el viejo depósito de agua.
 "Lo sabías", susurré.
 "Me siento a tu izquierda. Oigo tu corazón."
-"¿Y por qué no me delataste?"
+"¿Por qué no me delataste?"
 "Porque eres mi mejor amigo."
-Lo abracé. Por fin no estaba solo.
-"Voy contigo", dijo. "Solo dime cómo se cruza la puerta."
-Así que se lo conté todo. El camino. Cómo me llama mamá. Y lo que digo por la radio.
+Por fin no estaba solo.
+"Voy contigo. Solo dime cómo se cruza la puerta."
+Así que se lo conté todo. El camino. Cómo me llama mamá. Lo que digo por la radio.
 Me apretó el hombro. "Yo te cubro."
 Luego se arrancó la cara y la colgó de un clavo.
 Todo el pueblo lo sabía desde el principio.
