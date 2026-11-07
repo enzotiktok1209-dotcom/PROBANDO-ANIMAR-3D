@@ -80,8 +80,32 @@ because (×4: "because every face…", "because I was small", "because they can'
 
 ## 7. Nuestra versión (alemán): qué cambia
 - **Gancho igual** (solo traducido): "In dieser Stadt bin ich der einzige Mensch. Alle anderen sehen nur so aus."
-- **El resto está parafraseado, más corto y con más conectores y palabras de causalidad:** denn, weil, so, obwohl, aber, also, deshalb, trotzdem, doch bevor, dann. Quité frases que restan retención, por ejemplo "in class, on the bus, up on the roof", "Dumb luck", "He'd come looking for me" (resumida) y "Nobody moved".
-- **Duración:** 677 palabras, frente a 742 del original. Al ritmo de Mauern saldrían unos 3:10. **Recomiendo generar la voz en ElevenLabs a velocidad 1,1–1,15** para quedar en ~2:45, y yo recorto los silencios.
+- **El resto está parafraseado y recortado a lo esencial, con frases cortas y cinematográficas** (una imagen por frase) y con conectores y palabras de causalidad: denn, weil, so, obwohl, also, deshalb, doch, dann.
+- **Versión 2: 520 palabras**, frente a 742 del original. Se quitaron las cosas que no mueven la historia:
+  - "tienen nuestras voces" y "los últimos humanos de verdad" (resumido);
+  - el desván;
+  - "vuelve pronto a casa";
+  - "nadie duerme";
+  - "el único niño que me habló";
+  - en clase, en el bus, en el tejado;
+  - "sé lo que es, pero a veces lo olvido";
+  - "torpe de mí";
+  - el camino al salón y los cazadores con la jaula (fusionado);
+  - "como si nunca me hubiera visto en su vida";
+  - "nadie se movió";
+  - las vallas y la tierra del vecino;
+  - "¡vuelve, cariño!";
+  - el temblor en el depósito;
+  - "se encogió de hombros";
+  - "la puerta";
+  - "todo";
+  - "aún podía oír".
+- **Se mantienen todas las pistas y sus pagos:**
+  - nunca llorar, que se paga cuando llora;
+  - el corazón, que se paga con "me siento a tu izquierda";
+  - "te cubro", que vuelve en boca del traidor;
+  - la radio y cómo le llama mamá, que es el final.
+- **Duración:** unos 2:30 al ritmo de Mauern, o unos **2:15 con ElevenLabs a velocidad 1,1**.
 - **Nombres nuevos:** Jude → **Lenny** · Mr. Ames → **Herr Brandt**. El narrador sigue sin nombre (como en el original) y Mama y Papa no tienen nombre.
 
 ## 8. Personajes rediseñados (nada calcado del original)
@@ -105,62 +129,58 @@ because (×4: "because every face…", "because I was small", "because they can'
 - el muro gris con puerta de hierro en las montañas;
 - la caseta de radio de la madre.
 
-## 9. Traducción del guion al español (para revisar)
+## 9. Traducción del guion al español (versión 2, para revisar)
 En este pueblo soy el único humano. Todos los demás solo lo parecen.
-Tienen nuestras caras y nuestras voces. Porque cada cara de aquí perteneció a alguien que se comieron.
-Los últimos humanos de verdad viven detrás del muro, arriba en las montañas.
-Hace dos años me mandaron aquí de espía. Porque soy pequeño. Y a los pequeños nadie los revisa.
-Cada noche, desde el desván, aviso por radio a mamá en cuanto salen los cazadores. Así el muro cierra la puerta a tiempo.
-"Sigo vivo", le digo. "Escóndete, cariño. Vuelve pronto a casa."
+Porque cada cara de aquí perteneció a alguien que se comieron.
+Los últimos humanos viven detrás del muro, en las montañas. Y yo soy su espía.
+Porque soy pequeño. Y a los pequeños nadie los revisa.
+Cada noche aviso por radio a mamá en cuanto salen los cazadores. Así el muro cierra la puerta a tiempo.
+"Sigo vivo." "Escóndete, cariño."
 Nos copian todo. Solo que un poco mal.
-El señor Brandt corta el césped todo el día. Aunque hace mucho que no queda césped.
-La panadería vende el mismo pan desde hace veinte años. Pero nadie le ha dado nunca un mordisco.
-Todos se ríen en el mismo instante. Y paran a la vez.
-Y por la noche nadie duerme. Se quedan de pie en el salón a oscuras, mirando a la pared, hasta que amanece.
-Así que yo también me quedo de pie.
-Tengo dos reglas. Nunca llorar, porque ellos no pueden. Y que nadie oiga mi corazón, porque ellos no tienen.
+El señor Brandt corta el césped todo el día. Aunque ya no queda césped.
+La panadería vende el mismo pan desde hace veinte años. Nadie le ha dado nunca un mordisco.
+Todos se ríen a la vez. Y paran a la vez.
+Y por la noche se quedan de pie a oscuras, mirando a la pared. Así que yo también.
+Tengo dos reglas. Nunca llorar, porque ellos no pueden.
+Y que nadie oiga mi corazón, porque ellos no tienen.
 Por eso no dejo que nadie se me acerque. Excepto Lenny.
-Es el único niño que me ha hablado. Siempre se sienta a mi izquierda. Y es el único que se ríe en el momento justo.
-Sé lo que es. Aun así, a veces se me olvida.
-El otoño pasado murió nuestro perro. Al día siguiente, en clase de arte, se me saltaron las lágrimas.
+Siempre se sienta a mi izquierda. Y es el único que se ríe en el momento justo.
+Cuando murió nuestro perro, se me saltaron las lágrimas en clase.
 Pero antes de que nadie mirara, Lenny me tiró agua de pintar a la cara.
-"Uy, qué torpe soy." Y muy bajito: "Pase lo que pase, yo te cubro."
-Una vez al mes, los cazadores traen una jaula. Entonces hay noche de festín en el salón.
-En la puerta todos se quitan la cara y la cuelgan en ganchos. Como abrigos.
+"Uy." Y muy bajito: "Yo te cubro."
+Una vez al mes hay noche de festín.
+Entonces todos cuelgan sus caras en ganchos. Como abrigos.
 Debajo: negro, húmedo, solo boca.
-Los niños conservan su cara hasta los trece. Luego se la quitan delante de todos.
+Los niños conservan su cara hasta los trece. Luego se la arrancan delante de todos.
 Y en primavera cumplo trece.
-El invierno pasado, la jaula pasó por la calle principal. Y dentro iba mi papá.
-Había venido a buscarme.
-Me vio entre la gente. Vi cómo me veía. Entonces me escupió a los pies.
-"Monstruos." Como si nunca me hubiera visto.
-A la mañana siguiente, un hombre nuevo se mudó enfrente. Con la cara de papá.
-Me saludó con la mano. Demasiado rato. Y yo le devolví el saludo.
+El invierno pasado, los cazadores trajeron una jaula. Dentro iba mi papá.
+Me había estado buscando. Y ahora me veía.
+Me escupió a los pies. "Monstruos." Como si no me conociera.
+A la mañana siguiente, un hombre se mudó enfrente. Con la cara de papá.
+Me saludó. Demasiado rato. Y yo le devolví el saludo.
 No lloré.
-Esa noche mamá me preguntó si lo había visto. "No", dije.
-Luego llegó la primavera.
-El día que cumplí trece me llevaron al salón. Todos esperaban. Sin caras.
-"Quítatela", dijeron. Todos a la vez. Con todas esas voces.
-Agarré mi cara y tiré. Nada. Era solo mi cara.
+Esa noche mamá me preguntó si lo había visto. "No."
+Luego llegó mi cumpleaños número trece.
+Todo el pueblo esperaba en el salón. Sin caras.
+"Arráncatela", dijeron. Todos a la vez.
+Tiré. Nada. Era solo mi cara.
 Y por primera vez en dos años, lloré.
-Entonces se abrieron todas las bocas del salón. Y de repente alguien me agarró la mano.
+Se abrieron todas las bocas del salón. Pero de repente alguien me agarró la mano.
 Lenny. "¡Corre!"
-Saltamos las vallas, cruzando la tierra del señor Brandt.
-Detrás, todo el pueblo. Gritaban con las voces de todos.
-"¡Vuelve, cariño!" "¡Vuelve, colega!" Esa era la voz de papá.
+Detrás, todo el pueblo gritaba: "¡Vuelve, colega!" Con la voz de papá.
 Nos escondimos en el viejo depósito de agua.
-"Lo sabías", susurré. "Desde el primer día."
-"Me siento a tu izquierda. Lo oigo."
-"¿Por qué no me delataste?"
-Se encogió de hombros. "Eres mi mejor amigo."
-Lo abracé tan fuerte como pude. Por fin no estaba solo.
+"Lo sabías", susurré.
+"Me siento a tu izquierda. Oigo tu corazón."
+"¿Y por qué no me delataste?"
+"Porque eres mi mejor amigo."
+Lo abracé. Por fin no estaba solo.
 "Voy contigo", dijo. "Solo dime cómo se cruza la puerta."
-Así que se lo conté todo. El camino. La puerta. Cómo me llama mamá. Y lo que siempre digo por la radio.
+Así que se lo conté todo. El camino. Cómo me llama mamá. Y lo que digo por la radio.
 Me apretó el hombro. "Yo te cubro."
-Luego levantó la mano, se quitó la cara y la colgó de un clavo.
-Todo el pueblo lo sabía desde el primer día.
+Luego se arrancó la cara y la colgó de un clavo.
+Todo el pueblo lo sabía desde el principio.
 En cien años no habían encontrado el muro. Solo necesitaban a alguien que les dijera el camino.
-Luego todo se volvió negro. Pero aún podía oír.
-La radio de mi mochila crujió. "Cariño, ¿estás ahí?"
-Y justo encima de mí, oí mi propia voz.
+Luego todo se volvió negro.
+Mi radio crujió. "Cariño, ¿estás ahí?"
+Y encima de mí oí mi propia voz.
 "¡Hola, mamá! ¡Vuelvo a casa! ¡Abre la puerta!"
