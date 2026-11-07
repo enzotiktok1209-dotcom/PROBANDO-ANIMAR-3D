@@ -51,15 +51,20 @@ const MSGS = [['max_99', 'WIE GEIL IST DAS 😍'], ['lea.gg', 'GTA 6 SCHON?!', '
 
 // =====================================================================  THE HOOK
 // ---- 1 · "GTA 6" — Vice City at sunset, the title slams in (0.2 s punch-in on frame one)
-S(0.0, { tr: 'cut', lift: 0, cam: [[0, 540, 940, 1.35], [0.2, 540, 940, 1.0], [1.06, 540, 930, 1.08]],
+S(0.0, { tr: 'cut', lift: 0, cam: [[0, 540, 940, 1.9], [0.22, 540, 940, 1.0], [0.69, 540, 930, 1.06]],
   draw() { setVice(); const k = springEase(TT - 0.03, 260, 12); gtaTitle(500, 820, 1.25, k); if (TT > 0.69) { const k2 = springEase(TT - 0.69, 260, 12); gamepad(540, 1300, 1.0 * k2, Math.sin(TT * 3) * 0.06, Math.floor(TT * 6) % 4); } },
   sfx: [[0.03, 'impact'], [0.69, 'pop', 1.1], [0.9, 'click']] });
+// ---- 1b · "…6" — the console on a table, the GTA 6 case lands beside it
+S(0.69, { tr: 'zoomIn', lift: 0, cam: [[0.69, 540, 1080, 1.0], [1.6, 540, 1060, 1.12]],
+  draw() { setStreamRoom({ blur: 6 }); fillRR(140, 1360, 800, 50, 14, '#3a2a5a'); fillRR(180, 1410, 40, 300, 8, '#24183c'); fillRR(860, 1410, 40, 300, 8, '#24183c');
+    gameConsole(400, 1360, 0.7 * springEase(TT - 0.7, 260, 13)); glow(400, 1100, 300, '#ffffff', 0.25); const k = springEase(TT - 0.85, 240, 12); gtaCase(720, 1200 - (1 - k) * 700, 0.9, -0.08 + (1 - k) * 0.6); },
+  ui() { sticker('PS5 + GTA 6 🎮', 540, 380, 0.8, { bg: PAL.orange, size: 56 }); } });
 // ---- 2 · "…eine Woche vor allen anderen zocken?" — the calendar: 19.11. for everyone, a week earlier for one; a locked crowd
 function lockIcon(x, y, s) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.beginPath(); ctx.arc(0, -26, 24, Math.PI, 0); ctx.lineWidth = 12; ctx.strokeStyle = '#c9cede'; ctx.stroke(); fillRR(-36, -26, 72, 56, 10, '#ff4545'); circ(0, -2, 8, '#5a0a10'); ctx.restore(); }
-S(1.06, { tr: 'whipL', lift: 0, tense: 1, cam: [[1.06, 540, 980, 1.0], [3.08, 540, 960, 1.1]],
+S(1.6, { tr: 'whipL', lift: 0, tense: 1, cam: [[1.6, 540, 980, 1.0], [3.08, 540, 960, 1.1]],
   draw() { setDark('#2a1650', '#07030f'); const R = RNG('crowd2');
-    for (let i = 0; i < 7; i++) { const x = -20 + i * 185 + R.n(20), y = 1500, c = '#4a3780'; circ(x, y - 150, 62, c); fillRR(x - 85, y - 95, 170, 260, 70, c); if (TT > 1.5 + i * 0.04) lockIcon(x, y - 150, 0.85 * springEase(TT - 1.5 - i * 0.04, 300, 13)); }
-    const a = springEase(TT - 1.1, 240, 13), b = springEase(TT - 1.85, 240, 13);
+    for (let i = 0; i < 7; i++) { const x = -20 + i * 185 + R.n(20), y = 1500, c = '#4a3780'; circ(x, y - 150, 62, c); fillRR(x - 85, y - 95, 170, 260, 70, c); if (TT > 1.7 + i * 0.04) lockIcon(x, y - 150, 0.85 * springEase(TT - 1.7 - i * 0.04, 300, 13)); }
+    const a = springEase(TT - 1.62, 240, 13), b = springEase(TT - 1.9, 240, 13);
     ctx.save(); ctx.translate(300, 860); ctx.rotate(-0.06); ctx.scale(a * 0.62, a * 0.62); calendarPage(0, 0, 1, 'NOV · ALLE', 19); ctx.restore();
     ctx.save(); ctx.translate(780, 860); ctx.rotate(0.06); ctx.scale(b * 0.62, b * 0.62); calendarPage(0, 0, 1, 'NOV · DU', 12); ctx.restore(); if (TT > 1.85) glow(780, 860, 320, '#ffd23f', 0.3 * b); },
   ui() { info('7 TAGE FRÜHER! ⏩', 2.17, { y: 360, bg: PAL.orange, size: 58 }); },
@@ -95,8 +100,8 @@ S(8.91, { tr: 'cut', cam: CLOSEJ(8.91, 10.45),
   sfx: [[9.1, 'swish', 1], [9.3, 'pop', 1], [9.98, 'cashReg', 0.5]] });
 // ---- 8 · "Kevin dagegen springt sofort auf die Konsole zu." — Kevin leaps across the studio at the console
 S(10.45, { tr: 'whipL', lift: 120, cam: [[10.45, 540, 1100, 1.0], [12.86, 600, 1080, 1.08]],
-  draw() { setStudio({ blur: 4 }); const u = clamp((TT - 10.6) / 1.5), x = lerp(120, 760, EZ.io(u)); gameConsole(900, FLOOR - 20, 0.6); glow(900, FLOOR - 200, 260, '#ffffff', 0.3);
-    char('kevin', x, FLOOR + 20, 0.85, { run: [[10.45, 1], [12.1, 0, 0.2]], jump: [[10.45, 0], [11.25, 180, 0.3], [11.9, 0, 0.3]], pose: [[10.45, 'armsUp'], [12.2, 'holdBoth', 0.2]], emo: [[0, 'grin']], lean: 0.12 }); speedLines(10, 0.35, 'sl8'); },
+  draw() { setStudio({ blur: 4 }); const u = clamp((TT - 10.6) / 1.4), x = lerp(140, 620, EZ.io(u)); fillRR(740, FLOOR - 260, 300, 40, 10, '#3a2a5a'); fillRR(760, FLOOR - 220, 30, 240, 6, '#24183c'); fillRR(990, FLOOR - 220, 30, 240, 6, '#24183c'); gameConsole(890, FLOOR - 260, 0.5); glow(890, FLOOR - 420, 240, '#ffffff', 0.3);
+    char('kevin', x, FLOOR + 20, 0.85, { walk: [[10.45, 1.6], [12.0, 0, 0.25]], pose: [[10.45, 'cheer'], [10.75, 'pointR', 0.12], [11.05, 'cheer', 0.12], [11.35, 'pointR', 0.12], [12.1, { la: [0.16, -0.12], ra: [1.4, -0.3] }, 0.2]], emo: [[0, 'grin']], lean: [[10.45, 0.15], [12.0, 0, 0.3]], jump: [[10.45, 0], [10.6, 30, 0.1], [10.75, 0, 0.1], [10.9, 30, 0.1], [11.05, 0, 0.1], [11.2, 30, 0.1], [11.35, 0, 0.1], [11.5, 30, 0.1], [11.65, 0, 0.1]] }); speedLines(10, 0.35, 'sl8'); },
   ui() { info('KEVIN: GTA 6! 🎮', 11.25, { y: 380, bg: PAL.orange, size: 56 }); },
   sfx: [[10.5, 'footsteps', 1.8], [11.25, 'whooshUp', 1.2], [11.3, 'pop', 1], [12.1, 'thud']] });
 // ---- 9 · "Das meisterwartete Spiel aller Zeiten," — Kevin hugs the console, a trophy pops: most anticipated
@@ -206,15 +211,16 @@ S(36.17, { tr: 'whipR', cam: CLOSE(36.17, 37.89),
   sfx: [[36.3, 'kiss'], [36.94, 'pop', 1], [37.2, 'sparkle']] });
 
 // =====================================================================  JONAS WATCHES
+const jonasHome = (b = 8) => withBlur(b, () => { rays('#5ab8ff', '#a8e0ff', { cy: 600, spin: 0.02 }); ctx.save(); ctx.translate(540, 1500); poolVilla(0, 0, 1.15); ctx.restore(); });
+const kevinLiveScreen = () => { ctx.fillStyle = '#1a0f3a'; ctx.fillRect(-84, -176, 168, 352); ctx.save(); ctx.beginPath(); ctx.rect(-84, -176, 168, 352); ctx.clip(); const sc = 168 / 1080; ctx.save(); ctx.translate(-84, -140); ctx.scale(sc, sc); setVice(); ctx.restore(); char('kevin', 0, 170, 0.22, { pose: [[0, 'cheer']], emo: [[0, 'laugh']] }); ctx.restore(); fillRR(-74, -168, 62, 24, 8, '#ef2b2b'); tText('LIVE', -43, -156, 14, { color: '#fff', shadow: false }); tText('3.000.000 👁', 28, -156, 12, { color: '#fff', shadow: false }); };
 // ---- 28 · "Jonas sieht es auf seinem Handy." — on the sun lounger by his pool, phone in hand: Kevin's stream
 S(37.89, { tr: 'slide', cam: [[37.89, 540, 1080, 1.0], [39.39, 540, 1060, 1.08]],
-  draw() { rays('#3fb6ff', '#8fd8ff', { cy: 900, spin: 0.1 }); ctx.save(); ctx.translate(540, 1500); ctx.scale(1.4, 1.4); fillRR(-500, -40, 1000, 220, 30, '#29b6f6'); ctx.restore();
-    char('jonas', 540, 1370, 0.8, { pose: [[0, 'phoneR']], emo: [[0, 'happy']], look: [0.3, -0.2], extras: { glasses: true }, holdR: () => phone(0, -30, 0.3, 0.15, () => { ctx.fillStyle = '#1a0f3a'; ctx.fillRect(-84, -176, 168, 352); char('kevin', 0, 120, 0.18, { emo: [[0, 'grin']] }); fillRR(-70, -168, 70, 26, 8, '#ef2b2b'); }) }); },
-  ui() { info('JONAS SIEHT ZU 📱', 38.66, { y: 380, bg: PAL.blue, size: 54 }); },
+  draw() { jonasHome(8); char('jonas', 330, 1650, 0.8, { pose: [[0, 'phoneR']], emo: [[0, 'happy']], look: [0.5, -0.2], extras: { glasses: true } }); },
+  ui() { info('JONAS SIEHT ZU 📱', 38.66, { y: 330, bg: PAL.blue, size: 54 }); const k = springEase(TT - 38.0, 240, 13); ctx.save(); ctx.translate(760, 900); ctx.rotate(0.06); ctx.scale(k, k); phone(0, 0, 2.0, 0, kevinLiveScreen); ctx.restore(); },
   sfx: [[37.95, 'waves', 0.7], [38.66, 'pop', 1], [38.9, 'notify']] });
 // ---- 29 · "Und sein Lächeln wird plötzlich kleiner." — close on Jonas, the smile fades (slow push, vignette)
 S(39.39, { tr: 'cut', tense: 1, cam: [[39.39, 540, 1000, 1.7], [41.25, 540, 980, 2.0]],
-  draw() { rays('#3fb6ff', '#8fd8ff', { cy: 900, spin: 0.05 }); char('jonas', 540, FLOOR + 160, 1.0, { emo: [[39.39, 'happy'], [40.3, 'neutral', 0.4], [40.8, 'serious', 0.3]], look: [0.2, 0.3], extras: { glasses: true } }); },
+  draw() { jonasHome(12); char('jonas', 540, FLOOR + 160, 1.0, { emo: [[39.39, 'happy'], [40.3, 'neutral', 0.4], [40.8, 'serious', 0.3]], look: [0.2, 0.3], extras: { glasses: true } }); },
   sfx: [[40.3, 'recordScratch'], [40.74, 'dun']] });
 // ---- 30 · "Und das ist erst der erste Tag." — TAG 1 of 7, six pages still to come
 S(41.25, { tr: 'iris', cam: [[41.25, 540, 960, 1.0], [43.34, 540, 940, 1.1]],
@@ -241,7 +247,7 @@ S(47.12, { tr: 'iris', cam: [[47.12, 540, 960, 1.0], [48.62, 540, 940, 1.1]],
   sfx: [[47.2, 'pop', 1], [47.25, 'clockSpin', 0.8]] });
 // ---- 34 · "…ruft sogar eine riesige Gaming-Marke an:" — the phone rings: GAMING BRAND
 S(48.62, { tr: 'zoomIn', cam: [[48.62, 540, 960, 1.0], [50.07, 540, 950, 1.1]],
-  draw() { rays('#1d48b8', '#2f6df6', { cy: 900, spin: 0.25 }); const b = Math.sin(TT * 60) * 8 * (TT < 49.7 ? 1 : 0); ctx.save(); ctx.translate(b, 0); callScreen(540, 980, 2.4, () => { tText('🎮', 0, -40, 70, { shadow: false }); tText('GAMING', 0, 40, 26, { color: '#fff', shadow: false }); tText('MARKE', 0, 72, 26, { color: '#fff', shadow: false }); }, 'ANRUF'); ctx.restore(); },
+  draw() { setStreamRoom({ blur: 9 }); char('kevin', 360, FLOOR + 160, 1.0, { pose: [[48.62, 'idle'], [49.3, 'phoneR', 0.2]], emo: [[48.62, 'confused'], [49.6, 'shock']], extras: { headset: 1 } }); const b = Math.sin(TT * 60) * 8 * (TT < 49.7 ? 1 : 0); ctx.save(); ctx.translate(b, 0); callScreen(780, 1000, 1.7, () => { tText('🎮', 0, -40, 70, { shadow: false }); tText('GAMING', 0, 40, 26, { color: '#fff', shadow: false }); tText('MARKE', 0, 72, 26, { color: '#fff', shadow: false }); }, 'ANRUF'); ctx.restore(); },
   ui() { info('EINE RIESIGE GAMING-MARKE! 📞', 49.11, { y: 360, bg: PAL.pink, size: 44 }); },
   sfx: [[48.65, 'buzzPhone'], [49.11, 'pop', 1], [49.4, 'buzzPhone']] });
 // ---- 35 · "…ein Werbevertrag über eine Million." — the contract slides in, Kevin signs, a giant cheque
@@ -251,13 +257,13 @@ S(50.07, { tr: 'whipL', cam: [[50.07, 540, 960, 1.0], [52.37, 540, 940, 1.1]], p
   sfx: [[50.1, 'whooshDown', 1], [50.3, 'fold'], [50.9, 'pencil'], [51.84, 'cashCannon']] });
 // ---- 36 · "Jonas verschluckt sich an seinem Kaffee." — he sips… and sprays it out
 S(52.37, { tr: 'whipR', cam: CLOSEJ(52.37, 54.7), shake: [[54.2, 12, 0.4]],
-  draw() { rays('#3fb6ff', '#8fd8ff', { cy: 900, spin: 0.05 }); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[52.37, 'drinkR'], [54.2, 'facepalm', 0.15]], emo: [[52.37, 'happy'], [53.73, 'shock']], extras: { glasses: true }, holdR: TT < 54.2 ? () => mug(0, -30, 0.5) : undefined });
+  draw() { jonasHome(12); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[52.37, 'drinkR'], [54.2, 'facepalm', 0.15]], emo: [[52.37, 'happy'], [53.73, 'shock']], extras: { glasses: true }, holdR: TT < 54.2 ? () => mug(0, -30, 0.5) : undefined });
     if (TT > 54.2 && TT < 55) { const u = (TT - 54.2) / 0.8; for (let i = 0; i < 14; i++) { const R = RNG('sp', i); circ(540 + R.n(60) + u * 300 * (R.f() - 0.2), 760 + R.n(40) + u * u * 300, 12 * (1 - u), '#6b3f1f'); } } },
   ui() { popText('*HUST* ☕', 540, 380, 54.2, 90, '#ffffff', -0.06, 0); },
   sfx: [[52.5, 'slurp'], [54.2, 'spit'], [54.25, 'splashSfx', 0.6]] });
 // ---- 37 · "Eine Million, nur fürs Zocken?!" — Jonas, outraged, phone in hand
 S(54.7, { tr: 'cut', cam: CLOSEJ(54.7, 56.98), punch: [[55.22, 0.08]],
-  draw() { rays('#b6302b', '#e8483c', { cy: 900, spin: 0.2 }); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[54.7, 'shrug'], [56.0, 'headGrab', 0.2]], emo: [[0, 'angry']], extras: { glasses: true, sweat: 1 } }); },
+  draw() { jonasHome(12); ctx.fillStyle = 'rgba(180,30,30,0.18)'; ctx.fillRect(-600, -400, 2300, 2800); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[54.7, 'shrug'], [56.0, 'headGrab', 0.2]], emo: [[0, 'angry']], extras: { glasses: true, sweat: 1 } }); },
   ui() { popText('NUR FÜRS ZOCKEN?! 😤', 540, 380, 55.22, 70, PAL.yellow, -0.04, 0); },
   sfx: [[55.22, 'pop', 1], [56.0, 'errorBuzz']] });
 
@@ -291,17 +297,17 @@ S(62.17, { tr: 'whipL', cam: CLOSEJ(62.17, 63.1),
 const clue = (t0, x, y, txt, col) => { if (TT < t0) return; const k = springEase(TT - t0, 300, 12); ctx.save(); ctx.translate(x, y); ctx.scale(k, k); fillRR(-200, -70, 400, 140, 26, col); tText(txt, 0, 4, 52, { color: '#fff', shadow: false, maxW: 380 }); ctx.restore(); };
 const CLUES = () => { clue(63.29, 540, 320, '3 MIO. / TAG', PAL.blue); clue(64.75, 300, 490, '× 0,40 €', PAL.green); clue(65.39, 780, 490, '× 7 TAGE', PAL.orange); clue(66.54, 540, 660, '+ 1 MIO. VERTRAG', PAL.pink); };
 S(63.1, { tr: 'whipR', cam: CLOSE(63.1, 64.75),
-  draw() { setStudio({ blur: 10 }); char('kevin', 540, FLOOR + 220, 0.9, { pose: [[63.1, 'pointUpR']], emo: [[0, 'smug']] }); },
+  draw() { setStudio({ blur: 10 }); char('kevin', 540, FLOOR + 130, 0.9, { pose: [[63.1, 'pointUpR']], emo: [[0, 'smug']] }); },
   ui() { CLUES(); },
   sfx: [[63.29, 'pop', 1], [63.85, 'tick']] });
 // ---- 44 · "40 Cent, sieben Tage." — the next two clues
 S(64.75, { tr: 'cut', cam: CLOSE(64.75, 66.33),
-  draw() { setStudio({ blur: 10 }); char('kevin', 540, FLOOR + 220, 0.9, { pose: [[64.75, 'pointR']], emo: [[0, 'grin']] }); },
+  draw() { setStudio({ blur: 10 }); char('kevin', 540, FLOOR + 130, 0.9, { pose: [[64.75, 'pointR']], emo: [[0, 'grin']] }); },
   ui() { CLUES(); },
   sfx: [[64.75, 'popHi', 1], [65.39, 'popHi', 1.2]] });
 // ---- 45 · "Plus der Vertrag." — the contract clue
 S(66.33, { tr: 'zoomIn', cam: CLOSE(66.33, 67.27),
-  draw() { setStudio({ blur: 10 }); char('kevin', 540, FLOOR + 220, 0.9, { pose: [[0, 'hips']], emo: [[0, 'smug']] }); },
+  draw() { setStudio({ blur: 10 }); char('kevin', 540, FLOOR + 130, 0.9, { pose: [[0, 'hips']], emo: [[0, 'smug']] }); },
   ui() { CLUES(); },
   sfx: [[66.54, 'pop', 1.2], [66.73, 'fold']] });
 // ---- 46 · "Rechne selbst!" — Kevin points straight into the camera, a calculator spins in
