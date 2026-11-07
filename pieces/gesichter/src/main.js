@@ -475,3 +475,29 @@ function renderAt(T) {
   for (const b of BAD) drawBadge(b); caption(T);
 }
 window.renderAt = renderAt; window.DUR = DUR; window.FPS = FPS; window.CUES = CUES; window.SHOTS = S.map(s => [s.t0, s.t1, s.tr, s.zoom]); window.__ready = true;
+
+// ---------- portadas para TikTok (1080×1920) ----------
+const coverText = (lines, tag, tagCol = '#d6202f') => { const c = octx;
+  const g = c.createLinearGradient(0, 0, 0, H * .32); g.addColorStop(0, 'rgba(0,0,0,.7)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H * .32);
+  const g2 = c.createLinearGradient(0, H * .74, 0, H); g2.addColorStop(0, 'rgba(0,0,0,0)'); g2.addColorStop(1, 'rgba(0,0,0,.65)'); c.fillStyle = g2; c.fillRect(0, H * .74, W, H * .26);
+  const T = (s, x, y, size, fill, rot = 0) => { c.save(); c.translate(x, y); c.rotate(rot); c.font = `700 ${size}px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; const tw = c.measureText(s).width; if (tw > W * .92) { const k = W * .92 / tw; c.scale(k, k); } c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.shadowOffsetY = 10; c.lineWidth = size * .22; c.strokeStyle = '#000'; c.strokeText(s, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = fill; c.fillText(s, 0, 0); c.restore(); };
+  lines.forEach(([s, size, col], i) => T(s, W / 2, H * (.075 + i * .075), size, col, -.02));
+  c.save(); c.translate(W / 2, H * .875); c.rotate(.03); c.font = `700 72px ${FONT}`; const tk = Math.min(1, 860 / c.measureText(tag).width); c.scale(tk, tk); const tw = c.measureText(tag).width + 90; c.fillStyle = tagCol; c.shadowColor = 'rgba(0,0,0,.5)'; c.shadowBlur = 20; c.beginPath(); c.roundRect(-tw / 2, -58, tw, 116, 30); c.fill(); c.shadowBlur = 0; c.lineWidth = 10; c.strokeStyle = '#fff'; c.stroke(); c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(tag, 0, 6); c.restore(); };
+const arrow = (x, y, rot) => { const c = octx; c.save(); c.translate(x, y); c.rotate(rot); c.fillStyle = '#E2FD07'; c.strokeStyle = '#000'; c.lineWidth = 12; c.beginPath(); c.moveTo(-20, 0); c.lineTo(100, 0); c.lineTo(100, -40); c.lineTo(180, 30); c.lineTo(100, 100); c.lineTo(100, 60); c.lineTo(-20, 60); c.closePath(); c.stroke(); c.fill(); c.restore(); };
+window.renderCover = (variant = 0) => {
+  hideAll(); BAD.length = 0;
+  if (variant === 0) {   // el narrador asustado delante; detrás, el pueblo con la misma sonrisa y dos ya sin cara
+    use('ST'); dusk(); put(hero, 0, 0, -60, 0); applyPose(hero, { aRx: 1.2, aRe: 1.9, aLx: 1.2, aLe: 1.9, aRz: -.25, aLz: -.25, headX: .05, lean: -.05 }); hero.setFace({ mouth: 'o', eyes: 'wide', brows: -.7, sweat: 1 });
+    const pos = [[-5.5, -66], [5.5, -66], [-2.6, -70], [2.6, -70], [-8, -72], [8, -72], [0, -75]]; pos.forEach(([x, z], i) => { const p = fk[i]; put(p, x, 0, z, -x * .03); applyPose(p, { ...RIGID, headX: .12 }); if (i === 2 || i === 3) p.unmask(1, .9); else p.setFace({ mouth: 'grin', eyes: 'open', look: [-x * .1, .3] }); });
+    cam([0, 5.4, -48.5], [0, 5.2, -64], 50); grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55; sh(V(0, 0, -66), 30);
+    camera.updateProjectionMatrix(); sky.sky.position.copy(camera.position); composer.render(); octx.drawImage(renderer.domElement, 0, 0, W, H);
+    coverText([['ICH BIN DER', 112, '#ffffff'], ['EINZIGE MENSCH', 140, '#E2FD07']], 'SIE TRAGEN UNSERE GESICHTER');
+  } else {   // la pared de las caras colgadas con el narrador mirándolas
+    use('HA'); inside(1, .2); put(hero, HX - 2, 0, 19, PI + .25); applyPose(hero, { headX: -.25, aLz: .2, aRz: .2, headY: -.25 }); hero.setFace({ mouth: 'o', eyes: 'wide', brows: -.6 });
+    put(fk[8], HX + 4.5, 0, 22.5, PI - .5); fk[8].unmask(1, .8); applyPose(fk[8], { aRx: 2.5, aRe: .6 }); attach(FOLKF, fk[8].aR.hand, [0, -.9, .6], [0, PI, 0], 1);
+    cam([HX - 3.8, 5.6, 7], [HX + .2, 6.2, 27], 56); grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55;
+    camera.updateProjectionMatrix(); composer.render(); octx.drawImage(renderer.domElement, 0, 0, W, H);
+    coverText([['WEM GEHÖREN', 112, '#ffffff'], ['DIESE GESICHTER?', 128, '#E2FD07']], 'NIEMALS WEINEN!');
+    arrow(W * .86, H * .28, 2.2);
+  }
+};
