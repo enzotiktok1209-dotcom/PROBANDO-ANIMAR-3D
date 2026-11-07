@@ -52,11 +52,19 @@ S(0.0, { tr: 'cut', lift: 0, cam: [[0, 540, 1080, 1.16], [0.2, 540, 1080, 1.0], 
     const cy = lerp(-200, 1035, EZ.o3(clamp((TT - 0.3) / 0.3))); ctx.save(); ctx.translate(540, cy); ctx.rotate(-0.08); crown(0, 0, 0.75); ctx.restore(); },
   ui() { info('NUR DU! 👑', 0.25, { y: 330, bg: PAL.pink, size: 64 }); },
   sfx: [[0.12, 'click', 1.2], [0.2, 'click', 1.0], [0.25, 'pop', 1], [0.3, 'whooshDown', 1.3], [0.6, 'bling']] });
-// ---- 2 · "…GTA 6 zocken" — Vice City at sunset, the title slams in, the gamepad pops up
-S(0.88, { tr: 'zoomIn', cam: [[0.88, 540, 960, 1.0], [2.17, 540, 940, 1.1]],
-  draw() { setVice(); const k = springEase(TT - 0.9, 260, 12); gtaTitle(500, 760, 1.1, k); gamepad(540, 1260, 1.1 * springEase(TT - 1.1, 240, 13), Math.sin(TT * 3) * 0.06, Math.floor(TT * 6) % 4); },
-  ui() { info('GTA 6 ZOCKEN 🎮', 1.5, { y: 330, bg: PAL.orange, size: 56 }); },
-  sfx: [[0.9, 'impact'], [1.1, 'pop', 1], [1.5, 'pop', 1.1], [1.75, 'click']] });
+// ---- 2 · "…GTA 6 zocken" — Jonas on the sofa with the gamepad, the console beside a big screen: Vice City, the GTA 6 title slams in on it
+S(0.88, { tr: 'zoomIn', lift: 0, cam: [[0.88, 540, 1180, 1.06], [2.17, 540, 1150, 1.12]], punch: [[0.92, 0.06]],
+  draw() { setGamerRoom({ dark: 0.15 }); fillRR(120, 1060, 840, 40, 10, '#2a2140'); fillRR(140, 1100, 30, 160, 8, '#1b1530'); fillRR(910, 1100, 30, 160, 8, '#1b1530');
+    gameTV(540, 760, 880, 500, (x, y, w, h) => { const sc = w / 1080; ctx.save(); ctx.translate(x, y - 560 * sc); ctx.scale(sc, sc); setVice(); ctx.restore();
+      if (TT > 0.9) { const k = springEase(TT - 0.9, 260, 12); gtaTitle(x + w / 2 - 30, y + h * 0.42, 0.62, k); }
+      if (TT > 0.9 && TT < 1.02) { ctx.fillStyle = `rgba(255,255,255,${0.8 * (1 - (TT - 0.9) / 0.12)})`; ctx.fillRect(x, y, w, h); } });
+    gameConsole(880, 1060, 0.36); glow(540, 760, 700, '#ff7ad0', 0.12);
+    sofa(540, 1760, 1.0, '#3d6fd8');
+    char('jonas', 540, 1650, 0.74, { pose: [[0, 'holdBoth']], emo: [[0.88, 'happy'], [1.5, 'grin']], look: [0, -0.7], extras: { glasses: true, headset: 1 } });
+    fillRR(40, 1455, 1000, 320, 50, '#3d6fd8'); fillRR(40, 1455, 1000, 46, 22, shade('#3d6fd8', 0.12)); for (const sd of [-1, 1]) fillRR(540 + sd * 470 - 60, 1380, 120, 395, 50, shade('#3d6fd8', -0.12));
+    gamepad(540, 1415, 0.42, Math.sin(TT * 4) * 0.05, Math.floor(TT * 9) % 4); },
+  ui() { info('GTA 6 ZOCKEN 🎮', 1.5, { y: 250, bg: PAL.orange, size: 52 }); },
+  sfx: [[0.9, 'impact'], [0.95, 'powerOn'], [1.2, 'click'], [1.5, 'pop', 1.1], [1.6, 'click'], [1.85, 'engine', 0.5]] });
 // ---- 3 · "für 100.000 Euro am Tag?" — the day pages flip, every day a stack of cash lands
 const DAYS = [2.38, 2.95, 3.5];
 S(2.17, { tr: 'whipL', cam: [[2.17, 540, 960, 1.04], [4.22, 540, 950, 1.0]],
