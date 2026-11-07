@@ -72,3 +72,11 @@ Nombres propios nuevos: **Mats** (protagonista) y **Baron Grimm** (villano). Uni
 > Die Wolken zogen ab, und der Platz glitzerte wie zerbrochenes Glas. Der Bürgermeister rannte weinend vor Freude aus seinem Bunker, mit einer Truhe voller 10.000 Diamanten: „Mats! Du hast uns gerettet! Nimm dieses Vermögen!“ Ich sah die Truhe an, dann ihn, und lächelte: „Behalt den Müll. Gib mir lieber das warme Sauerteigbrot aus deiner Küche.“
 >
 > Jetzt bin ich der Held der Stadt. Ich laufe mit frischem Brot die Straße entlang und kicke ganz nebenbei 50-Karat-Diamanten in den Gully.
+
+## 8. Producción (video alemán, versión corta)
+- Narración 125,2 s → **119,5 s sin silencios** (65 tramos), 362 palabras alineadas.
+- **70 planos**, media 1,7 s (máx. 2,9 s), siguiendo el orden de escenas de la referencia pero con otros ángulos, colores y personajes.
+- Gancho: golpe de zoom en el fotograma 0 desde muy alto sobre Funkelbach (montañas nevadas, iglesia, casas de entramado) con lluvia de diamantes, como la toma aérea de la referencia; campanita a 0 ms; riser hasta "Denn wenn…".
+- Pueblo propio: casas de piedra y entramado con letreros en alemán (Bäckerei, Brot & Holz Börse, Schule Funkelbach…), plaza con verja y fuente, iglesia, molino con cinta de goma, vertedero con granero, búnker, sirena, cartel "LANGSAM!". Otros escenarios: desierto con tienda y cactus, aula, interior rojo del tanque.
+- Reparto: Mats (gorra gris, pañuelo rojo, chaqueta mostaza con remiendos, botas verdes), Baron Grimm (uniforme negro, charreteras, capa roja, bicornio, monóculo), alcalde (chistera, barba blanca, cadena), noble de botones de madera, dama con pan, mendigo, chico del lápiz y chica, barrendero con pala de metal, 12 extras y multitud de 420 figuras.
+- Sonido: 404 efectos (hueco máx. 1,06 s), campanita 12 veces (0 s y cada ≈10 s), mezcla −12,3 LUFS.
