@@ -23,5 +23,6 @@ tail = tail.replace("T < st(7)", "T < st(2)").replace("clamp(T / st(7))", "clamp
 tail = tail.replace("  composer.render();", "  sky.sky.position.copy(camera.position); composer.render();")
 assert "sky.sky.position.copy" in tail
 assert "st(2) - .02" in tail and "T < st(2)" in tail and "t0: s.t0" in tail, 'tail'
-parts = [head, h2, open('body_sets.js').read(), open('body_util.js').read(), '// ---------- capa 2D ----------', two, key, cap, open('body_shots.js').read(), tail]
+COVER = open('cover.js').read()
+parts = [head, h2, open('body_sets.js').read(), open('body_util.js').read(), '// ---------- capa 2D ----------', two, key, cap, open('body_shots.js').read(), tail, COVER]
 open('main.js', 'w').write('\n'.join(parts) + '\n'); print('ok')
