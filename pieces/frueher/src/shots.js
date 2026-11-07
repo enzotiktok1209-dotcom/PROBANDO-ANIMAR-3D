@@ -191,7 +191,7 @@ S(31.65, { tr: 'zoomIn', cam: [[31.65, 540, 960, 1.0], [32.83, 540, 950, 1.06]],
   sfx: [[31.92, 'pop', 1], [32.0, 'coinTicks', 1.4, 4], [32.3, 'notify']] });
 // ---- 25 · "Und am Abend: drei Millionen." — night falls on the window, the counter races to 3.000.000, hearts flood (riser into the hit)
 S(32.83, { tr: 'cut', tense: 1, cam: [[32.83, 540, 960, 1.0], [34.87, 540, 940, 1.14]],
-  draw() { streamShot(); chatFlood(33.62, 34); },
+  draw() { streamShot(); chatFlood(33.62, 34, ['GTA 6 LIVE 😍', 'KEVIN LEGENDE!!!', 'OMG VICE CITY', '😱😱😱', 'ABO DA! ⭐', '🔥🔥 KEVIN']); },
   ui() { liveBadge(380, 380, 0); viewerCount(700, 380, VIEW); info('AM ABEND 🌙', 33.0, { y: 560, bg: '#141026', size: 52 }); if (TT > 33.91) { const k = springEase(TT - 33.91, 300, 10); ctx.save(); ctx.translate(540, 1000); ctx.scale(k, k); tText('3.000.000', 0, 0, 150, { color: '#fff', stroke: '#ef2b2b', strokeW: 24 }); ctx.restore(); } },
   sfx: [[33.0, 'pop', 1], [33.62, 'impact'], [33.65, 'applause', 0.8]] });
 // ---- 26 · "Drei Millionen?!" — Kevin's jaw drops

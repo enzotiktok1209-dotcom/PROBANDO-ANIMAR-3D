@@ -57,12 +57,12 @@ function gameTV(x, y, w, h, fn) { fillRR(x - w / 2 - 18, y - h / 2 - 18, w + 36,
 function gameBank(x, y, w, h) { ctx.fillStyle = '#e8e2d0'; ctx.fillRect(x, y, w, h); for (let i = 0; i < 5; i++) fillRR(x + 30 + i * (w - 60) / 4 - 20, y + 20, 40, h * 0.6, 6, '#cfc6ae'); fillRR(x, y + h * 0.7, w, h * 0.3, 0, '#8a7a5a'); tText('BANK', x + w / 2, y + 40, h * 0.12, { color: '#5a4a2a', shadow: false }); }
 function gameNeonStreet(x, y, w, h, road = 0.72) { ctx.fillStyle = lin(0, y, 0, y + h, [[0, '#2a0f5a'], [1, '#ff3d8a']]); ctx.fillRect(x, y, w, h); for (let i = 0; i < 10; i++) { const bx = x + ((i * w / 8 - TT * 200) % (w * 1.2) + w * 1.2) % (w * 1.2) - w * 0.1; fillRR(bx, y + h * 0.25, w * 0.08, h * 0.5, 3, '#1a0830'); } ctx.fillStyle = '#12052a'; ctx.fillRect(x, y + h * road, w, h * (1 - road)); }
 // a flood of chat messages and hearts rising over the screen
-function chatFlood(t0, n = 34) {
+function chatFlood(t0, n = 34, words) {
   for (let k = 0; k < n; k++) { const R = RNG('cf', k), tb = t0 + k * 0.035, u = (TT - tb) / 1.3; if (u < 0 || u > 1) continue;
     ctx.save(); ctx.globalAlpha = u < 0.8 ? 1 : (1 - u) / 0.2; const x = 120 + R.f() * 840, y = 1500 - u * 1100 - R.f() * 200, sc = springEase(TT - tb, 320, 12);
     ctx.translate(x, y); ctx.scale(sc, sc); ctx.rotate(R.n(0.15));
     if (k % 3 === 0) tText('❤', 0, 0, 80 + R.f() * 40, { color: '#ff4f8a', shadow: false });
-    else { const m = ['LUCIAAA 😍', 'LUCIA!!!', 'OMG LUCIA', '😍😍😍', 'LUCIAAAA', '🔥🔥 LUCIA'][k % 6]; const tw = textW(m, 40, 900) + 40; fillRR(-tw / 2, -32, tw, 64, 18, 'rgba(20,10,40,0.85)'); tText(m, 0, 2, 40, { color: ['#ff8fc0', '#ffd23f', '#6af0ff'][k % 3], shadow: false }); }
+    else { const W = words || ['LUCIAAA 😍', 'LUCIA!!!', 'OMG LUCIA', '😍😍😍', 'LUCIAAAA', '🔥🔥 LUCIA'], m = W[k % W.length]; const tw = textW(m, 40, 900) + 40; fillRR(-tw / 2, -32, tw, 64, 18, 'rgba(20,10,40,0.85)'); tText(m, 0, 2, 40, { color: ['#ff8fc0', '#ffd23f', '#6af0ff'][k % 3], shadow: false }); }
     ctx.restore(); }
 }
 // a pizza box with one cold slice left
