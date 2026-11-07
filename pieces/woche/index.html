@@ -2853,10 +2853,12 @@ const phoneShot = (screen, o = {}) => { const k = springEase(TT - (o.t0 ?? 0), 2
 
 // =====================================================================  THE HOOK
 // ---- 1 · "Über 300.000 Euro im Jahr?" — a mountain of cash builds, the number slams, a calendar "1 JAHR" (0.2 s punch-in on frame one)
-S(0.0, { tr: 'cut', lift: 0, tense: 1, cam: [[0, 540, 980, 1.16], [0.2, 540, 980, 1.0], [2.34, 540, 960, 1.08]],
-  draw() { rays('#0e8a45', '#14a956', { cy: 940, spin: 0.3 }); glow(540, 1000, 640, '#a6f0b4', 0.4); cashMountain(540, 1220, 1.05, clamp((TT - 0.05) / 0.9)); cash('h1', 0.41, 20);
-    if (TT > 1.9) { const k = springEase(TT - 1.9, 260, 12); ctx.save(); ctx.translate(860, 700); ctx.rotate(0.1); ctx.scale(k * 0.5, k * 0.5); calendarPage(0, 0, 1, 'JAHR', 1); ctx.restore(); } },
-  ui() { if (TT > 0.41) { const k = springEase(TT - 0.41, 300, 11); ctx.save(); ctx.translate(540, 420); ctx.scale(k, k); tText('300.000 €', 0, 0, 140, { color: PAL.yellow, stroke: '#0a4a22', strokeW: 24 }); ctx.restore(); } info('IM JAHR', 1.9, { y: 580, bg: PAL.red, size: 60 }); },
+S(0.0, { tr: 'cut', lift: 0, cam: [[0, 540, 1020, 1.4], [0.18, 540, 1020, 1.0], [2.34, 540, 980, 1.2]],
+  draw() { rays('#0e8a45', '#14a956', { cy: 940, spin: 0.3 }); glow(540, 1000, 700, '#a6f0b4', 0.45); const k = springEase(TT - 0.02, 200, 13);
+    ctx.save(); ctx.translate(0, (1 - k) * 900); cashMountain(540, 1240, 1.25, clamp((TT - 0.02) / 0.6)); ctx.restore();
+    if (TT > 0.3) billRain('h1b', 0.3, 30, { burst: [540, 820], spread: 2.0 }); cash('h1', 0.41, 22);
+    if (TT > 1.9) { const kc = springEase(TT - 1.9, 260, 12); ctx.save(); ctx.translate(700, 830); ctx.rotate(0.08); ctx.scale(kc * 0.7, kc * 0.7); calendarPage(0, 0, 1, 'JAHR', 1); ctx.restore(); } },
+  ui() { if (TT > 0.41) { const k = springEase(TT - 0.41, 300, 11); ctx.save(); ctx.translate(540, 380); ctx.scale(k, k); tText('300.000 €', 0, 0, 140, { color: PAL.yellow, stroke: '#0a4a22', strokeW: 24 }); ctx.restore(); } },
   sfx: [[0.41, 'cashCannon'], [0.45, 'impact'], [1.2, 'coinPour'], [1.9, 'pop', 1], [1.95, 'flip']] });
 // ---- 2 · "Oder 1 Cent" — darkness, one tiny copper cent spins in a spotlight
 S(2.34, { tr: 'whipL', lift: 0, cam: [[2.34, 540, 960, 1.0], [3.5, 540, 950, 1.12]],
@@ -3062,14 +3064,14 @@ function splitEven(top, bottom) {
 function helmet(x, y, s) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.beginPath(); ctx.arc(0, 0, 120, Math.PI, 0); ctx.lineTo(120, 60); ctx.lineTo(-120, 60); ctx.closePath(); ctx.fillStyle = '#e8262f'; ctx.fill(); fillRR(-90, -30, 150, 60, 24, '#1b1530'); fillRR(-80, -24, 60, 14, 6, 'rgba(255,255,255,0.35)'); ctx.restore(); }
 const kevinHalf = (t0) => { rays('#1d48b8', '#2f6df6', { cy: 560, spin: 0.08 }); const k = t0 == null ? 1 : springEase(TT - t0, 170, 13); char('kevin', 350 - (1 - k) * 760, 860, 0.56, { pose: [[0, { la: [0.16, -0.12], ra: [1.05, -0.35] }]], emo: [[0, 'smug']], extras: KS2, lean: (1 - k) * 0.25, holdR: () => goldWatch(0, 0, 0.09, TT) }); };
 const jonasHalf = (t0) => { rays('#b6302b', '#e8483c', { cy: 1220, spin: -0.08 }); const k = t0 == null ? 1 : springEase(TT - t0, 170, 13); char('jonas', 350, 1520 + (1 - k) * 600, 0.56, { pose: [[0, { la: [1.05, -0.35], ra: [0.16, -0.12] }]], emo: [[0, 'smug']], extras: { glasses: true }, holdL: () => helmet(0, -60, 0.7) }); };
-S(61.34, { tr: 'glitch', tense: 1, capY: YD, cam: [[61.34, 540, 960, 1.0], [64.23, 540, 960, 1.03]],
-  draw() { splitEven(() => { kevinHalf(61.36); cash('k36', 61.9, 12); }, () => jonasHalf(61.36)); },
-  ui() { hud('KONTO · KEVIN', [[0, 277e3]], { x: 775, y: 560, scale: 0.8, t0: 61.45 }); const k = springEase(TT - 61.5, 260, 14); ctx.save(); ctx.translate(775, 1230); ctx.scale(k * 0.8, k * 0.8); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); },
-  sfx: [[61.4, 'whoosh', 1.1], [61.45, 'pop', 1], [61.5, 'pop', 1.2], [61.89, 'cashReg'], [62.8, 'heartbeat', 1.0]] });
+S(61.34, { tr: 'glitch', cam: CLOSE(61.34, 64.23),
+  draw() { setLuxGarage({ blur: 10 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[61.34, 'idle'], [61.5, 'raiseR', 0.2]], emo: [[0, 'smug']], extras: KS2, holdR: () => statement(0, -60, 0.34, 'KEVIN', 277e3, 0.1) }); if (TT > 61.89) cash('k36', 61.89, 14); },
+  ui() { hud('KONTO · KEVIN', [[0, 277e3]], { t0: 61.5 }); popText('277.000 € 😎', 540, 560, 61.89, 76, PAL.yellow, -0.04, 0); },
+  sfx: [[61.4, 'whoosh', 1.1], [61.45, 'pop', 1], [61.5, 'rustle'], [61.89, 'cashReg'], [62.8, 'heartbeat', 1.0]] });
 // ---- 37 · "Wie viel bleibt Jonas?" — cut on the question; Jonas' counter glitches
-S(64.23, { tr: 'cut', tense: 1, capY: YD, cam: [[64.23, 540, 960, 1.0], [65.8, 540, 960, 1.04]], punch: [[64.23, 0.05], [64.88, 0.06]],
-  draw() { splitEven(() => kevinHalf(), () => jonasHalf()); },
-  ui() { hud('KONTO · KEVIN', [[0, 277e3]], { x: 775, y: 560, scale: 0.8 }); { const g = TT > 64.3 && TT < 64.6 ? Math.sin(TT * 90) * 12 : 0; ctx.save(); ctx.translate(775 + g, 1230); ctx.scale(0.8, 0.8); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); }
+S(64.23, { tr: 'whipR', tense: 1, capY: YD, cam: [[64.23, 540, 960, 1.0], [65.8, 540, 960, 1.04]], punch: [[64.88, 0.06]],
+  draw() { splitEven(() => kevinHalf(64.25), () => jonasHalf(64.25)); },
+  ui() { hud('KONTO · KEVIN', [[0, 277e3]], { x: 775, y: 560, scale: 0.8, t0: 64.3 }); { const g = TT > 64.5 && TT < 64.8 ? Math.sin(TT * 90) * 12 : 0, kk = springEase(TT - 64.32, 260, 14); ctx.save(); ctx.translate(775 + g, 1230); ctx.scale(0.8 * kk, 0.8 * kk); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); }
     info('WIE VIEL BLEIBT JONAS? 🤔', 64.3, { y: 270, bg: PAL.yellow, fg: '#1b1530', size: 50 }); },
   sfx: [[64.3, 'glitch'], [64.35, 'pop', 1], [64.5, 'coinTicks', 1.4, 4]] });
 // =====================================================================
