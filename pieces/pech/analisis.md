@@ -73,3 +73,12 @@ Protagonista renombrado a **Finn** (nombre propio para este video). Moneda en eu
 > Plötzlich piept mein Handy. Eine Nachricht: „Glückwunsch, Finn. Du bist offiziell der größte Pechvogel aller Zeiten.“ Ich erstarre. Denn weiter steht da: „In einer Welt, in der Pech reich macht, ist perfektes Glück das größte Pech von allen.“
 >
 > Und genau in diesem Moment landen 1 Milliarde Euro auf meinem Konto. Endlich bin ich der reichste Mensch der Stadt – und zum ersten Mal in meinem Leben bin ich froh, ein Pechvogel zu sein.
+
+## 8. Producción (video alemán)
+- Narración ElevenLabs 132,9 s → **125,8 s sin silencios** (72 tramos, pausas ≈ 80 ms), 390 palabras alineadas con Whisper.
+- **73 planos**, media 1,72 s (máx. 2,86 s), cada uno con cambio de entorno y transición con sonido (barrido, zoom, destello, deslizamiento, giro, golpe).
+- Gancho como la referencia: toma aérea de dron sobre la avenida larga (rascacielos al fondo, gente y coches), con **golpe de zoom en el primer fotograma** + campanita a 0 ms; luego 100 € (autobús), 500 € (lluvia), casa derrumbada → 1 Mio. Riser desde 0,25 s hasta el golpe en "1 Million".
+- Escenarios nuevos: barrio con casas detalladas, villa con columnas y palmeras, piscina del rico + jet privado, cabina de lotería, Pech-Amt (fachada con gatos negros y herradura + interior con escáner y Pech-Meter), banco con cámara acorazada encadenada, baño, carretera comarcal con bus oxidado, dormitorio de noche.
+- Reparto propio (todos distintos): Finn (sudadera naranja, tupé rubio, pecas, mochila verde), mejor amigo (chándal verde, gorra roja del revés), vecino del rayo (chaleco morado, pelo de punta), magnate (traje azul marino, tupé dorado), chófer, conductor, mecánico, funcionario, vendedora de lotería, banquero y 12 extras.
+- Sonido: 437 efectos (hueco máx. 1,05 s), risers en gancho, jet, "nie Pech", jackpot, Pech-Meter, susurro y la frase final; música −24 LUFS; **campanita 13 veces** (0 s y cada ≈10 s en inicios de frase); mezcla −12,2 LUFS.
+- Reproducir: `python3 build.py` → `./render.sh` → `node cues.mjs` → `python3 sfx.py audio/cues.json audio/voz-sin-silencios.wav audio/musica-fondo.mp3 renders/mezcla.wav` → `python3 marca.py renders/mezcla.wav audio/sonido-marca.mp3 renders/mezcla-final.wav` → ffmpeg.
