@@ -88,3 +88,27 @@ function shopCart(x, y, s) {
   circ(-110, 0, 30, '#2b2b38'); circ(170, 0, 30, '#2b2b38'); circ(-110, 0, 12, '#888'); circ(170, 0, 12, '#888');
   ctx.restore();
 }
+// a big, realistic mountain of cash bundles (each bundle: stacked notes, a paper band, a lit top face),
+// a darker pile behind for depth; k 0..1 builds it from the bottom row up, bundles drop into place
+function cashMountain(x, y, s, k = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  shadowEll(0, 14, 600, 50, 0.45); glow(0, -260, 560, '#d9ffd0', 0.25);
+  const bundle = (bx, by, dark, u) => {
+    if (u <= 0) return; const dy = (1 - EZ.o3(u)) * -260; ctx.save(); ctx.translate(bx, by + dy); ctx.globalAlpha = clamp(u * 3);
+    const f = dark ? 0.78 : 1, c = (h) => dark ? shade(h, -0.22) : h;
+    poly([[-65, -46], [65, -46], [77, -60], [-53, -60]], c('#b9e6bd'));               // top face
+    poly([[65, -46], [77, -60], [77, -12], [65, 0]], c('#4f8f5a'));                     // right side
+    fillRR(-65, -46, 130, 46, 3, c('#7cc48a'));                                         // front: stacked notes
+    for (let i = 1; i < 6; i++) line(-63, -46 + i * 7.6, 63, -46 + i * 7.6, 1.6, c('#5fa86d'));
+    fillRR(-14, -46, 28, 46, 2, c('#f3e7bf')); poly([[-14, -46], [14, -46], [26, -60], [-2, -60]], c('#fff6d6')); tText('€', 0, -22, 22, { color: c('#8a6a20'), shadow: false });
+    if (!dark && f) circ(-40, -30, 7, 'rgba(255,255,255,0.25)');
+    ctx.restore(); };
+  const back = [7, 6, 5, 4, 3, 2], front = [8, 7, 6, 5, 4, 3, 2, 1];
+  const total = back.reduce((a, b) => a + b, 0) + front.reduce((a, b) => a + b, 0); let n = 0;
+  back.forEach((cnt, r) => { for (let i = 0; i < cnt; i++, n++) bundle((i - (cnt - 1) / 2) * 132 + 40, -110 - r * 46, 1, k * total * 1.15 - n); });
+  front.forEach((cnt, r) => { for (let i = 0; i < cnt; i++, n++) bundle((i - (cnt - 1) / 2) * 132, -r * 46, 0, k * total * 1.15 - n); });
+  if (k > 0.95) for (let i = 0; i < 5; i++) sparkle(-300 + i * 150, -120 - (i % 2) * 180, 20 + 10 * Math.sin(TT * 7 + i), '#ffffff', TT * 2 + i);
+  ctx.restore();
+}
+// the GTA 6 game case: the case art with the neon title on it
+function gtaCase(x, y, s, rot = 0) { gameCase(x, y, s, rot); ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s); gtaTitle(-10, -60, 0.36, 1); ctx.restore(); }

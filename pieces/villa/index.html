@@ -2569,6 +2569,30 @@ function shopCart(x, y, s) {
   circ(-110, 0, 30, '#2b2b38'); circ(170, 0, 30, '#2b2b38'); circ(-110, 0, 12, '#888'); circ(170, 0, 12, '#888');
   ctx.restore();
 }
+// a big, realistic mountain of cash bundles (each bundle: stacked notes, a paper band, a lit top face),
+// a darker pile behind for depth; k 0..1 builds it from the bottom row up, bundles drop into place
+function cashMountain(x, y, s, k = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  shadowEll(0, 14, 600, 50, 0.45); glow(0, -260, 560, '#d9ffd0', 0.25);
+  const bundle = (bx, by, dark, u) => {
+    if (u <= 0) return; const dy = (1 - EZ.o3(u)) * -260; ctx.save(); ctx.translate(bx, by + dy); ctx.globalAlpha = clamp(u * 3);
+    const f = dark ? 0.78 : 1, c = (h) => dark ? shade(h, -0.22) : h;
+    poly([[-65, -46], [65, -46], [77, -60], [-53, -60]], c('#b9e6bd'));               // top face
+    poly([[65, -46], [77, -60], [77, -12], [65, 0]], c('#4f8f5a'));                     // right side
+    fillRR(-65, -46, 130, 46, 3, c('#7cc48a'));                                         // front: stacked notes
+    for (let i = 1; i < 6; i++) line(-63, -46 + i * 7.6, 63, -46 + i * 7.6, 1.6, c('#5fa86d'));
+    fillRR(-14, -46, 28, 46, 2, c('#f3e7bf')); poly([[-14, -46], [14, -46], [26, -60], [-2, -60]], c('#fff6d6')); tText('€', 0, -22, 22, { color: c('#8a6a20'), shadow: false });
+    if (!dark && f) circ(-40, -30, 7, 'rgba(255,255,255,0.25)');
+    ctx.restore(); };
+  const back = [7, 6, 5, 4, 3, 2], front = [8, 7, 6, 5, 4, 3, 2, 1];
+  const total = back.reduce((a, b) => a + b, 0) + front.reduce((a, b) => a + b, 0); let n = 0;
+  back.forEach((cnt, r) => { for (let i = 0; i < cnt; i++, n++) bundle((i - (cnt - 1) / 2) * 132 + 40, -110 - r * 46, 1, k * total * 1.15 - n); });
+  front.forEach((cnt, r) => { for (let i = 0; i < cnt; i++, n++) bundle((i - (cnt - 1) / 2) * 132, -r * 46, 0, k * total * 1.15 - n); });
+  if (k > 0.95) for (let i = 0; i < 5; i++) sparkle(-300 + i * 150, -120 - (i % 2) * 180, 20 + 10 * Math.sin(TT * 7 + i), '#ffffff', TT * 2 + i);
+  ctx.restore();
+}
+// the GTA 6 game case: the case art with the neon title on it
+function gtaCase(x, y, s, rot = 0) { gameCase(x, y, s, rot); ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s); gtaTitle(-10, -60, 0.36, 1); ctx.restore(); }
 // =====================================================================
 //  main.js — shots, camera, transitions, captions, grade. renderFrame(t) draws one frame.
 //  A shot: S(t0, { tr, cam, punch, shake, draw, ui, sfx, capY }) — every time is absolute (seconds).
@@ -2780,7 +2804,7 @@ const flyIn = (t0, dur = 0.5) => EZ.o3(clamp((TT - t0) / dur));
 // =====================================================================  THE HOOK
 // ---- 1 · "Als Einziger…" — a locked-out crowd in the dark, one spotlight: Jonas with the gamepad and a crown (0.2 s punch-in on frame one)
 function lockIcon(x, y, s) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.beginPath(); ctx.arc(0, -26, 24, Math.PI, 0); ctx.lineWidth = 12; ctx.strokeStyle = '#c9cede'; ctx.stroke(); fillRR(-36, -26, 72, 56, 10, '#ff4545'); circ(0, -2, 8, '#5a0a10'); ctx.restore(); }
-S(0.0, { tr: 'cut', lift: 0, cam: [[0, 540, 1080, 1.16], [0.2, 540, 1080, 1.0], [0.88, 540, 1060, 1.06]],
+S(0.0, { tr: 'cut', lift: 0, cam: [[0, 540, 1390, 1.16], [0.2, 540, 1390, 1.0], [0.88, 540, 1370, 1.06]],
   draw() { setDark('#2a1650', '#07030f'); const R = RNG('crowd');
     for (let row = 0; row < 2; row++) for (let i = 0; i < 7; i++) { const x = -20 + i * 185 + row * 90 + R.n(20), y = 1180 + row * 260, c = row ? '#3a2a66' : '#4a3780'; circ(x, y - 150, 62, c); fillRR(x - 85, y - 95, 170, 260, 70, c); if (Math.abs(x - 540) > 150 && TT > 0.12 + (i + row * 7) * 0.025) lockIcon(x, y - 150, 0.85 * springEase(TT - 0.12 - (i + row * 7) * 0.025, 300, 13)); }
     ctx.save(); ctx.globalAlpha = 0.6; poly([[440, -200], [640, -200], [840, 1750], [240, 1750]], 'rgba(255,240,190,0.22)'); ctx.restore(); glow(540, 1350, 420, '#fff0c0', 0.4);
@@ -2811,8 +2835,8 @@ S(2.17, { tr: 'whipL', cam: [[2.17, 540, 960, 1.04], [4.22, 540, 950, 1.0]],
   ui() { tText('100.000 € PRO TAG', 540, 380, 86, { color: '#fff', stroke: '#0a4a22', strokeW: 18, maxW: 1000 }); DAYS.forEach((t) => popText('+100.000 €', 520, 1180, t + 0.25, 60, '#a6f0b4', 0, 120)); },
   sfx: [[2.2, 'moneyRain'], ...DAYS.map((t) => [t, 'flip']), ...DAYS.map((t) => [t + 0.3, 'cashReg', 0.9])] });
 // ---- 4 · "Oder 40 Millionen sofort?" — a mountain of cash rises, the 40 million slam on screen
-S(4.22, { tr: 'flash', cam: [[4.22, 540, 960, 1.0], [6.41, 540, 930, 1.12]], punch: [[4.66, 0.1]],
-  draw() { rays('#9a6a00', '#e8b400', { cy: 940, spin: 0.3 }); glow(540, 1100, 700, '#fff2b0', 0.4); const k = springEase(TT - 4.3, 180, 13); moneyPyramid(540, 1450, 1.25, k); cash('d4', 4.66, 28); },
+S(4.22, { tr: 'flash', tense: 1, cam: [[4.22, 540, 960, 1.0], [6.41, 540, 930, 1.12]], punch: [[4.66, 0.1]],
+  draw() { rays('#9a6a00', '#e8b400', { cy: 940, spin: 0.3 }); glow(540, 1000, 700, '#fff2b0', 0.4); cashMountain(540, 1250, 1.0, clamp((TT - 4.25) / 0.75)); cash('d4', 4.66, 28); },
   ui() { if (TT > 4.66) { const k = springEase(TT - 4.66, 300, 11); ctx.save(); ctx.translate(540, 420); ctx.scale(k, k); tText('40.000.000 €', 0, 0, 120, { color: PAL.yellow, stroke: '#3a2400', strokeW: 22, maxW: 1000 }); ctx.restore(); } info('SOFORT ⚡', 5.85, { y: 600, bg: PAL.red, size: 60 }); },
   sfx: [[4.3, 'whooshDown', 1.1], [4.66, 'cashCannon'], [5.2, 'coinPour'], [5.85, 'pop', 1]] });
 
@@ -2859,7 +2883,7 @@ S(13.54, { tr: 'whipU', cam: [[13.54, 540, 900, 1.25], [14.82, 540, 860, 1.35]],
   ui() { info('CONTROLLER IN DIE LUFT! 🎮', 14.12, { y: 300, bg: PAL.orange, size: 46 }); },
   sfx: [[13.6, 'whooshUp', 1.1], [13.9, 'sparkle'], [14.12, 'pop', 1], [14.5, 'bling']] });
 // ---- 11 · "Wetten, dass ich in einem Jahr mehr habe als du?" — Jonas points, grinning, the challenge
-S(14.82, { tr: 'cut', cam: CLOSEJ(14.82, 17.08), punch: [[15.97, 0.08]],
+S(14.82, { tr: 'cut', tense: 1, cam: CLOSEJ(14.82, 17.08), punch: [[15.97, 0.08]],
   draw() { setStudio({ blur: 9 }); char('jonas', 540, FLOOR + 170, 1.05, { pose: [[14.82, 'idle'], [14.95, 'pointL', 0.15], [16.2, 'hips', 0.25]], emo: [[14.82, 'grin'], [16.2, 'smug']], look: [-0.5, 0], lean: -0.05, extras: { glasses: true } }); },
   ui() { popText('WETTEN? 😏', 540, 360, 14.85, 92, PAL.yellow, -0.05, 0); if (TT > 15.97) info('IN 1 JAHR: WER HAT MEHR?', 15.97, { y: 520, bg: PAL.blue, size: 46, rot: 0.03 }); },
   sfx: [[14.85, 'pop', 1.1], [15.97, 'ting'], [16.8, 'swish', 0.8]] });
@@ -2931,7 +2955,7 @@ S(34.83, { tr: 'whipL', cam: [[34.83, 540, 1120, 1.25], [36.93, 540, 1140, 1.35]
   ui() { info('KLEBT AM CONTROLLER 🎮', 35.8, { y: 330, bg: PAL.blue, size: 50 }); },
   sfx: [[34.9, 'click'], [35.3, 'click'], [35.8, 'pop', 1], [36.2, 'click'], [36.5, 'typing', 0.4]] });
 // ---- 24 · "Er ist der Einzige in ganz Vice City." — in the game: an empty neon street, one player
-S(36.93, { tr: 'zoomIn', cam: [[36.93, 540, 960, 1.0], [39.14, 540, 960, 1.08]],
+S(36.93, { tr: 'zoomIn', tense: 1, cam: [[36.93, 540, 960, 1.0], [39.14, 540, 960, 1.08]],
   draw() { gameTV(540, 960, 980, 1400, (x, y, w, h) => { gameNeonStreet(x, y, w, h, 0.62); jasonHuman(540, y + h * 0.9, 1.1); }); },
   ui() { sticker('SPIELER ONLINE: 1', 540, 400, 37.1, { bg: '#0c0820', fg: '#41f08a', size: 50 }); info('NUR ER 👑', 37.5, { y: 540, bg: PAL.pink, size: 54, rot: 0.04 }); },
   sfx: [[37.1, 'beep'], [37.5, 'pop', 1], [38.44, 'bling'], [38.7, 'crickets', 0.5]] });
@@ -2952,7 +2976,7 @@ S(42.37, { tr: 'cut', cam: CLOSEJ(42.37, 43.86), punch: [[42.9, 0.08]],
   ui() { popText('BESTER JOB DER WELT! 🏆', 540, 380, 42.45, 64, PAL.yellow, -0.04, 0); },
   sfx: [[42.45, 'pop', 1], [42.5, 'applause', 0.6], [42.9, 'sparkle']] });
 // ---- 28 · "Nach nur zehn Tagen ist er schon Millionär." — the pages race to day 10, the MILLIONÄR stamp
-S(43.86, { tr: 'whipL', cam: [[43.86, 540, 960, 1.0], [46.15, 540, 930, 1.12]], punch: [[45.44, 0.1]],
+S(43.86, { tr: 'whipL', tense: 1, cam: [[43.86, 540, 960, 1.0], [46.15, 540, 930, 1.12]], punch: [[45.44, 0.1]],
   draw() { rays('#5a2bd6', '#7a3cff', { cy: 900, spin: 0.3 }); const d = Math.min(10, 1 + Math.floor(clamp((TT - 43.95) / 1.0) * 9.99)); calendarPage(540, 960, 1.15, 'TAG', d, TT < 44.95 ? ((TT * 10) % 1) : 0);
     if (TT > 45.44) { const k = springEase(TT - 45.44, 300, 10); ctx.save(); ctx.translate(540, 1000); ctx.rotate(-0.15); ctx.scale(1.6 - 0.6 * k, 1.6 - 0.6 * k); ctx.globalAlpha = clamp((TT - 45.44) / 0.1); ctx.lineWidth = 16; ctx.strokeStyle = '#26c25a'; rrPath(-380, -90, 760, 180, 24); ctx.stroke(); tText('MILLIONÄR ✓', 0, 4, 100, { color: '#26c25a', shadow: false }); ctx.restore(); } },
   ui() { info('NACH NUR 10 TAGEN', 43.9, { y: 340, bg: '#141026', size: 56 }); },
@@ -3014,7 +3038,7 @@ S(59.21, { tr: 'slide', lift: 200, cam: [[59.21, 540, 1150, 1.0], [61.59, 540, 1
   ui() { info('IM HAFEN ⚓', 59.37, { y: 360, bg: PAL.blue, size: 56 }); },
   sfx: [[59.3, 'waves', 0.8], [59.37, 'pop', 1], [59.8, 'shipHorn', 0.5], [60.92, 'keys'], [61.0, 'birds', 0.6]] });
 // ---- 38 · "eine Yacht für 2 Millionen." — the yacht, big and shining, the price; Kevin's account above it
-S(61.59, { tr: 'zoomIn', cam: [[61.59, 540, 1100, 1.0], [63.56, 540, 1080, 1.1]],
+S(61.59, { tr: 'zoomIn', tense: 1, cam: [[61.59, 540, 1100, 1.0], [63.56, 540, 1080, 1.1]],
   draw() { setHarbor({ blur: 3 }); glow(540, 1200, 600, '#ffffff', 0.25); yacht(540, 1320 + Math.sin(TT * 2) * 10, 2.0); twinkles('y38', 200, 1000, 700, 260, 7, { s: 30 }); priceTag(560, 820, springEase(TT - 62.51, 280, 12), '2 MIO. €', -0.08, PAL.yellow); },
   ui() { hud('KONTO · KEVIN', [[0, 37e6]], {}); info('YACHT 🛥️', 62.05, { y: 470, bg: PAL.blue, size: 56 }); },
   sfx: [[61.65, 'shipHorn'], [62.05, 'pop', 1], [62.51, 'cashReg'], [62.9, 'sparkle']] });
@@ -3056,7 +3080,7 @@ S(70.72, { tr: 'cut', tense: 1, lift: 0, cam: [[70.72, 540, 1000, 1.0], [72.27, 
   ui() { info('ABRECHNUNG 📄', 70.8, { y: 340, bg: '#141026', size: 56 }); },
   sfx: [[70.8, 'fold'], [70.85, 'thud'], [71.2, 'fold', 1.2], [71.25, 'thud'], [71.6, 'heartbeat', 0.8]] });
 // ---- 45 · "Ich hab noch 37 Millionen." — Kevin waves his statement, smug
-S(72.27, { tr: 'whipL', cam: CLOSE(72.27, 74.09),
+S(72.27, { tr: 'whipL', tense: 1, cam: CLOSE(72.27, 74.09),
   draw() { setGamerRoom({ blur: 10, dark: 0.3 }); char('kevin', 540, FLOOR + 160, 1.0, { pose: [[72.27, 'idle'], [72.4, 'raiseR', 0.2]], emo: [[0, 'smug']], extras: KS2, holdR: () => statement(0, -60, 0.32, 'KEVIN', 37e6, 0.1) }); if (TT > 72.74) cash('k45', 72.74, 12); },
   ui() { hud('KONTO · KEVIN', [[0, 37e6]], { t0: 72.4 }); popText('37 MILLIONEN 😎', 540, 560, 72.74, 72, PAL.yellow, -0.04, 0); },
   sfx: [[72.3, 'rustle'], [72.4, 'pop', 1], [72.74, 'cashReg'], [73.5, 'bling']] });
@@ -3072,17 +3096,24 @@ S(76.12, { tr: 'whipR', cam: CLOSEJ(76.12, 77.87), punch: [[76.93, 0.08]],
   sfx: [[76.2, 'tap'], [76.35, 'tap'], [76.5, 'tap'], [76.65, 'tap'], [76.93, 'pop', 1], [77.2, 'ting']] });
 
 // =====================================================================  THE QUESTION
-// ---- 48 · Kevin: 37.000.000 € (top half)
-S(77.87, { tr: 'glitch', tense: 1, cam: [[77.87, 540, 960, 1.0], [79.2, 540, 960, 1.03]],
-  draw() { splitTopBottom(() => { rays('#1d48b8', '#2f6df6', { cy: 560, spin: 0.08 }); char('kevin', 280, 900, 0.62, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: KS2 }); cash('k48', 78.2, 12); }, () => { rays('#b6302b', '#e8483c', { cy: 1400, spin: -0.08 }); }); },
-  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 720, y: 560, scale: 0.8, t0: 77.9 }); },
+// ---- 48 · Kevin: 37.000.000 € (top half) — both halves the same size; captions ride on the divider
+const YD = 900;
+function splitEven(top, bottom) {
+  ctx.save(); ctx.beginPath(); ctx.rect(-300, -400, 1700, YD + 400); ctx.clip(); top(); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(-300, YD, 1700, 1500); ctx.clip(); bottom(); ctx.restore(); line(-300, YD, 1400, YD, 14, '#ffffff');
+}
+const kevinHalf = () => { rays('#1d48b8', '#2f6df6', { cy: 560, spin: 0.08 }); char('kevin', 350, 860, 0.56, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: KS2 }); };
+const jonasHalf = (t0) => { rays('#b6302b', '#e8483c', { cy: 1220, spin: -0.08 }); const k = t0 == null ? 1 : springEase(TT - t0, 200, 14);
+  char('jonas', 350, 1520 + (1 - k) * 600, 0.56, { pose: [[0, { la: [1.05, -0.35], ra: [1.05, -0.35] }]], emo: [[0, 'smug']], extras: { glasses: true, headset: 1 }, holdR: () => gamepad(0, -30, 0.36, 0.15, Math.floor(TT * 8) % 4), holdL: () => gtaCase(0, -60, 0.56, -0.12) }); };
+S(77.87, { tr: 'glitch', tense: 1, capY: YD, cam: [[77.87, 540, 960, 1.0], [79.2, 540, 960, 1.02]],
+  draw() { splitEven(() => { kevinHalf(); cash('k48', 78.2, 12); }, () => { rays('#b6302b', '#e8483c', { cy: 1220, spin: -0.08 }); }); },
+  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 775, y: 560, scale: 0.8, t0: 77.9 }); },
   sfx: [[77.9, 'pop', 1], [78.2, 'cashReg'], [78.6, 'heartbeat', 1.0]] });
-// ---- 49 · …and Jonas? (bottom half; his total stays hidden) — cut on the question
-S(79.2, { tr: 'cut', tense: 1, cam: [[79.2, 540, 960, 1.0], [80.5, 540, 960, 1.05]], punch: [[79.7, 0.06]],
-  draw() { splitTopBottom(() => { rays('#1d48b8', '#2f6df6', { cy: 560, spin: 0.08 }); char('kevin', 280, 900, 0.62, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: KS2 }); },
-    () => { rays('#b6302b', '#e8483c', { cy: 1400, spin: -0.08 }); const k = springEase(TT - 79.22, 200, 14); char('jonas', 280, 1420 + (1 - k) * 500, 0.46, { pose: [[0, 'holdR']], emo: [[0, 'smug']], extras: { glasses: true }, holdR: () => gamepad(0, -20, 0.22) }); }); },
-  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 720, y: 560, scale: 0.8 }); if (TT > 79.25) { const k = springEase(TT - 79.25, 260, 14); ctx.save(); ctx.translate(720, 1200); ctx.scale(k * 0.85, k * 0.85); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); }
-    info('WIE VIEL HAT JONAS? 🤔', 79.7, { y: 960, bg: PAL.yellow, fg: '#1b1530', size: 54 }); },
+// ---- 49 · …and Jonas? (bottom half: gamepad and the GTA 6 case in his hands; his total stays hidden) — cut on the question
+S(79.2, { tr: 'cut', tense: 1, capY: YD, cam: [[79.2, 540, 960, 1.0], [80.5, 540, 960, 1.04]], punch: [[79.7, 0.06]],
+  draw() { splitEven(() => kevinHalf(), () => jonasHalf(79.22)); },
+  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 775, y: 560, scale: 0.8 }); if (TT > 79.25) { const k = springEase(TT - 79.25, 260, 14); ctx.save(); ctx.translate(775, 1230); ctx.scale(k * 0.8, k * 0.8); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); }
+    info('WIE VIEL HAT JONAS? 🤔', 79.7, { y: 270, bg: PAL.yellow, fg: '#1b1530', size: 54 }); },
   sfx: [[79.25, 'pop', 1.2], [79.3, 'glitch'], [79.4, 'coinTicks', 1.4, 4], [79.7, 'pop', 1]] });
 // =====================================================================
 //  timeline.js — TIMELINE for the tools (export, review) and the score
@@ -3482,32 +3513,22 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
   }
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.06 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
-  const KEYS = [
-    [0.9, 0.85, 1.1],    // a riser over the first scene (the only one, the crown) into the GTA title
+  const KEYS = [   // [time, riser length (0 = a dramatic hit without a riser), level] — risers only on the 7 biggest moments
+    [0.9, 0.85, 1.1],    // the hook: the only one -> the GTA 6 title
     [4.66, 0.9, 1.0],    // 40 Millionen
-    [7.75, 0.8, 0.85],   // the slam
-    [15.97, 0.8, 0.85],  // "in einem Jahr"
+    [7.75, 0, 0.8],      // the slam
     [19.62, 1.0, 1.05],  // "Deal!"
-    [22.55, 1.0, 0.9],   // the "???" price tag
     [23.65, 0.9, 1.0],   // "entscheiden"
-    [25.96, 0.8, 0.85],  // Miami
-    [28.11, 0.5, 0.75],  // villa price
-    [29.91, 0.5, 0.75],  // Ferrari price
-    [32.3, 0.6, 0.8],    // the diamond Rolex
-    [38.44, 0.7, 0.8],   // the only player
-    [41.0, 0.6, 0.8],    // +100.000 €
+    [25.96, 0, 0.75],    // Miami
     [45.44, 1.2, 1.05],  // MILLIONÄR
-    [49.5, 0.9, 1.0],    // the door bursts open
-    [56.53, 0.6, 0.8],   // "Verlierer"
-    [62.51, 0.8, 0.9],   // the yacht's price
+    [49.5, 0, 0.95],     // the door bursts open
+    [62.51, 0, 0.85],    // the yacht's price
     [65.0, 1.2, 1.0],    // "doch dann…"
-    [67.5, 0.6, 0.85],   // not bought
-    [71.22, 1.0, 1.0],   // "abgerechnet"
-    [72.74, 0.6, 0.85],  // 37 Millionen
-    [78.2, 1.0, 1.05],   // Kevin: 37.000.000 €
+    [71.22, 0, 0.95],    // "abgerechnet"
+    [78.2, 0, 1.0],      // Kevin: 37.000.000 €
     [79.7, 1.0, 1.05],   // the question
   ];
-  for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
+  for (const [t, d, v] of KEYS) { if (d > 0) build(t, d, v); dramaHit(t, v); }
   // every sticker, pop-text and price tag that springs in gets its own sound (unless the shot already has one there)
   {
     const POPS = ['pop', 'popHi', 'swish'];
@@ -3526,7 +3547,7 @@ async function buildScore(sampleRate = 48000, part = 'mix', normIn = null) {
   {
     const E = [0.02];
     for (const sh of SHOTS) { if (sh.i) E.push(sh.t0 - (TR_DUR[sh.tr] ?? 0) / 2, sh.t0); for (const [t] of sh.sfx || []) E.push(t); for (const [t] of sh.punch || []) E.push(t); }
-    for (const [t, d] of KEYS) E.push(t - d, t);
+    for (const [t, d] of KEYS) E.push(t - Math.max(d, 0.01), t);
     E.sort((a, b) => a - b);
     for (let i = 0; i + 1 < E.length; i++) { const a = E[i], b = E[i + 1]; if (b - a > 1.1 && a < DURATION - 1) for (let t = a + 0.55; t < b - 0.3; t += 0.6) SFX.tickSoft(t, 1 + (Math.round(t * 10) % 3) * 0.1); }
   }

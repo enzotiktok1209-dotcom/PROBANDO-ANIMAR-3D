@@ -222,32 +222,22 @@
   }
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.06 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
-  const KEYS = [
-    [0.9, 0.85, 1.1],    // a riser over the first scene (the only one, the crown) into the GTA title
+  const KEYS = [   // [time, riser length (0 = a dramatic hit without a riser), level] — risers only on the 7 biggest moments
+    [0.9, 0.85, 1.1],    // the hook: the only one -> the GTA 6 title
     [4.66, 0.9, 1.0],    // 40 Millionen
-    [7.75, 0.8, 0.85],   // the slam
-    [15.97, 0.8, 0.85],  // "in einem Jahr"
+    [7.75, 0, 0.8],      // the slam
     [19.62, 1.0, 1.05],  // "Deal!"
-    [22.55, 1.0, 0.9],   // the "???" price tag
     [23.65, 0.9, 1.0],   // "entscheiden"
-    [25.96, 0.8, 0.85],  // Miami
-    [28.11, 0.5, 0.75],  // villa price
-    [29.91, 0.5, 0.75],  // Ferrari price
-    [32.3, 0.6, 0.8],    // the diamond Rolex
-    [38.44, 0.7, 0.8],   // the only player
-    [41.0, 0.6, 0.8],    // +100.000 €
+    [25.96, 0, 0.75],    // Miami
     [45.44, 1.2, 1.05],  // MILLIONÄR
-    [49.5, 0.9, 1.0],    // the door bursts open
-    [56.53, 0.6, 0.8],   // "Verlierer"
-    [62.51, 0.8, 0.9],   // the yacht's price
+    [49.5, 0, 0.95],     // the door bursts open
+    [62.51, 0, 0.85],    // the yacht's price
     [65.0, 1.2, 1.0],    // "doch dann…"
-    [67.5, 0.6, 0.85],   // not bought
-    [71.22, 1.0, 1.0],   // "abgerechnet"
-    [72.74, 0.6, 0.85],  // 37 Millionen
-    [78.2, 1.0, 1.05],   // Kevin: 37.000.000 €
+    [71.22, 0, 0.95],    // "abgerechnet"
+    [78.2, 0, 1.0],      // Kevin: 37.000.000 €
     [79.7, 1.0, 1.05],   // the question
   ];
-  for (const [t, d, v] of KEYS) { build(t, d, v); dramaHit(t, v); }
+  for (const [t, d, v] of KEYS) { if (d > 0) build(t, d, v); dramaHit(t, v); }
   // every sticker, pop-text and price tag that springs in gets its own sound (unless the shot already has one there)
   {
     const POPS = ['pop', 'popHi', 'swish'];
@@ -266,7 +256,7 @@
   {
     const E = [0.02];
     for (const sh of SHOTS) { if (sh.i) E.push(sh.t0 - (TR_DUR[sh.tr] ?? 0) / 2, sh.t0); for (const [t] of sh.sfx || []) E.push(t); for (const [t] of sh.punch || []) E.push(t); }
-    for (const [t, d] of KEYS) E.push(t - d, t);
+    for (const [t, d] of KEYS) E.push(t - Math.max(d, 0.01), t);
     E.sort((a, b) => a - b);
     for (let i = 0; i + 1 < E.length; i++) { const a = E[i], b = E[i + 1]; if (b - a > 1.1 && a < DURATION - 1) for (let t = a + 0.55; t < b - 0.3; t += 0.6) SFX.tickSoft(t, 1 + (Math.round(t * 10) % 3) * 0.1); }
   }
