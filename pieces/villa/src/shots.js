@@ -331,7 +331,7 @@ S(74.09, { tr: 'cut', lift: 200, cam: [[74.09, 540, 1150, 1.05], [76.12, 540, 11
   sfx: [[74.4, 'swish', 0.8], [74.6, 'pop', 1], [75.3, 'pop', 1.3], [75.6, 'sparkle']] });
 // ---- 47 · "Erst rechnen, dann lachen!" — Jonas taps a calculator, grinning
 S(76.12, { tr: 'whipR', cam: CLOSEJ(76.12, 77.87), punch: [[76.93, 0.08]],
-  draw() { setGamerRoom({ blur: 10 }); const key = Math.floor((TT - 76.2) * 7) % 12; char('jonas', 540, FLOOR + 170, 1.05, { pose: [[0, { la: [0.16, -0.12], ra: [0.9, -2.3] }]], emo: [[76.12, 'smug'], [76.93, 'grin']], look: [0.3, 0.5], extras: { glasses: true, headset: 1 }, holdR: () => calculator(0, -40, 0.3, '???', 0, TT > 76.2 ? key : -1) }); },
+  draw() { setGamerRoom({ blur: 10 }); const key = Math.floor((TT - 76.2) * 7) % 12; char('jonas', 540, FLOOR + 170, 1.05, { pose: [[0, { la: [0.16, -0.12], ra: [1.62, -3.15] }]], emo: [[76.12, 'smug'], [76.93, 'grin']], look: [0.3, 0.5], extras: { glasses: true, headset: 1 }, holdR: () => calculator(10, 30, 0.38, '???', 0, TT > 76.2 ? key : -1) }); },
   ui() { popText('ERST RECHNEN! 🧮', 540, 380, 76.15, 76, PAL.yellow, -0.04, 0); if (TT > 76.93) info('…DANN LACHEN 😏', 76.93, { y: 560, bg: PAL.blue, size: 50, rot: 0.03 }); },
   sfx: [[76.2, 'tap'], [76.35, 'tap'], [76.5, 'tap'], [76.65, 'tap'], [76.93, 'pop', 1], [77.2, 'ting']] });
 
@@ -343,15 +343,16 @@ function splitEven(top, bottom) {
   ctx.save(); ctx.beginPath(); ctx.rect(-300, YD, 1700, 1500); ctx.clip(); bottom(); ctx.restore(); line(-300, YD, 1400, YD, 14, '#ffffff');
 }
 const kevinHalf = () => { rays('#1d48b8', '#2f6df6', { cy: 560, spin: 0.08 }); char('kevin', 350, 860, 0.56, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: KS2 }); };
-const jonasHalf = (t0) => { rays('#b6302b', '#e8483c', { cy: 1220, spin: -0.08 }); const k = t0 == null ? 1 : springEase(TT - t0, 200, 14);
+const kevinIn = (t0) => { rays('#1d48b8', '#2f6df6', { cy: 560, spin: 0.08 }); const k = springEase(TT - t0, 170, 13); char('kevin', 350 - (1 - k) * 760, 860, 0.56, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: KS2, lean: (1 - k) * 0.25 }); };
+const jonasHalf = (t0) => { rays('#b6302b', '#e8483c', { cy: 1220, spin: -0.08 }); const k = t0 == null ? 1 : springEase(TT - t0, 170, 13);
   char('jonas', 350, 1520 + (1 - k) * 600, 0.56, { pose: [[0, { la: [1.05, -0.35], ra: [1.05, -0.35] }]], emo: [[0, 'smug']], extras: { glasses: true, headset: 1 }, holdR: () => gamepad(0, -30, 0.36, 0.15, Math.floor(TT * 8) % 4), holdL: () => gtaCase(0, -60, 0.56, -0.12) }); };
 S(77.87, { tr: 'glitch', tense: 1, capY: YD, cam: [[77.87, 540, 960, 1.0], [79.2, 540, 960, 1.02]],
-  draw() { splitEven(() => { kevinHalf(); cash('k48', 78.2, 12); }, () => { rays('#b6302b', '#e8483c', { cy: 1220, spin: -0.08 }); }); },
-  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 775, y: 560, scale: 0.8, t0: 77.9 }); },
+  draw() { splitEven(() => { kevinIn(77.88); cash('k48', 78.2, 12); }, () => jonasHalf(77.88)); },
+  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 775, y: 560, scale: 0.8, t0: 77.95 }); const k = springEase(TT - 78.0, 260, 14); ctx.save(); ctx.translate(775, 1230); ctx.scale(k * 0.8, k * 0.8); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); },
   sfx: [[77.9, 'pop', 1], [78.2, 'cashReg'], [78.6, 'heartbeat', 1.0]] });
 // ---- 49 · …and Jonas? (bottom half: gamepad and the GTA 6 case in his hands; his total stays hidden) — cut on the question
 S(79.2, { tr: 'cut', tense: 1, capY: YD, cam: [[79.2, 540, 960, 1.0], [80.5, 540, 960, 1.04]], punch: [[79.7, 0.06]],
-  draw() { splitEven(() => kevinHalf(), () => jonasHalf(79.22)); },
-  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 775, y: 560, scale: 0.8 }); if (TT > 79.25) { const k = springEase(TT - 79.25, 260, 14); ctx.save(); ctx.translate(775, 1230); ctx.scale(k * 0.8, k * 0.8); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); }
+  draw() { splitEven(() => kevinHalf(), () => jonasHalf()); },
+  ui() { hud('KONTO · KEVIN', [[0, 37e6]], { x: 775, y: 560, scale: 0.8 }); { const g = TT > 79.3 && TT < 79.6 ? Math.sin(TT * 90) * 12 : 0; ctx.save(); ctx.translate(775 + g, 1230); ctx.scale(0.8 * (1 + springEase(TT - 79.25, 300, 10) * 0.0), 0.8); blurCounter(0, 0, 560, 210, 'KONTO · JONAS'); ctx.restore(); }
     info('WIE VIEL HAT JONAS? 🤔', 79.7, { y: 270, bg: PAL.yellow, fg: '#1b1530', size: 54 }); },
   sfx: [[79.25, 'pop', 1.2], [79.3, 'glitch'], [79.4, 'coinTicks', 1.4, 4], [79.7, 'pop', 1]] });
