@@ -90,7 +90,10 @@ S(4.7, { tr: 'zoomOut', noClock: 1, lift: 110, cam: [[4.7, 540, 1020, 1.0], [6.3
     twoButtonDesk(300, FLOOR + 20, 0.82, { pressL: TT > 5.66 && TT < 6.0, litL: TT > 5.66 ? 0.9 : 0.3, litR: 0.2 });
     twoButtonDesk(780, FLOOR + 20, 0.82, { pressR: TT > 6.18 && TT < 6.45, litL: 0.2, litR: TT > 6.18 ? 0.9 : 0.3 });
     impactLines(198, FLOOR - 300, 100, 300, 12, 5.69); cash('k4', 5.75, 18); },
-  ui() { tText('WAS NIMMST DU?', 540, 330, 70, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14 }); info('ERSTER! 💰', 5.75, { y: 470, x: 300, bg: PAL.green, size: 46 }); },
+  ui() { tText('WAS NIMMST DU?', 540, 200, 66, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
+    choiceCard(285, 462, 'SOFORT', '10 MILLIONEN €', 'AUF DIE HAND', PAL.green, 4.72, () => { glow(0, 0, 200, '#a6f0b4', 0.3); briefcase(0, 60, 0.42, 1); });
+    choiceCard(795, 462, '24 STUNDEN', 'KREDITKARTE', 'OHNE LIMIT ∞', PAL.orange, 4.78, () => { glow(0, 0, 200, '#ffe08a', 0.35); blackCard(0, 0, 0.42, { rot: -0.1 }); });
+    tText('VS', 540, 462, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); },
   sfx: [[4.75, 'pop', 1], [5.35, 'whoosh', 1.3], [5.4, 'whoosh', 1.1], [5.69, 'slam'], [5.72, 'buzzerWin'], [5.8, 'cashCannon'], [6.18, 'pop', 0.9]] });
 // ---- 5 · "…die 10 Millionen." — Kevin hugs the stacks
 S(6.3, { tr: 'cut', noClock: 1, cam: CLOSE(6.3, 7.3),
