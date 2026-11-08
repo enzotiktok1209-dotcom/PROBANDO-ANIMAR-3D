@@ -81,13 +81,17 @@ S(3.05, { tr: 'flash', noClock: 1, cam: [[3.05, 540, 980, 1.0], [4.7, 560, 960, 
   sfx: [[3.07, 'whooshUp', 1], [3.52, 'cashCannon'], [4.0, 'coinPour']] });
 
 // =====================================================================  THE CHOICE: two buttons per player
-// ---- 4 · "Kevin schnappt sich…" — each behind a table with two buttons, hands up; Kevin slams the green one
-S(4.7, { tr: 'zoomOut', noClock: 1, lift: 60, cam: [[4.7, 540, 1060, 1.0], [6.3, 400, 1080, 1.15]], shake: [[5.75, 16, 0.4]],
-  draw() { setStudio(); char('kevin', 290, FLOOR - 90, 0.72, { pose: [[4.7, 'raiseR'], [5.6, 'slamR', 0.08], [6.0, 'cheer', 0.2]], emo: [[0, 'grin'], [6.0, 'laugh']], look: [0.2, 0.5] });
-    char('jonas', 790, FLOOR - 90, 0.72, jonasT({ pose: [[0, 'raiseR']], emo: [[0, 'calm']], look: [-0.4, 0.3] }));
-    twoButtonDesk(290, FLOOR - 120, 0.85, { pressL: TT > 5.69, litL: TT > 5.69 ? 0.9 : 0.3 }); twoButtonDesk(790, FLOOR - 120, 0.85, { litL: 0.3, litR: 0.3 }); impactLines(180, 1380, 100, 320, 12, 5.72); cash('k4', 5.75, 18); },
-  ui() { tText('WAS NIMMST DU?', 540, 330, 70, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14 }); info('10 MIO.! 💰', 5.75, { y: 470, x: 290, bg: PAL.green, size: 46 }); },
-  sfx: [[4.75, 'pop', 1], [5.6, 'whoosh', 1.3], [5.72, 'slam'], [5.75, 'buzzerWin'], [5.8, 'cashCannon']] });
+// ---- 4 · "Kevin schnappt sich…" — both at their stands, hands up; both lunge for the green button — Kevin gets there first,
+//      Jonas' hand stops just above his, then he calmly presses the orange one (the card)
+const slamL = { la: [0.95, -0.95], ra: [0.16, -0.12] }, hoverL = { la: [1.1, -0.7], ra: [0.16, -0.12] };
+S(4.7, { tr: 'zoomOut', noClock: 1, lift: 110, cam: [[4.7, 540, 1020, 1.0], [6.3, 520, 1040, 1.06]], shake: [[5.69, 16, 0.4]],
+  draw() { setStudio(); char('kevin', 300, FLOOR - 40, 0.8, { pose: [[4.7, 'raiseR'], [5.35, slamL, 0.3], [5.95, 'cheer', 0.2]], emo: [[0, 'grin'], [5.4, 'angry', 0.1], [5.95, 'laugh', 0.15]], look: [0.1, 0.6], lean: [[0, 0], [5.35, 0.12, 0.3], [5.95, 0, 0.2]] });
+    char('jonas', 780, FLOOR - 40, 0.8, jonasT({ pose: [[4.7, 'raiseR'], [5.35, hoverL, 0.42], [5.95, 'idle', 0.2], [6.05, 'slamR', 0.15]], emo: [[0, 'calm'], [5.4, 'serious', 0.1], [5.8, 'confused', 0.1], [6.1, 'smug', 0.15]], look: [-0.3, 0.6], lean: [[0, 0], [5.35, 0.1, 0.4], [5.95, 0, 0.2]] }));
+    twoButtonDesk(300, FLOOR + 20, 0.82, { pressL: TT > 5.66 && TT < 6.0, litL: TT > 5.66 ? 0.9 : 0.3, litR: 0.2 });
+    twoButtonDesk(780, FLOOR + 20, 0.82, { pressR: TT > 6.18 && TT < 6.45, litL: 0.2, litR: TT > 6.18 ? 0.9 : 0.3 });
+    impactLines(198, FLOOR - 300, 100, 300, 12, 5.69); cash('k4', 5.75, 18); },
+  ui() { tText('WAS NIMMST DU?', 540, 330, 70, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14 }); info('ERSTER! 💰', 5.75, { y: 470, x: 300, bg: PAL.green, size: 46 }); },
+  sfx: [[4.75, 'pop', 1], [5.35, 'whoosh', 1.3], [5.4, 'whoosh', 1.1], [5.69, 'slam'], [5.72, 'buzzerWin'], [5.8, 'cashCannon'], [6.18, 'pop', 0.9]] });
 // ---- 5 · "…die 10 Millionen." — Kevin hugs the stacks
 S(6.3, { tr: 'cut', noClock: 1, cam: CLOSE(6.3, 7.3),
   draw() { setStudio({ blur: 9 }); char('kevin', 540, FLOOR + 170, 1.05, { pose: [[0, 'holdBoth']], emo: [[0, 'laugh']], holdR: () => briefcase(-70, 10, 0.3, 1) }); cash('k5', 6.32, 20); },

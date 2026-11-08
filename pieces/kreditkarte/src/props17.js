@@ -37,12 +37,18 @@ function clockHud(t0) {
   ctx.save(); ctx.translate(540, 245); ctx.scale(k, k); fillRR(-200, -46, 400, 92, 46, red ? (blink ? '#ff3b4a' : '#b81b2b') : '#141026'); ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(255,255,255,0.25)'; rrPath(-200, -46, 400, 92, 46); ctx.stroke();
   tText('⏱', -150, 2, 44, { shadow: false }); tText(hms(left), 30, 4, 56, { color: '#ffffff', shadow: false }); ctx.restore();
 }
-// a long game-show table with two buttons for one player: green (money) and orange (card)
+// a game-show stand with two buttons for one player (same height as the old podiums): green (money) left, orange (card) right
 function twoButtonDesk(x, y, s, o = {}) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  shadowEll(0, 250, 300, 30, 0.35); fillRR(-280, 0, 560, 250, 18, '#241a44'); fillRR(-280, 0, 560, 26, 12, '#3a2a6a'); fillRR(-260, 70, 520, 14, 6, PAL.gold); fillRR(-260, 200, 520, 14, 6, PAL.gold);
-  const btn = (bx, col, lab, press, lit) => { const p = press ? 10 : 0; ell(bx, 4, 110, 30, '#1b1530'); if (lit) glow(bx, -20, 160, col, 0.6 * lit); ctx.beginPath(); ctx.ellipse(bx, -12 + p, 92, 50, 0, Math.PI, 0); ctx.fillStyle = col; ctx.fill(); ell(bx, -12 + p, 92, 24, shade(col, -0.15)); ell(bx - 26, -40 + p, 26, 12, 'rgba(255,255,255,0.45)'); tText(lab, bx, 140, 34, { color: '#fff', shadow: false }); };
-  btn(-130, PAL.green, '10 MIO.', o.pressL, o.litL); btn(130, PAL.orange, 'KARTE', o.pressR, o.litR);
+  shadowEll(0, 8, 300, 34, 0.4);
+  poly([[-260, 0], [-235, -330], [235, -330], [260, 0]], '#2b2440'); poly([[-260, 0], [-235, -330], [-190, -330], [-212, 0]], '#3a3157');
+  fillRR(-260, -60, 520, 22, 6, PAL.yellow); fillRR(-250, -270, 500, 14, 6, 'rgba(255,210,63,0.6)');
+  fillRR(-285, -360, 570, 44, 12, '#1d1830');
+  const btn = (bx, col, lab, press, lit) => { const pz = (press ? 1 : 0) * 26; if (lit) glow(bx, -400, 170, col, 0.55 * lit);
+    ell(bx, -370, 104, 32, shade(col, -0.45)); ell(bx, -384 + pz * 0.5, 90, 28 - pz * 0.2, shade(col, -0.25));
+    ctx.beginPath(); ctx.ellipse(bx, -394 + pz, 86, 54 - pz * 1.4, 0, Math.PI, TAU); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); ell(bx - 28, -416 + pz, 28, 11, 'rgba(255,255,255,0.55)', -0.3);
+    fillRR(bx - 95, -240, 190, 64, 14, '#141026'); tText(lab, bx, -208, 34, { color: col, shadow: false }); };
+  btn(-125, PAL.green, '10 MIO.', o.pressL, o.litL); btn(125, PAL.orange, 'KARTE', o.pressR, o.litR);
   ctx.restore();
 }
 // a row of shops with their shutters down: GESCHLOSSEN
