@@ -489,13 +489,13 @@ window.renderCover = (variant = 0) => {
   if (variant === 0) {   // el narrador asustado delante; detrás, el pueblo con la misma sonrisa y dos ya sin cara
     use('ST'); dusk(); put(hero, 0, 0, -60, 0); applyPose(hero, { aRx: 1.2, aRe: 1.9, aLx: 1.2, aLe: 1.9, aRz: -.25, aLz: -.25, headX: .05, lean: -.05 }); hero.setFace({ mouth: 'o', eyes: 'wide', brows: -.7, sweat: 1 });
     const pos = [[-5.5, -66], [5.5, -66], [-2.6, -70], [2.6, -70], [-8, -72], [8, -72], [0, -75]]; pos.forEach(([x, z], i) => { const p = fk[i]; put(p, x, 0, z, -x * .03); applyPose(p, { ...RIGID, headX: .12 }); if (i === 2 || i === 3) p.unmask(1, .9); else p.setFace({ mouth: 'grin', eyes: 'open', look: [-x * .1, .3] }); });
-    cam([0, 5.4, -48.5], [0, 5.2, -64], 50); grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55; sh(V(0, 0, -66), 30);
+    cam([0, 4.4, -50], [0, 3.0, -64], 54); grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55; sh(V(0, 0, -66), 30);
     camera.updateProjectionMatrix(); sky.sky.position.copy(camera.position); composer.render(); octx.drawImage(renderer.domElement, 0, 0, W, H);
     coverText([['ICH BIN DER', 112, '#ffffff'], ['EINZIGE MENSCH', 140, '#E2FD07']], 'SIE TRAGEN UNSERE GESICHTER');
   } else {   // la pared de las caras colgadas con el narrador mirándolas
-    use('HA'); inside(1, .2); put(hero, HX - 2, 0, 19, PI + .25); applyPose(hero, { headX: -.25, aLz: .2, aRz: .2, headY: -.25 }); hero.setFace({ mouth: 'o', eyes: 'wide', brows: -.6 });
+    use('HA'); inside(1, .2); put(hero, HX - .6, 0, 15.5, PI + .12); applyPose(hero, { headX: -.25, aLz: .2, aRz: .2, headY: -.25 }); hero.setFace({ mouth: 'o', eyes: 'wide', brows: -.6 });
     put(fk[8], HX + 4.5, 0, 22.5, PI - .5); fk[8].unmask(1, .8); applyPose(fk[8], { aRx: 2.5, aRe: .6 }); attach(FOLKF, fk[8].aR.hand, [0, -.9, .6], [0, PI, 0], 1);
-    cam([HX - 3.8, 5.6, 7], [HX + .2, 6.2, 27], 56); grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55;
+    cam([HX - 1.6, 4.6, 6.5], [HX - .2, 4.4, 27], 58); grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55;
     camera.updateProjectionMatrix(); composer.render(); octx.drawImage(renderer.domElement, 0, 0, W, H);
     coverText([['WEM GEHÖREN', 112, '#ffffff'], ['DIESE GESICHTER?', 128, '#E2FD07']], 'NIEMALS WEINEN!');
     arrow(W * .86, H * .28, 2.2);
