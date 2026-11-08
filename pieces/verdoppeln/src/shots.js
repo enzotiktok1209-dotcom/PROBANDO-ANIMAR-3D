@@ -56,7 +56,7 @@ function splitEven(top, bottom) {
 }
 const CARDS = (t0, y = 462) => { tText('WÄHL SCHNELL!', 540, y - 262, 70, { color: PAL.yellow, stroke: '#240b5e', strokeW: 14, maxW: 1000 });
   choiceCard(285, y, 'SOFORT', '1 MILLION €', 'AUF DIE HAND', PAL.green, t0, () => { glow(0, 0, 200, '#a6f0b4', 0.3); briefcase(0, 60, 0.42, 1); });
-  choiceCard(795, y, '30 TAGE LANG', '1 € × 2', 'JEDEN TAG VERDOPPELT', PAL.orange, t0 + 0.06, () => { glow(0, 0, 200, '#fff2b0', 0.4); euroCoin(-70, 0, 62, { spin: TT * 2, shadow: false }); tText('×2', 90, 4, 80, { color: '#fff', stroke: '#7a3a00', strokeW: 14 }); });
+  choiceCard(795, y, '30 TAGE LANG', '1 € × 2', 'JEDEN TAG VERDOPPELT', PAL.orange, t0 + 0.06, () => { glow(0, 0, 200, '#fff2b0', 0.4); euroCoin(-70, 0, 62, { spin: Math.sin(TT * 2) * 0.35, shadow: false }); tText('×2', 90, 4, 80, { color: '#fff', stroke: '#7a3a00', strokeW: 14 }); });
   tText('VS', 540, y, 50, { color: '#fff', stroke: PAL.red, strokeW: 26 }); };
 const pan = (t0, t1, x0, x1, y = 960, z0 = 1, z1 = 1.06) => [[t0, x0, y, z0], [t1, x1, y - 20, z1]];
 const KJ = (o = {}) => ({ emo: [[0, 'grin']], ...o });
