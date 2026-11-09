@@ -64,10 +64,10 @@ Finalmente, después de un año, el ajuste de cuentas. Jonas pone su cuenta sobr
 
 ## Descripción (TikTok)
 
-Der Mond gehört dir – oder 1 Billion Euro sofort? 🌕💶 Was würdest du wählen? Rechne mit: Wie viel hat Kevin am Ende? Schreib deine Antwort in die Kommentare! 👇
+Der Mond gehört dir – oder 1 Billion Euro sofort? 🌕💶 Kevin nimmt den Mond, Jonas das Geld. Wer hat nach einem Jahr mehr? Rechne mit und schreib deine Antwort in die Kommentare! 👇
 
 #waswürdestduwählen #mond #billion #geld #millionär #reich #kevinundjonas #animation #rechnen #fyp #fürdich
 
-## Comentario fijado (solución)
+## Comentario fijado
 
-Lösung 🌕: Logo = 500 Milliarden. Grundstücke = 1 Million × 1 Million = 1 Billion. Zusammen hat Kevin 1,5 Billionen! 🤯 Jonas hat nur 900 Milliarden – also muss Jonas die G-Klasse kaufen 😂 Hast du richtig gerechnet?
+Ehrlich: Was hättest DU genommen? 🌕 Den Mond oder 💶 1 Billion sofort? Schreib „MOND“ oder „GELD“ in die Kommentare! 👇
