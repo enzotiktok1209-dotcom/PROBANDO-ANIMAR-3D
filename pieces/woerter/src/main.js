@@ -331,3 +331,17 @@ function renderAt(T) {
 }
 window.renderAt = renderAt; window.DUR = DUR; window.FPS = FPS; window.CUES = CUES; window.SHOTS = S.map(s => [s.t0, s.t1, s.tr, s.zoom]); window.__ready = true;
 
+
+// ---------- portada (1080×1920): el niño delante, el pueblo detrás con sus números; texto pegado a las cabezas ----------
+window.renderCover = (variant = 0) => {
+  hideAll(); BAD.length = 0; use('ST'); day(); const z = -60;
+  put(kid, 0, 0, z, 0); applyPose(kid, { aRx: 2.05, aRe: 2.45, aRz: -.6, aLz: .15, headX: .08 }); kid.setFace({ mouth: 'flat', eyes: 'wide', brows: -.5, sweat: 1, look: [0, 0] }); num(kid, 1000, { big: 1.25, dy: .35 });
+  const P = [[-3.6, -7, 812, 'smile'], [3.6, -7, 0, 'o'], [-1.4, -13, 265, 'grin'], [1.6, -12, 590, 'smile'], [-5.6, -15, 38, 'frown'], [5.4, -16, 977, 'grin']];
+  P.forEach(([x, dz, v, m], i) => { const p = fk[i]; put(p, x, 0, z + dz, -x * .04); const zero = v === 0; applyPose(p, zero ? { aRx: 2.2, aRe: 2.3, aRz: -.4, aLx: 2.2, aLe: 2.3, aLz: -.4 } : { aRx: .6 + (i % 2) * .5, aRe: 1.2, headY: -x * .04 }); p.setFace({ mouth: m, eyes: zero ? 'wide' : 'open', brows: zero ? -.6 : 0 }); num(p, v, { big: .9 }); });
+  cam([0, 4.2, z + 14], [0, 5.2, z - 6], 44); grade.uniforms.vig.value = .58; grade.uniforms.sat.value = 1.6; sh(V(0, 0, z - 4), 30);
+  camera.updateProjectionMatrix(); sky.sky.position.copy(camera.position); composer.render(); octx.drawImage(renderer.domElement, 0, 0, W, H); for (const n of NUMS) drawNum(n);
+  const c = octx; const T = (s, x, y, size, fill) => { c.save(); c.translate(x, y); c.rotate(-.02); c.font = `700 ${size}px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round'; const tw = c.measureText(s).width; if (tw > W * .92) { const k = W * .92 / tw; c.scale(k, k); } c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.shadowOffsetY = 10; c.lineWidth = size * .22; c.strokeStyle = '#000'; c.strokeText(s, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = fill; c.fillText(s, 0, 0); c.restore(); };
+  const [t1, t2] = variant ? ['WIE VIELE WÖRTER', 'HAST DU NOCH?'] : ['NUR 1.000 WÖRTER', 'AM TAG'];
+  T(t1, W / 2, H * .17, 100, '#ffffff'); T(t2, W / 2, H * .235, 132, '#E2FD07');
+  const tag = 'BEI 0: 7 TAGE STUMM'; c.save(); c.translate(W / 2, H * .8); c.rotate(.03); c.font = `700 70px ${FONT}`; const tk = Math.min(1, 860 / c.measureText(tag).width); c.scale(tk, tk); const tw = c.measureText(tag).width + 90; c.fillStyle = '#d6202f'; c.shadowColor = 'rgba(0,0,0,.5)'; c.shadowBlur = 20; c.beginPath(); c.roundRect(-tw / 2, -56, tw, 112, 30); c.fill(); c.shadowBlur = 0; c.lineWidth = 10; c.strokeStyle = '#fff'; c.stroke(); c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(tag, 0, 6); c.restore();
+};
