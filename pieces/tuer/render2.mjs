@@ -8,6 +8,6 @@ p.on('pageerror', e => console.log('pageerror:', e.message));
 await p.goto(url); await p.waitForFunction('window.__ready === true', null, { timeout: 300000 });
 const el = await p.$('#stage'); const t0 = Date.now();
 for (let f = +a; f < +b; f++) { const path = `${out}/f${String(f).padStart(5, '0')}.jpg`; if (fs.existsSync(path)) continue;
-  await p.evaluate(t => window.renderAt(t), f / 30); await el.screenshot({ path, type: 'jpeg', quality: 95 });
+  const b64 = await p.evaluate(t => { window.renderAt(t); return document.querySelector('#stage canvas:not([style*="none"])').toDataURL('image/jpeg', .95).split(',')[1]; }, f / 30); fs.writeFileSync(path, Buffer.from(b64, 'base64'));
   if (f % 100 === 0) console.log(f, ((Date.now() - t0) / 1000).toFixed(0) + 's'); }
 await br.close();

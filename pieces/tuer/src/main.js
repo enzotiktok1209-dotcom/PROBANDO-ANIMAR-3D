@@ -399,6 +399,7 @@ function renderShot(i, T, tr, a) {
   camera.updateProjectionMatrix();
   if (tr === 'W' || tr === 'S') { grade.uniforms.blurAmt.value = a * .07; grade.uniforms.dir.value.set(tr === 'W' ? 1 : 0, tr === 'W' ? 0 : 1); } else grade.uniforms.blurAmt.value = 0;
   if (tr === 'F') grade.uniforms.flash.value = Math.max(grade.uniforms.flash.value, a * .95);
+  sun.castShadow = sun.intensity >= .45;
   sky.sky.position.copy(camera.position); composer.render();
 }
 function renderAt(T) {
