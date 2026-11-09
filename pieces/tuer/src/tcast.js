@@ -3,7 +3,7 @@
 // Mila (6): coletas pelirrojas con lazos azules, peto vaquero sobre camiseta de rayas rojas y blancas.
 // Mama: delantal de flores, pañuelo verde. Herr Fuchs: chaleco de punto verde, gorra de cuadros, bastón. Su madre: gafas redondas, chal lila, moño gris.
 // Fellriesen: pelo gris ceniza enmarañado con mechones de musgo, brazos larguísimos, flequillo que tapa los ojos, sonrisa enorme de dientes humanos planos.
-import { THREE, mat, box, cyl, sphere, canvasTex, checkTex, character, CUSTOM_FACES, RNG } from './engine.js';
+import { THREE, mat, box, cyl, sphere, canvasTex, checkTex, character, CUSTOM_FACES, RNG, faceTexture } from './engine.js';
 import { mk, hairS, glasses } from './props.js';
 import { robloxify } from './roblox.js';
 
@@ -42,23 +42,50 @@ export function makeOma(scene) {
   return mk(scene, { seed: 605, scale: .92, skin: 0xf2d0b8, skinCss: '#f2d0b8', shirt: 0xb898d8, shirt2: 0xb898d8, pants: 0x5a4a6a, skirt: 0x5a4a6a, shoes: 0x3a2a3a, hair: 0xc8c8cc, hairBuild: hairS(0xc8c8cc, 'bun'),
     face: { iris: '#5a7a9a', browColor: '#c8c8cc', blush: .3 } }, [o => glasses(o.head), o => { const s = box(2.3, .8, 1.3, mat(0x9a6ac8, { roughness: 1, map: knit('#9a6ac8', 'rgba(0,0,0,.2)') }), .3, o.spine, 0, 1.8, 0); }]);
 }
-// ---------- Fellriesen ----------
-const furTex = (a, b, c2) => canvasTex(128, 128, (c, w, h) => { c.fillStyle = a; c.fillRect(0, 0, w, h); const r = RNG(a.length + 7); for (let i = 0; i < 700; i++) { c.strokeStyle = [b, c2, 'rgba(0,0,0,.25)'][i % 3]; c.lineWidth = 1 + r() * 2; const x = r() * w, y = r() * h; c.beginPath(); c.moveTo(x, y); c.lineTo(x + (r() - .5) * 6, y + 6 + r() * 10); c.stroke(); } }, true);
-CUSTOM_FACES.beast = (c, s) => { const fur = s.fur || '#8a8a86'; c.fillStyle = fur; c.fillRect(0, 0, 512, 512); const r = RNG(5); for (let i = 0; i < 500; i++) { c.strokeStyle = i % 2 ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.2)'; c.lineWidth = 3; const x = r() * 512, y = r() * 300; c.beginPath(); c.moveTo(x, y); c.lineTo(x + (r() - .5) * 10, y + 24); c.stroke(); }
-  const open = s.open || 0, y0 = 330; c.fillStyle = '#3a1418'; c.beginPath(); c.moveTo(40, y0 - 40); c.quadraticCurveTo(256, y0 + 30, 472, y0 - 40); c.quadraticCurveTo(256, y0 + 150 + open * 80, 40, y0 - 40); c.fill();
-  c.save(); c.clip(); const tooth = (x, y, w, h) => { c.fillStyle = '#e8dcb8'; c.beginPath(); c.roundRect(x, y, w, h, 6); c.fill(); c.strokeStyle = '#8a7a58'; c.lineWidth = 3; c.stroke(); };
-  for (let i = 0; i < 14; i++) { const x = 52 + i * 29.5; const top = y0 - 40 + Math.pow((x - 256) / 216, 2) * 0 + 70 * (1 - Math.pow((x - 256) / 216, 2)) * .9; tooth(x, top - 34, 27, 44); tooth(x + 4, top + 22 + open * 50 + 30 * (1 - Math.pow((x - 256) / 216, 2)), 25, 40); } c.restore();
-  c.strokeStyle = '#2a1012'; c.lineWidth = 8; c.beginPath(); c.moveTo(40, y0 - 40); c.quadraticCurveTo(256, y0 + 30, 472, y0 - 40); c.stroke(); };
-const BEAST_FUR = [['#8a8a86', 0x8a8a86, '#a8a8a2', '#5a6a4a'], ['#7a7670', 0x7a7670, '#9a958e', '#4a5a3a'], ['#96928a', 0x96928a, '#b4b0a8', '#62704e']];
-export function makeBeast(scene, i = 0, sc = 3.4) { const [css, hex, light, moss] = BEAST_FUR[i % 3]; const ft = furTex(css, light, moss); const fm = mat(0xffffff, { map: ft, roughness: 1 });
-  const o = robloxify(character(scene, { seed: 700 + i, scale: sc * (.92 + (i % 3) * .06), headScale: 1.25, skin: hex, skinCss: css, shirtMap: ft, shirt2: null, pants: hex, shoes: 0x3a3632, sole: 0x2a2622, noBelt: true, face: { custom: 'beast', fur: css }, hairBuild: () => {} }), { hs: 1.25 });
-  const m2 = mat(hex, { roughness: 1 }), mm = mat(0x5a6a4a, { roughness: 1 }), r = RNG(40 + i);
-  // flequillo largo que tapa los ojos
-  const fr = new THREE.Group(); fr.position.set(0, 1.35, .3); o.head.add(fr); for (let k = 0; k < 13; k++) { const cn = new THREE.Mesh(new THREE.ConeGeometry(.16, .8 + r() * .3, 5), k % 4 ? m2 : mm); cn.position.set(-.72 + k * .12, -.02, .55); cn.rotation.x = Math.PI + .25; o.head && fr.add(cn); }
-  const capF = new THREE.Mesh(new THREE.SphereGeometry(.88, 20, 12, 0, 6.283, 0, 1.4), fm); capF.position.y = 1.15; capF.scale.set(1.0, .7, 1.0); o.head.add(capF);
-  // mechones por el cuerpo y los brazos
-  const tuft = (parent, x, y, z, s = .3, rx = 0) => { const cn = new THREE.Mesh(new THREE.ConeGeometry(s, s * 3, 5), r() > .8 ? mm : m2); cn.position.set(x, y, z); cn.rotation.set(Math.PI + rx, 0, (r() - .5) * .6); parent.add(cn); };
-  for (let k = 0; k < 26; k++) tuft(o.spine, (r() - .5) * 2.1, .2 + r() * 1.9, (r() > .5 ? .56 : -.56), .22 + r() * .12, (r() - .5) * .4);
-  for (const a of [o.aL, o.aR]) { for (let k = 0; k < 6; k++) tuft(a.sh, (r() - .5) * .9, -.2 - r() * 1, (r() - .5) * .9, .2); for (let k = 0; k < 5; k++) tuft(a.el, (r() - .5) * .8, -.1 - r() * .7, (r() - .5) * .8, .18); a.sh.scale.y = 1.55; a.hand.scale.set(1.3, 1.1, 1.3); }
-  for (const s of [-1, 1]) for (let k = 0; k < 4; k++) tuft(o.spine, s * 1.0, 1.9 + k * .02, (k - 1.5) * .3, .3, .3);
-  o.root.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); o.isBeast = true; return o; }
+// ---------- Fellriesen: larguiruchos, encorvados, creepy (rig propio, compatible con applyPose) ----------
+CUSTOM_FACES.creep = (c, s) => { const open = s.open || 0; c.clearRect(0, 0, 512, 512);
+  // piel negra con brillo húmedo y venas
+  
+  c.strokeStyle = 'rgba(70,20,24,.55)'; c.lineWidth = 3; const r = RNG(77); for (let k = 0; k < 14; k++) { let x = r() * 512, y = r() * 200; c.beginPath(); c.moveTo(x, y); for (let q = 0; q < 5; q++) { x += (r() - .5) * 40; y += 14 + r() * 18; c.lineTo(x, y); } c.stroke(); }
+  // cuencas hundidas, bordes rojizos, pupila blanca diminuta que brilla
+  for (const x of [176, 336]) { const g = c.createRadialGradient(x, 175, 2, x, 175, 78); g.addColorStop(0, '#000'); g.addColorStop(.55, '#050303'); g.addColorStop(.8, 'rgba(110,20,24,.85)'); g.addColorStop(1, 'rgba(12,10,10,0)'); c.fillStyle = g; c.beginPath(); c.ellipse(x, 175, 78, 62, x < 256 ? -.25 : .25, 0, 7); c.fill();
+    const p = c.createRadialGradient(x + (x < 256 ? 6 : -6), 178, 0, x, 178, 17); p.addColorStop(0, '#ffffff'); p.addColorStop(.3, 'rgba(255,252,240,1)'); p.addColorStop(.55, 'rgba(255,240,220,.45)'); p.addColorStop(1, 'rgba(255,240,220,0)'); c.fillStyle = p; c.beginPath(); c.arc(x, 178, 17, 0, 7); c.fill(); }
+  // sonrisa de oreja a oreja: encías rojas y dientes humanos planos amarillentos
+  const y0 = 335, h0 = 72 + open * 120; c.fillStyle = '#2a0406'; c.beginPath(); c.moveTo(28, y0 - 60); c.quadraticCurveTo(256, y0 + 40, 484, y0 - 60); c.quadraticCurveTo(256, y0 + h0 + 46, 28, y0 - 60); c.fill();
+  c.save(); c.clip(); c.fillStyle = '#7a1418'; c.fillRect(0, y0 - 80, 512, 50);
+  for (let i = 0; i < 17; i++) { const x = 40 + i * 25.5, t = 1 - Math.pow((x + 12 - 256) / 228, 2); const top = y0 - 60 + 100 * t * .5; c.fillStyle = ['#e8dcb0', '#d8c890', '#efe6c4'][i % 3]; c.beginPath(); c.roundRect(x, top - 4, 23, 42, 4); c.fill(); c.strokeStyle = '#5a4428'; c.lineWidth = 2; c.stroke();
+    const bot = top + 34 + open * 96 + 34 * t; c.fillStyle = ['#e0d4a8', '#efe6c4', '#cfc08a'][i % 3]; c.beginPath(); c.roundRect(x + 1, bot, 22, 40, 4); c.fill(); c.stroke(); }
+  c.fillStyle = 'rgba(200,220,230,.6)'; for (const x of [150, 300, 380]) { c.fillRect(x, y0 + 20 + open * 60, 5, 30 + open * 30); } c.restore();
+  c.strokeStyle = '#000'; c.lineWidth = 7; c.beginPath(); c.moveTo(28, y0 - 60); c.quadraticCurveTo(256, y0 + 40, 484, y0 - 60); c.stroke(); for (const s2 of [-1, 1]) { c.beginPath(); c.moveTo(256 + s2 * 228, y0 - 60); c.lineTo(256 + s2 * 246, y0 - 88); c.stroke(); } };
+const FURS = [[0x111010, 0x0e0c0c], [0x141212, 0x100e0e], [0x0f0e0e, 0x121010]];
+export function makeBeast(scene, i = 0, sc = 3.6) { const [furHex, skinHex] = FURS[i % 3]; const r = RNG(60 + i);
+  const fur = mat(furHex, { roughness: .95 }), skin = mat(skinHex, { roughness: .25, metalness: .25 }), dark = mat(0x2a0a0c, { roughness: .6 }), nail = mat(0x8a7a5a, { roughness: .4 });
+  const root = new THREE.Group(); scene.add(root); const hips = new THREE.Group(); hips.position.y = 2.05; root.add(hips); const spine = new THREE.Group(); hips.add(spine);
+  const limb = (parent, len, rTop, rBot, m, y0 = 0) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(rTop, rBot, len, 8), m); c.position.y = y0 - len / 2; parent.add(c); return c; };
+  // torso: pecho estrecho y costillas marcadas, joroba
+  const chest = new THREE.Mesh(new THREE.CylinderGeometry(.42, .26, 1.5, 10), skin); chest.position.set(0, .8, 0); chest.scale.z = .62; spine.add(chest);
+  for (let k = 0; k < 5; k++) { const rib = new THREE.Mesh(new THREE.TorusGeometry(.36 - k * .02, .03, 4, 14, Math.PI), dark); rib.position.set(0, 1.1 - k * .14, .12); rib.rotation.set(0, 0, Math.PI); rib.scale.set(1, .5, 1); spine.add(rib); }
+  const hump = new THREE.Mesh(new THREE.SphereGeometry(.42, 12, 10), fur); hump.position.set(0, 1.45, -.18); hump.scale.set(1.1, .9, .8); spine.add(hump);
+  const pelvis = new THREE.Mesh(new THREE.SphereGeometry(.3, 10, 8), fur); pelvis.scale.set(1.1, .6, .7); spine.add(pelvis);
+  // cuello largo y cabeza alargada
+  const neck = new THREE.Group(); neck.position.set(0, 1.62, .05); spine.add(neck); const nk = limb(neck, .55, .1, .13, skin, .55); nk.position.y = .27;
+  const head = new THREE.Group(); head.position.y = .52; neck.add(head); const hm = new THREE.Mesh(new THREE.SphereGeometry(.42, 18, 14), skin); hm.scale.set(.86, 1.42, .86); hm.position.y = .42; head.add(hm);
+  const ft0 = faceTexture({ custom: 'creep', open: 0 }); const faceMat = new THREE.MeshStandardMaterial({ map: ft0, emissive: 0xffffff, emissiveMap: ft0, emissiveIntensity: .9, transparent: true, roughness: .3, metalness: .2, polygonOffset: true, polygonOffsetFactor: -2 });
+  const face = new THREE.Mesh(new THREE.CylinderGeometry(.385, .385, .95, 24, 1, true, -1.0, 2.0), faceMat); face.position.y = .42; face.scale.set(.96, 1, 1.0); face.scale.set(.96, 1, 1.0); head.add(face);
+  // brazos larguísimos y finos con dedos largos
+  const arm = (s) => { const sh = new THREE.Group(); sh.position.set(s * .42, 1.42, 0); spine.add(sh); sphere(.12, skin, sh, 0, 0, 0, 8, 6); limb(sh, 1.25, .08, .07, skin, 0);
+    const el = new THREE.Group(); el.position.y = -1.25; sh.add(el); sphere(.08, skin, el, 0, 0, 0, 8, 6); limb(el, 1.2, .07, .05, skin, 0); const hand = new THREE.Group(); hand.position.y = -1.2; el.add(hand); const palm = box(.16, .22, .08, skin, .03, hand, 0, -.08, 0);
+    for (let f = 0; f < 4; f++) { const fg = new THREE.Group(); fg.position.set(-.06 + f * .04, -.18, 0); fg.rotation.z = (f - 1.5) * .12; hand.add(fg); limb(fg, .42 + (f === 1 || f === 2 ? .08 : 0), .018, .012, skin, 0); const n = new THREE.Mesh(new THREE.ConeGeometry(.018, .06, 4), nail); n.position.y = -.48; n.rotation.x = Math.PI; fg.add(n); fg.rotation.x = .25; }
+    for (let k = 0; k < 7; k++) { const st = new THREE.Mesh(new THREE.ConeGeometry(.03, .45 + r() * .4, 4), fur); st.position.set((r() - .5) * .14, -.3 - r() * .9, (r() - .5) * .14); st.rotation.x = Math.PI; sh.add(st); }
+    return { sh, el, hand }; };
+  const leg = (s) => { const hp = new THREE.Group(); hp.position.set(s * .2, 0, 0); hips.add(hp); limb(hp, 1.02, .1, .07, fur, 0); const kn = new THREE.Group(); kn.position.y = -1.0; hp.add(kn); sphere(.08, skin, kn, 0, 0, 0, 8, 6); limb(kn, 1.0, .07, .045, skin, 0);
+    const foot = box(.14, .06, .5, skin, .02, kn, 0, -1.02, .16); for (let f = 0; f < 3; f++) { const t = new THREE.Mesh(new THREE.ConeGeometry(.02, .14, 4), nail); t.position.set(-.04 + f * .04, -1.04, .45); t.rotation.x = Math.PI / 2; kn.add(t); }
+    for (let k = 0; k < 6; k++) { const st = new THREE.Mesh(new THREE.ConeGeometry(.035, .4 + r() * .3, 4), fur); st.position.set((r() - .5) * .18, -.25 - r() * .7, (r() - .5) * .18); st.rotation.x = Math.PI; hp.add(st); } return { hp, kn, shoe: foot }; };
+  // mechones colgando de hombros y espalda
+  for (let k = 0; k < 24; k++) { const hh = .6 + r() * .7; const st = new THREE.Mesh(new THREE.ConeGeometry(.045, hh, 4), fur); const a = r() * 6.283; st.position.set(Math.cos(a) * .36, 1.55 - hh / 2 - r() * .3, Math.sin(a) * .26); st.rotation.set(Math.PI + (r() - .5) * .3, 0, (r() - .5) * .3); spine.add(st); }
+  const aL = arm(-1), aR = arm(1), lL = leg(-1), lR = leg(1);
+  root.scale.setScalar(sc * (.95 + (i % 3) * .05));
+  const spec = { scale: root.scale.x, skinCss: '#c8c2b8' };
+  const o = { root, hips, spine, neck, head, face, faceMat, aL, aR, lL, lR, spec, props: {}, seed: 700 + i, isBeast: true };
+  o.setFace = (f) => { const t = faceTexture({ custom: 'creep', open: Math.round((f.open || 0) * 10) / 10 }); if (faceMat.map !== t) { faceMat.map = t; faceMat.emissiveMap = t; faceMat.needsUpdate = true; } };
+  o.unmask = null; root.traverse(m => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); return o; }
