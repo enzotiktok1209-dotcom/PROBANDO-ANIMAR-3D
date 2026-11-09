@@ -1,0 +1,47 @@
+{
+  "name": "vierzig",
+  "title": "40 Millionen sofort vs 1 \u20ac pro Sekunde f\u00fcr 1 Jahr (DE)",
+  "format": {
+    "width": 1440,
+    "height": 2560,
+    "fps": 30,
+    "duration": 77.4,
+    "frames": 2322
+  },
+  "storyFormat": "beat-cut character comedy, a cut every ~2 s, voice-over clock",
+  "style": "flat-toon (in src/toon.js)",
+  "build": [
+    "src/head.html",
+    "src/data.js",
+    "kit/core.js",
+    "src/toon.js",
+    "src/rig.js",
+    "src/props.js",
+    "src/sets.js",
+    "src/props2.js",
+    "src/props3.js",
+    "src/props4.js",
+    "src/props5.js",
+    "src/props6.js",
+    "src/props7.js",
+    "src/props8.js",
+    "src/main.js",
+    "src/shots.js",
+    "src/timeline.js",
+    "kit/score-head.js",
+    "src/score.js",
+    "src/score-tail.js"
+  ],
+  "voice": {
+    "file": "voice/vo.wav",
+    "music": -6
+  },
+  "review": {
+    "safe": {
+      "top": 220,
+      "bottom": 380,
+      "right": 120
+    },
+    "deadMax": 4
+  }
+}
