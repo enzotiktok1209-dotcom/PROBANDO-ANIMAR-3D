@@ -1,0 +1,44 @@
+{
+  "name": "crush",
+  "title": "Acordei no corpo do meu crush",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "bpm": 112.5,
+    "duration": 68.4,
+    "frames": 2052
+  },
+  "storyFormat": "timeline explainer, beat-cut",
+  "style": "flat-noite",
+  "voice": {
+    "file": "voice/voice.wav",
+    "music": -9,
+    "gain": 0
+  },
+  "build": [
+    "src/head.html",
+    "kit/core.js",
+    "style",
+    "styles/flat-noite/rig.js",
+    "styles/flat-noite/animals.js",
+    "styles/flat-noite/ui.js",
+    "../ultimo-homem-p2/src/props.js",
+    "src/scenes-a.js",
+    "src/scenes-b.js",
+    "src/bridges.js",
+    "kit/morph.js",
+    "kit/board.js",
+    "kit/score-head.js",
+    "src/score.js",
+    "kit/score-tail.js"
+  ],
+  "review": {
+    "safe": {
+      "top": 250,
+      "bottom": 420,
+      "right": 140
+    },
+    "refs": {}
+  }
+}

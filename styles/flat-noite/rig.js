@@ -79,6 +79,8 @@ function fnRafaelHead(r, o) {
   fnEll(-0.98 * r + sx0 * 0.4, 0.12 * r, 0.17 * r, 0.22 * r, FN.skin); fnEll(0.98 * r + sx0 * 0.4, 0.12 * r, 0.17 * r, 0.22 * r, FN.skin);   // ears
   fnEll(-0.98 * r + sx0 * 0.4, 0.12 * r, 0.08 * r, 0.12 * r, FN.skinD); fnEll(0.98 * r + sx0 * 0.4, 0.12 * r, 0.08 * r, 0.12 * r, FN.skinD);
   fnEll(0, 0, r, ry, FN.skin);
+  ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, r, ry, 0, 0, TAU); ctx.clip(); fnEll(0.55 * r * (FN_LIGHT.dx < 0 ? 1 : -1), 0.25 * r, 0.9 * r, 1.1 * ry, `rgba(60,25,10,${0.18 * FN_LIGHT.k})`); fnEll(0, 1.0 * ry, 0.9 * r, 0.3 * r, 'rgba(60,25,10,0.18)'); ctx.restore();
+  if (o.bald) { fnEll(-0.95 * r, -0.1 * r, 0.16 * r, 0.35 * r, FN.hair); fnEll(0.95 * r, -0.1 * r, 0.16 * r, 0.35 * r, FN.hair); } else {
   // hair cap: covers the top, a smooth hairline arching over the forehead, sideburns down to the ears
   ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0, r * 1.01, ry * 1.01, 0, 0, TAU); ctx.clip();
   ctx.beginPath(); ctx.moveTo(-1.1 * r, 0.2 * r); ctx.lineTo(-0.9 * r, 0.2 * r);
@@ -87,10 +89,13 @@ function fnRafaelHead(r, o) {
   ctx.quadraticCurveTo(0.86 * r + sx0 * 0.3, -0.36 * r, 0.9 * r, 0.2 * r); ctx.lineTo(1.1 * r, 0.2 * r); ctx.lineTo(1.1 * r, -1.2 * r); ctx.lineTo(-1.1 * r, -1.2 * r); ctx.closePath();
   ctx.fillStyle = FN.hair; ctx.fill(); ctx.restore();
   ctx.beginPath(); ctx.ellipse(0, -0.06 * r, 1.04 * r, 1.04 * ry, 0, Math.PI * 1.08, Math.PI * 1.92); ctx.lineTo(0.6 * r, -0.55 * r); ctx.lineTo(-0.6 * r, -0.55 * r); ctx.closePath(); ctx.fillStyle = FN.hair; ctx.fill();   // a little volume on top
+  }
   if (o.hood) { ctx.save(); ctx.beginPath(); ctx.ellipse(0, 0.1 * r, 1.34 * r, 1.32 * r, 0, 0, TAU); ctx.ellipse(sx0 * 0.4, 0.14 * r, 1.0 * r, 1.08 * r, 0, 0, TAU, true); ctx.fillStyle = FN.hood; ctx.fill('evenodd'); ctx.restore(); }
   fnEll(-0.56 * r + sx0, 0.3 * r, 0.17 * r, 0.1 * r, FN.cheek); fnEll(0.56 * r + sx0, 0.3 * r, 0.17 * r, 0.1 * r, FN.cheek);
+  if (o.beard) { ctx.beginPath(); ctx.moveTo(-0.92 * r, 0.1 * r); ctx.quadraticCurveTo(-0.85 * r, 1.05 * r, 0, 1.12 * r); ctx.quadraticCurveTo(0.85 * r, 1.05 * r, 0.92 * r, 0.1 * r); ctx.quadraticCurveTo(0.4 * r, 0.62 * r, 0, 0.6 * r); ctx.quadraticCurveTo(-0.4 * r, 0.62 * r, -0.92 * r, 0.1 * r); ctx.fillStyle = o.beardC || '#6a6a70'; ctx.fill(); }
   const sx = fnRafEyes(r, o, look);
   fnRafBrows(r, o, sx);
+  if (o.glasses) { ctx.lineWidth = 0.06 * r; ctx.strokeStyle = '#1a1a22'; [-1, 1].forEach((g) => { ctx.beginPath(); ctx.arc(g * 0.37 * r + sx, 0.02 * r, 0.27 * r, 0, TAU); ctx.stroke(); }); fnLine(-0.1 * r + sx, 0, 0.1 * r + sx, 0, 0.05 * r, '#1a1a22'); }
   ctx.beginPath(); ctx.arc(sx * 1.1 + 0.02 * r, 0.2 * r, 0.07 * r, -0.4 * Math.PI, 0.5 * Math.PI); ctx.lineWidth = 0.04 * r; ctx.strokeStyle = FN.skinD; ctx.lineCap = 'round'; ctx.stroke();   // nose
   if (o.mouth === 'puff' || o.puff) { fnCirc(-0.45 * r + sx, 0.42 * r, 0.2 * r, FN.skinL); fnCirc(0.45 * r + sx, 0.42 * r, 0.2 * r, FN.skinL); }
   ctx.save(); ctx.translate(0, 0.04 * r); ctx.scale(0.82, 0.82); fnMouth(r, o, sx / 0.82); ctx.restore();
@@ -125,7 +130,7 @@ function fnRafBrows(r, o, sx) {
 function fnRafael(x, y, s, p = {}) {
   const r = RR, face = p.face || 1, tee = p.outfit === 'tee';
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  if (p.shadow !== false) fnEll(0, 3, r * 1.05 * (1 - (p.bob || 0) / 300), r * 0.16, 'rgba(0,0,0,0.32)');
+  if (p.shadow !== false) fnCastShadow(0, 3, 8.4 * r, r);
   const bob = p.bob || 0, lean = p.lean || 0, squash = p.squash || 0;
   ctx.translate(0, bob); ctx.scale(1 + squash * 0.5, 1 - squash);
   const hipY = -2.9 * r;
@@ -141,7 +146,7 @@ function fnRafael(x, y, s, p = {}) {
   if (tee) { const [dx, dy] = fnDir(aL[0]); fnStroke([[-tw * r + 0.12 * r, sh + 0.28 * r], [-tw * r + 0.12 * r + dx * 0.55 * r, sh + 0.28 * r + dy * 0.55 * r]], 0.42 * r, bodyD); }
   // torso: a long rounded box, the far half a shade darker (as in the reference)
   fnRR(-tw * r, sh, tw * 2 * r, -sh + (tee ? 0.15 : 0.3) * r, 0.42 * r, body);
-  ctx.save(); ctx.beginPath(); ctx.roundRect(-tw * r, sh, tw * 2 * r, -sh + (tee ? 0.15 : 0.3) * r, 0.42 * r); ctx.clip(); fnRect(0.05 * r, sh, tw * r, -sh + r, 'rgba(0,0,0,0.13)'); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.roundRect(-tw * r, sh, tw * 2 * r, -sh + (tee ? 0.15 : 0.3) * r, 0.42 * r); ctx.clip(); fnRect(FN_LIGHT.dx < 0 ? 0.05 * r : -tw * r, sh, tw * r, -sh + r, `rgba(0,0,0,${0.12 + 0.12 * FN_LIGHT.k})`); ctx.restore();
   if (!tee) {
     fnRR(-tw * r, 0.05 * r, tw * 2 * r, 0.25 * r, 0.1 * r, bodyD);                // waistband
     fnRR(-0.62 * r, -1.05 * r, 1.24 * r, 0.62 * r, 0.16 * r, 'rgba(0,0,0,0.12)');  // kangaroo pocket
@@ -199,9 +204,9 @@ function fnWomanHead(r, o) {
 function fnWoman(x, y, s, o = {}) {
   const r = RR;
   ctx.save(); ctx.translate(x, y); ctx.scale(s * (o.flip ? -1 : 1), s);
-  if (o.shadow !== false) fnEll(0, 4, r * 1.25, r * 0.2, 'rgba(0,0,0,0.35)');
+  if (o.shadow !== false) fnCastShadow(0, 4, 8.2 * r, r);
   ctx.translate(0, o.bob || 0);
-  const hipY = -2.9 * r, coat = { raincoat: '#f2c230', vest: '#16171e', denim: '#4a6fa5', purple: '#6b4fa0' }[o.outfit || 'vest'], coatD = { raincoat: '#c99a1a', vest: '#0d0e13', denim: '#36527c', purple: '#4f3a7a' }[o.outfit || 'vest'];
+  const hipY = -2.9 * r, coat = { raincoat: '#f2c230', vest: '#16171e', denim: '#4a6fa5', purple: '#6b4fa0', uniform: '#f2f2f6' }[o.outfit || 'vest'], coatD = { raincoat: '#c99a1a', vest: '#0d0e13', denim: '#36527c', purple: '#4f3a7a', uniform: '#d6d8e2' }[o.outfit || 'vest'];
   const lL = o.lL || [0.05, 0], lR = o.lR || [-0.05, 0];
   const fL = fnLimb(-0.24 * r, hipY, lL[0], lL[1], 1.48 * r, 1.42 * r, 0.38 * r, '#1c2035');
   const fR = fnLimb(0.24 * r, hipY, lR[0], lR[1], 1.48 * r, 1.42 * r, 0.38 * r, '#262b47');
@@ -209,9 +214,10 @@ function fnWoman(x, y, s, o = {}) {
   ctx.save(); ctx.translate(0, hipY); ctx.rotate(o.lean || 0);
   const sh = -3.0 * r, aL = o.aL || [0.12, -0.04], aR = o.aR || [-0.12, 0.04];
   const hL = fnLimb(-0.86 * r, sh + 0.28 * r, aL[0], aL[1], 1.55 * r, 1.4 * r, 0.3 * r, coatD, o.skin || FN.wSkin, 0.22 * r);
-  fnRR(-0.98 * r, sh, 1.96 * r, -sh + 0.25 * r, 0.4 * r, coat); ctx.save(); ctx.beginPath(); ctx.roundRect(-0.98 * r, sh, 1.96 * r, -sh + 0.25 * r, 0.4 * r); ctx.clip(); fnRect(0.05 * r, sh, r, -sh + r, 'rgba(0,0,0,0.13)'); ctx.restore();
+  fnRR(-0.98 * r, sh, 1.96 * r, -sh + 0.25 * r, 0.4 * r, coat); ctx.save(); ctx.beginPath(); ctx.roundRect(-0.98 * r, sh, 1.96 * r, -sh + 0.25 * r, 0.4 * r); ctx.clip(); fnRect(FN_LIGHT.dx < 0 ? 0.05 * r : -r, sh, r, -sh + r, `rgba(0,0,0,${0.12 + 0.12 * FN_LIGHT.k})`); ctx.restore();
   if (o.outfit === 'vest') { fnRR(-0.62 * r, sh + 0.7 * r, 1.24 * r, 0.34 * r, 0.06 * r, 'rgba(255,255,255,0.08)'); ctx.save(); ctx.font = `900 ${0.27 * r}px ${FONT_SUB}`; ctx.textAlign = 'center'; ctx.fillStyle = '#ffffff'; ctx.fillText('POLÍCIA', 0, sh + 0.97 * r); ctx.restore(); fnRR(-0.7 * r, sh + 1.25 * r, 0.4 * r, 0.5 * r, 0.06 * r, '#262833'); fnRR(0.3 * r, sh + 1.25 * r, 0.4 * r, 0.5 * r, 0.06 * r, '#262833'); }
   if (o.outfit === 'raincoat') { fnLine(0, sh + 0.2 * r, 0, 0.2 * r, 0.05 * r, coatD); [0.5, 1.0, 1.5].forEach((k) => fnCirc(0.12 * r, sh + k * r, 0.05 * r, coatD)); }
+  if (o.outfit === 'uniform') { fnPoly([[-0.45 * r, sh], [0, sh + 0.55 * r], [0.45 * r, sh]], '#2a57c9'); fnCirc(0.45 * r, sh + 0.9 * r, 0.16 * r, '#2a57c9'); }
   if (o.outfit === 'denim') { fnPath([[-0.3 * r, sh], [0, sh + 0.7 * r], [0.3 * r, sh]]); ctx.fillStyle = '#2b2b2b'; ctx.fill(); }
   ctx.save(); ctx.translate(0, sh - 1.22 * r); ctx.rotate(o.tilt || 0);
   fnRR(-0.15 * r, 0.78 * r, 0.3 * r, 0.6 * r, 0.08 * r, o.skinD || FN.wSkinD);
@@ -249,3 +255,16 @@ function fnDog(x, y, s, o = {}) {
   fnPoly([[-5, -40], [15, -75], [30, -38]], cd); fnPoly([[20, -42], [55, -62], [45, -30]], cd);   // one folded ear
   ctx.restore(); ctx.restore();
 }
+
+// ---------- light + shadows: scenes set FN_LIGHT = { dx (-1 light from right … 1 from left), k strength, len }
+let FN_LIGHT = { dx: 0.6, k: 1, len: 0.5 };
+function fnSetLight(dx, k = 1, len = 0.5) { FN_LIGHT = { dx, k, len }; }
+function fnCastShadow(x, y, h, r) {
+  const L = FN_LIGHT, len = h * L.len, dx = L.dx * len;
+  ctx.save(); ctx.globalAlpha *= 0.45 * L.k;
+  const g = ctx.createLinearGradient(x, y, x + dx, y - len * 0.18); g.addColorStop(0, 'rgba(0,0,10,0.75)'); g.addColorStop(1, 'rgba(0,0,10,0)');
+  ctx.beginPath(); ctx.moveTo(x - r * 0.75, y); ctx.lineTo(x + dx - r * 0.5, y - len * 0.16); ctx.lineTo(x + dx + r * 0.5, y - len * 0.16); ctx.lineTo(x + r * 0.75, y); ctx.closePath(); ctx.fillStyle = g; ctx.fill();
+  ctx.restore(); fnEll(x, y, r * 0.95, r * 0.15, 'rgba(0,0,10,0.45)');
+}
+// a person with other colours (students, the teacher): swaps the palette for one draw of the Rafael rig
+function fnPerson(x, y, s, p = {}, col = {}) { const keep = {}; for (const k in col) { keep[k] = FN[k]; FN[k] = col[k]; } fnRafael(x, y, s, p); for (const k in keep) FN[k] = keep[k]; }

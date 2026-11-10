@@ -81,6 +81,7 @@ function fnPost() {
   const cv = ctx.canvas, tmp = layer(1);
   const tc = tmp.getContext('2d'); tc.setTransform(1, 0, 0, 1, 0, 0); tc.filter = 'saturate(1.22) contrast(1.06)'; tc.drawImage(cv, 0, 0); tc.filter = 'none';
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'copy'; ctx.drawImage(tmp, 0, 0); ctx.globalCompositeOperation = 'source-over';
+  ctx.save(); ctx.globalCompositeOperation = 'soft-light'; const gr = ctx.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, 'rgba(255,170,90,0.35)'); gr.addColorStop(0.55, 'rgba(128,128,128,0)'); gr.addColorStop(1, 'rgba(20,40,110,0.55)'); ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H); ctx.restore();
   const vig = typeof pieceVignette === 'function' ? pieceVignette(TT) : 0.35;
   const g = ctx.createRadialGradient(W / 2, H * 0.42, H * (0.42 - vig * 0.2), W / 2, H * 0.45, H * 0.78);
   g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,8,${clamp(0.35 + vig * 0.6, 0, 0.95)})`);
