@@ -30,7 +30,7 @@ function camAt(s) {
     const u = EZ.io(clamp((TT - tp) / Math.max(0.001, t - tp)));
     x = lerp(K[i - 1][1], kx, u); y = lerp(K[i - 1][2], ky, u); z = lerp(K[i - 1][3], kz, u);
   }
-  y += s.lift || 0;
+  y += (s.lift || 0) + (s.raise ?? 110);   // every shot sits higher: the subject in the middle, never down under the captions
   for (const [t, a] of s.punch || []) z *= 1 + a * springEase(TT - t, 340, 17);
   if (s.tense) z *= 1 + 0.07 * EZ.io(clamp((TT - s.t0) / Math.max(0.3, s.t1 - s.t0)));
   let sx = 0, sy = 0;

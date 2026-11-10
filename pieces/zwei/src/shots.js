@@ -69,14 +69,14 @@ S(4.64, { tr: 'zoomOut', lift: 0, tense: 1, cam: [[4.64, 540, 960, 1.0], [5.99, 
 
 // =====================================================================  THE CHOICE
 // ---- 6 · "Kevin haut sofort…" — both at their buttons with the two cards; Kevin's hand shoots up first
-S(5.99, { tr: 'flash', lift: 110, cam: [[5.99, 540, 1020, 1.0], [7.13, 540, 1010, 1.05]],
-  draw() { duoStudio({ emo: [[0, 'confused']], look: [0.6, 0] }, { pose: [[5.99, 'idle'], [6.44, 'raiseR', 0.12]], emo: [[5.99, 'serious'], [6.44, 'grin']] }); studioPodiums(); },
+S(5.99, { tr: 'flash', lift: 110, cam: [[5.99, 540, 1020, 1.0], [6.79, 540, 1010, 1.05]],
+  draw() { duoStudio({ emo: [[0, 'confused']], look: [0.6, 0] }, { pose: [[5.99, 'idle'], [6.3, 'raiseR', 0.12]], emo: [[5.99, 'serious'], [6.3, 'grin']] }); studioPodiums(); },
   ui() { cards(6.01); },
-  sfx: [[6.01, 'pop', 1], [6.07, 'pop', 1.2], [6.44, 'whooshUp', 1.3]] });
+  sfx: [[6.01, 'pop', 1], [6.07, 'pop', 1.2], [6.3, 'whooshUp', 1.3]] });
 // ---- 7 · "…auf den Knopf." — the slam on the orange button
-S(7.13, { tr: 'zoomIn', lift: 90, cam: [[7.13, 780, 1140, 1.45], [7.96, 770, 1100, 1.6]], shake: [[7.59, 20, 0.4]],
+S(6.79, { tr: 'zoomIn', lift: 90, cam: [[6.79, 780, 1140, 1.45], [7.96, 770, 1100, 1.6]], shake: [[7.59, 20, 0.4]],
   draw() { setStudio({ blur: 3 }); char('jonas', 300, FLOOR - 40, 0.8, { emo: [[0, 'shock']], look: [0.6, 0.2], extras: JON });
-    char('kevin', 780, FLOOR - 40, 0.8, { pose: [[7.13, 'raiseR'], [7.5, 'slamR', 0.08], [7.75, 'cheer', 0.2]], emo: [[7.13, 'serious'], [7.75, 'grin']], look: [-0.3, 0.5] });
+    char('kevin', 780, FLOOR - 40, 0.8, { pose: [[6.79, 'raiseR'], [7.5, 'slamR', 0.08], [7.75, 'cheer', 0.2]], emo: [[6.79, 'serious'], [7.75, 'grin']], look: [-0.3, 0.5] });
     studioPodiums({ pressR: TT > 7.59 ? 1 : 0, litR: TT > 7.59 ? 0.9 : 0 }); impactLines(780, 1250, 120, 380, 12, 7.59); },
   ui() { info('2 € / SEKUNDE! ⏱️', 7.62, { y: 380, bg: PAL.orange, size: 58 }); },
   sfx: [[7.59, 'slam'], [7.62, 'buzzerWin']] });
@@ -278,7 +278,7 @@ S(59.65, { tr: 'whipU', lift: 0, cam: [[59.65, 540, 960, 1.0], [61.42, 540, 940,
 // ---- 43 · "…die Abrechnung." — face to face across a table, heartbeat
 S(61.42, { tr: 'zoomIn', tense: 1, lift: 200, cam: [[61.42, 540, 1150, 1.05], [62.28, 540, 1130, 1.14]],
   draw() { setStudio({ blur: 6 }); char('jonas', 320, FLOOR + 40, 0.9, { pose: [[0, 'armsCross']], emo: [[0, 'serious']], look: [0.7, 0], extras: JON }); char('kevin', 760, FLOOR + 40, 0.9, { pose: [[0, 'hips']], emo: [[0, 'smug']], look: [-0.7, 0] }); fillRR(140, FLOOR - 170, 800, 50, 14, '#6a3f22'); },
-  ui() { info('ABRECHNUNG ⚖️', 61.6, { y: 380, bg: '#141026', size: 60 }); },
+  ui() { info('ABRECHNUNG ⚖️', 61.6, { y: 260, bg: '#141026', size: 60 }); },
   sfx: [[61.6, 'pop', 1], [61.75, 'heartbeat', 0.6]] });
 // ---- 44 · "Jonas knallt sein Konto auf den Tisch." — the statement smacks onto the wood
 S(62.28, { tr: 'cut', cam: [[62.28, 540, 1000, 1.0], [64.37, 540, 980, 1.08]], shake: [[63.17, 16, 0.35]],
@@ -327,7 +327,7 @@ function splitEven(top, bottom) {
   ctx.save(); ctx.beginPath(); ctx.rect(-300, -400, 1700, YD + 400); ctx.clip(); top(); ctx.restore();
   ctx.save(); ctx.beginPath(); ctx.rect(-300, YD, 1700, 1500); ctx.clip(); bottom(); ctx.restore(); line(-300, YD, 1400, YD, 14, '#ffffff');
 }
-S(73.65, { tr: 'glitch', tense: 1, capY: YD, cam: [[73.65, 540, 960, 1.0], [75.0, 540, 960, 1.03]],
+S(73.65, { tr: 'glitch', tense: 1, capY: YD, raise: 0, cam: [[73.65, 540, 960, 1.0], [75.0, 540, 960, 1.03]],
   draw() { const k = springEase(TT - 73.67, 170, 13);
     splitEven(() => { rays('#121c34', '#1d2a4a', { cy: 560, spin: 0.08 }); char('jonas', 330 - (1 - k) * 760, 860, 0.6, { pose: [[0, 'armsCross']], emo: [[0, 'smug']], extras: JON, lean: (1 - k) * 0.25 }); },
       () => { rays('#c96b10', '#ff8a1e', { cy: 1220, spin: -0.08 }); char('kevin', 330 + (1 - k) * 760, 1840, 0.6, { pose: [[0, 'hips']], emo: [[0, 'smug']], extras: { shades: 1 }, lean: -(1 - k) * 0.25 }); }); },
