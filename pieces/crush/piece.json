@@ -22,6 +22,7 @@
     "style",
     "styles/flat-noite/rig.js",
     "styles/flat-noite/animals.js",
+    "styles/flat-noite/julia.js",
     "styles/flat-noite/ui.js",
     "../ultimo-homem-p2/src/props.js",
     "src/scenes-a.js",

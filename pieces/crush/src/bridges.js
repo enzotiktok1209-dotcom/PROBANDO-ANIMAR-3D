@@ -71,5 +71,5 @@ function pieceHUD(t) {
   let lab = HUD_AT[0][1]; for (const [s, l] of HUD_AT) if (t >= s - 1e-6) lab = l;
   const k = SHOT_LIST[Math.max(0, eraAt(t))][1];
   if (k === 'cta' || k.startsWith('tag')) return;
-  fnHUD(lab, { counter: t < 3.31 ? 'CORPO: RAFAEL' : 'CORPO: JÚLIA' });
+  fnHUD(lab, { counter: 'CORPO: JÚLIA · MENTE: RAFAEL' });
 }

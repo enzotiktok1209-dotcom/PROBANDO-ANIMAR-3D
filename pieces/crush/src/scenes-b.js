@@ -26,7 +26,7 @@ SCENE.phonebuzz = () => {
 SCENE.phoneup = () => {
   const t = LT(); fnJuliaRoom();
   const lift = springMove(ATS(0.05), 0, 1, SPRING.smooth);
-  fnWoman(540, feetFor(640, 2.2), 2.2, ju({ look: [0.3, 0.8], eyes: 'open', lid: 0.1, brow: 'worry', mouth: 'flat', key: 'pu', shadow: false, aR: [lerp(-0.12, -0.9, lift), lerp(0.04, -1.6, lift)],
+  fnJulia(540, feetFor(640, 2.2), 2.2, ju({ look: [0.3, 0.8], eyes: 'open', lid: 0.1, brow: 'worry', mouth: 'flat', key: 'pu', shadow: false, aR: [lerp(-0.12, -0.9, lift), lerp(0.04, -1.6, lift)],
     hold: (h) => { if (lift > 0.3) { ctx.save(); ctx.translate(h[0], h[1] - 40); ctx.rotate(-0.2); fnRR(-40, -70, 80, 140, 12, '#1a1a22'); fnRR(-34, -62, 68, 124, 8, '#4aa8ff'); ctx.restore(); } } }));
 };
 SCENE.messages = () => {
@@ -45,7 +45,7 @@ SCENE.yourmsg = () => {
 };
 SCENE.seen = () => {
   const t = LT(); fnRect(-300, -300, W + 600, H + 600, '#0e1236'); fnGlow(540, 700, 500, 'rgba(255,60,80,0.25)', 0.8);
-  fnAt(540, 700, 3.4, () => fnWomanHead(RR, ju({ look: [0, 0.5], eyes: 'open', lid: 0.35, brow: 'sad', mouth: 'frown', key: 'sn', blink: false })));
+  fnAt(540, 700, 3.4, () => fnJuliaHead(RR, ju({ look: [0, 0.5], eyes: 'open', lid: 0.35, brow: 'sad', mouth: 'frown', key: 'sn', blink: false })));
   const k = fnPop(ATS(0.4)); if (k > 0) { ctx.save(); ctx.translate(540, 360); ctx.scale(k, k); ctx.rotate(-0.12); ctx.lineWidth = 10; ctx.strokeStyle = FN.red; ctx.beginPath(); ctx.roundRect(-260, -60, 520, 120, 14); ctx.stroke(); fnBold('VISUALIZADO', 0, 4, 60, FN.red); ctx.restore(); }
   for (let i = 0; i < 4; i++) { const u = mod(TT * 0.8 + i / 4, 1); fnAlpha(1 - u, () => fnEll(300 + i * 160, 380 + u * 900, 6, 14, '#9fd6ff')); }   // rain of sadness
 };
@@ -91,12 +91,12 @@ SCENE.holddoor = () => {
   const bow = springMove(ATS(0.2), 0, 1, SPRING.smooth);
   fnRR(640, 360, 300, 790, 10, '#5a3d28'); fnRR(660, 380, 260, 300, 8, '#a8c8dc');
   fnPerson(860, 1150, 1.25, { look: [-1, 0], mouth: 'smile', brow: 'up', lean: -0.2 * bow, aL: [-1.2, -0.4], aR: [0.3, 0.2], key: 'hd', side: 0.5, face: -1 }, STU[0]);
-  fnWoman(330, 1150, 1.25, ju({ outfit: 'uniform', look: [1, 0], eyes: 'wide', lid: 0, brow: 'up', mouth: 'o', key: 'jd' }));
+  fnJulia(330, 1150, 1.25, ju({ outfit: 'uniform', look: [1, 0], eyes: 'wide', lid: 0, brow: 'up', mouth: 'o', key: 'jd' }));
 };
 SCENE.hallway = () => {
   const t = LT(); fnCorridor({ scroll: t * 200 });
   [[160, 1, 'smile'], [400, 2, 'smile'], [880, 0, 'smile']].forEach(([x, c, m], i) => fnPerson(x, 1150, 1.0, { look: [i === 2 ? -1 : 1, 0], mouth: m, brow: 'up', aR: [-2.6 - Math.sin(TT * 10 + i) * 0.3, -0.2], key: 'hw' + i, side: 0.4, face: i === 2 ? -1 : 1 }, STU[c]));
-  fnWoman(640, 1150, 1.2, ju({ outfit: 'uniform', look: [Math.sin(TT * 2), 0], eyes: 'wide', lid: 0, brow: 'up', mouth: 'smile', key: 'jh', ...fnWalkPose(TT * 1.4, 0.7) }));
+  fnJulia(640, 1150, 1.2, ju({ outfit: 'uniform', look: [Math.sin(TT * 2), 0], eyes: 'wide', lid: 0, brow: 'up', mouth: 'smile', key: 'jh', ...fnWalkPose(TT * 1.4, 0.7) }));
   for (let i = 0; i < 3; i++) fnBubble('OI JÚ!', [200, 420, 880][i], 520 - i * 20, ATS(0.2 + i * 0.25), { size: 32 });
 };
 SCENE.teacher = () => {
@@ -105,12 +105,12 @@ SCENE.teacher = () => {
   fnRect(-300, 1150, W + 600, 900, '#b0a080');
   const laugh = Math.abs(Math.sin(TT * 9));
   fnPerson(700, 1150 + laugh * 6, 1.5, { bald: true, beard: true, glasses: true, look: [-0.6, 0], eyes: 'squeeze', mouth: 'open', brow: 'up', key: 'pf', aL: [0.6, 1.4], aR: [-0.4, -0.6], lean: -0.1 + laugh * 0.04, tilt: -0.1 }, { skin: '#d8a070', hair: '#5a5a60', hood: '#8a6a4a', hoodD: '#6a5038', jeans: '#3a3a40' });
-  fnWoman(250, 1150, 1.2, ju({ outfit: 'uniform', look: [1, 0], eyes: 'open', lid: 0.1, brow: 'up', mouth: 'smile', key: 'jt' }));
+  fnJulia(250, 1150, 1.2, ju({ outfit: 'uniform', look: [1, 0], eyes: 'open', lid: 0.1, brow: 'up', mouth: 'smile', key: 'jt' }));
   for (let i = 0; i < 3; i++) fnBold('HA', 820 + i * 60, 540 - i * 50 + laugh * 10, 50, FN.yellow, 'center', 8);
 };
 SCENE.seehim = () => {
   const t = LT(); fnCorridor(); fnWash('#000020', 0.25);
-  fnAt(540, 720, 3.3, () => fnWomanHead(RR, ju({ look: [0.9, 0], eyes: 'wide', lid: 0, brow: 'worry', mouth: 'o', key: 'sh', blink: false })));
+  fnAt(540, 720, 3.3, () => fnJuliaHead(RR, ju({ look: [0.9, 0], eyes: 'wide', lid: 0, brow: 'worry', mouth: 'o', key: 'sh', blink: false })));
 };
 SCENE.himself = () => {
   const t = LT(); fnCorridor(); fnCone(540, -100, 0, 1400, 380, 'rgba(255,240,200,0.9)', 0.25, 20);
@@ -132,12 +132,12 @@ SCENE.trip = () => {
 SCENE.understand = () => {
   const t = LT(); fnCorridor(); fnWash('#000020', 0.2);
   const s2 = clamp(t / 1.2);
-  fnAt(540, 720, 3.2, () => fnWomanHead(RR, ju({ look: [0.6, 0.3], eyes: 'open', lid: lerp(0, 0.35, s2), brow: 'sad', mouth: 'flat', key: 'un', blink: false })));
+  fnAt(540, 720, 3.2, () => fnJuliaHead(RR, ju({ look: [0.6, 0.3], eyes: 'open', lid: lerp(0, 0.35, s2), brow: 'sad', mouth: 'flat', key: 'un', blink: false })));
 };
 SCENE.facepalm = () => {
   const t = LT(); fnCorridor();
   const palm = springMove(ATS(0.1), 0, 1, SPRING.snappy);
-  fnWoman(540, feetFor(680, 2.3), 2.3, ju({ outfit: 'uniform', look: [0, 0.4], eyes: 'closed', brow: 'worry', mouth: 'flat', key: 'fp', shadow: false, aR: [lerp(-0.12, -0.6, palm), lerp(0.04, -2.55, palm)] }));
+  fnJulia(540, feetFor(680, 2.3), 2.3, ju({ outfit: 'uniform', look: [0, 0.4], eyes: 'closed', brow: 'worry', mouth: 'flat', key: 'fp', shadow: false, aR: [lerp(-0.12, -0.6, palm), lerp(0.04, -2.55, palm)] }));
   fnTag('AI, AI…', 540, 380, ATS(0.4), '#8a6aa8', 32);
 };
 SCENE.typing = () => {
@@ -168,12 +168,12 @@ SCENE.reads = () => {
   const t = LT(); fnRect(-300, -300, W + 600, H + 600, '#1a1f44'); fnGlow(540, 760, 400, 'rgba(120,240,170,0.35)', 0.8);
   // Rafael's face… but the expression (and the lashes of the thought bubble) is Júlia's
   fnAt(540, 760, 3.3, () => fnRafaelHead(RR, { look: [0, 0.5], eyes: 'open', lid: 0.3, brow: 'up', mouth: 'smirk', key: 'rd', blink: false }));
-  const k = fnPop(ATS(0.6)); if (k > 0) { ctx.save(); ctx.translate(850, 380); ctx.scale(k, k); fnCirc(0, 0, 110, '#ffffff'); fnCirc(-90, 120, 22, '#ffffff'); fnAt(0, 0, 0.85, () => fnWomanHead(RR, ju({ lid: 0.3, mouth: 'smile', key: 'rdj', blink: false }))); ctx.restore(); }
+  const k = fnPop(ATS(0.6)); if (k > 0) { ctx.save(); ctx.translate(850, 380); ctx.scale(k, k); fnCirc(0, 0, 110, '#ffffff'); fnCirc(-90, 120, 22, '#ffffff'); fnAt(0, 0, 0.85, () => fnJuliaHead(RR, ju({ lid: 0.3, mouth: 'smile', key: 'rdj', blink: false }))); ctx.restore(); }
 };
 SCENE.twist = () => {
   const t = LT(); fnSky('#2a0a3a', '#05030f');
   fnRect(-300, -300, 840, H + 600, '#3a1a4a'); fnRect(540, -300, 840, H + 600, '#1a2a4a'); fnLine(540, -300, 540, H + 300, 8, '#ffffff');
-  fnRafael(270, 1150, 1.25, { look: [1, 0], mouth: 'smirk', lid: 0.3, brow: 'up', key: 'tw1' }); fnWoman(810, 1150, 1.25, ju({ outfit: 'uniform', look: [-1, 0], eyes: 'wide', lid: 0, brow: 'worry', mouth: 'o', key: 'tw2' }));
+  fnRafael(270, 1150, 1.25, { look: [1, 0], mouth: 'smirk', lid: 0.3, brow: 'up', key: 'tw1' }); fnJulia(810, 1150, 1.25, ju({ outfit: 'uniform', look: [-1, 0], eyes: 'wide', lid: 0, brow: 'worry', mouth: 'o', key: 'tw2' }));
   fnMono('JÚLIA', 270, 380, 36, FN.pink); fnMono('RAFAEL', 810, 380, 36, FN.blueL); fnBold('⇄', 540, 760, 110, FN.yellow, 'center', 10);
 };
 SCENE.question = () => {
@@ -187,7 +187,7 @@ SCENE.firstthing = () => {
 };
 SCENE.cta = () => {
   const t = LT(); fnSky('#3a1a3a', '#120818'); fnGlow(540, 600, 600, 'rgba(255,95,176,0.4)', 0.8);
-  fnAt(330, 560, 1.6, () => fnRafaelHead(RR, { look: [1, 0], mouth: 'smile', key: 'c1' })); fnAt(750, 560, 1.6, () => fnWomanHead(RR, ju({ look: [-1, 0], lid: 0.2, mouth: 'smile', key: 'c2' })));
+  fnAt(330, 560, 1.6, () => fnRafaelHead(RR, { look: [1, 0], mouth: 'smile', key: 'c1' })); fnAt(750, 560, 1.6, () => fnJuliaHead(RR, ju({ look: [-1, 0], lid: 0.2, mouth: 'smile', key: 'c2' })));
   fnBold('♥', 540, 560, 90, FN.pink, 'center', 8);
   const k = fnPop(ATS(0.1)); ctx.save(); ctx.translate(540, 860); ctx.scale(k, k); fnBold('A PRIMEIRA COISA', 0, -40, 66, '#ffffff', 'center', 10); fnBold('QUE VOCÊ FARIA?', 0, 40, 70, FN.yellow, 'center', 10); ctx.restore();
   const k2 = fnPop(ATS(1.0)); if (k2 > 0) { ctx.save(); ctx.translate(540, 1080); ctx.scale(k2, k2); fnRR(-250, -50, 500, 100, 50, FN.yellow); fnBold('COMENTA 👇', 0, 3, 52, FN.navy0); ctx.restore(); }
