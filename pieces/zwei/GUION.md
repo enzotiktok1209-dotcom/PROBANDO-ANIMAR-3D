@@ -1,70 +1,71 @@
 # Zwei – 50 Millionen sofort vs 2 € pro Sekunde, 1 Jahr (DE)
 
-Kevin elige los 50 Mio., Jonas los 2 €/s. 194 palabras (~70-73 s tras recortar silencios).
-Números cortos al hablar: nunca se dice la cifra larga (63.072.000); solo va escrita en el comentario.
+Jonas elige los 50 Mio., Kevin los 2 €/s ("esta vez no voy a ser el tonto"). Sin trato: solo competencia. 209 palabras (~73-76 s).
+Números cortos al hablar: la cifra larga (63.072.000) solo va escrita en el comentario.
 
-**Solución:** 2 € × 31.536.000 s = **63.072.000 €** para Jonas. Kevin tiene 40 Mio. Gana Jonas; **Kevin le compra el jet privado**.
-Pistas dichas antes: 2 €/s, 120 €/min, 7.200 €/h, >1 Mio./semana, >5 Mio./mes.
+**Solución:** Kevin = 2 € × 31.536.000 s = **63.072.000 €**. Jonas = 40 Mio. invertidos +10 % = **44 Mio.** Gana Kevin.
+
+**Producción:** ropa nueva para los dos (Kevin con chaqueta verde y gorra; Jonas con camisa blanca y americana de rico), mansión en Berlín.
 
 ## Guion (alemán)
 
 50 Millionen sofort? Oder 2 Euro pro Sekunde, ein Jahr lang? Wer ist am Ende reicher?
-Kevin haut sofort auf den Knopf.
+Jonas haut sofort auf den Knopf.
 "50 Millionen! Bruder, ich bin reich!"
-Jonas dagegen lacht nur. "Ich nehme die 2 Euro."
+Doch Kevin schüttelt den Kopf. "Nicht dieses Mal. Diesmal bin ich nicht der Dumme. Ich nehme die 2 Euro."
 "2 Euro? Davon kaufst du dir nicht mal einen Döner!"
-"Dann machen wir einen Deal: Wer in einem Jahr weniger hat, kauft dem anderen einen Privatjet."
-"Abgemacht!"
-Also kauft sich Kevin als Erstes eine Villa in Dubai. Für 5 Millionen.
+"Mal sehen, wer nach einem Jahr mehr hat."
+Also kauft sich Jonas als Erstes eine Villa in Berlin. Für 5 Millionen.
 Dann eine Yacht für 4 Millionen. Und einen Sportwagen für eine Million.
-Kevin lacht: "Viel Spaß mit deinen Münzen!"
-Und Jonas? Sein Handy vibriert: 2 Euro.
+Und den Rest? Den investiert er: 40 Millionen in Aktien.
+Und Kevin? Sein Handy vibriert: 2 Euro.
 Und gleich wieder. Und wieder. Jede Sekunde.
 Jede Minute: 120 Euro. Jede Stunde: 7.200.
 Sogar im Schlaf wächst sein Konto weiter.
-Jeden Morgen tanzt Jonas vor seinem Handy.
+Jeden Morgen tanzt Kevin vor seinem Handy.
 Nach nur einer Woche: über eine Million.
-Nach einem Monat: über 5 Millionen. So viel wie Kevins Villa.
-Kevin sieht die Zahl. Und hört plötzlich auf zu lachen.
-Nach einem Jahr: die Abrechnung. Kevin knallt sein Konto auf den Tisch.
-"40 Millionen. Das holst du nie ein!"
-Jonas grinst nur. "2 Euro pro Sekunde. Ein ganzes Jahr. Rechne selbst!"
-Wie viel hat Jonas?
+Nach einem Monat: über 5 Millionen. So viel wie Jonas' Villa.
+Jonas sieht die Zahl. Und hört plötzlich auf zu lachen.
+Doch seine Aktien laufen gut: plus 10 Prozent in einem Jahr.
+Nach einem Jahr: die Abrechnung. Jonas knallt sein Konto auf den Tisch.
+"44 Millionen. Das holst du nie ein!"
+Kevin grinst nur. "2 Euro pro Sekunde. Ein ganzes Jahr. Rechne selbst!"
+Wie viel hat Kevin?
 
 ## Traducción (español)
 
 ¿50 millones ahora mismo? ¿O 2 euros por segundo, durante un año? ¿Quién es más rico al final?
-Kevin golpea el botón al instante.
+Jonas golpea el botón al instante.
 "¡50 millones! ¡Hermano, soy rico!"
-Jonas, en cambio, solo se ríe. "Yo me quedo con los 2 euros."
+Pero Kevin niega con la cabeza. "Esta vez no. Esta vez no voy a ser el tonto. Yo me quedo con los 2 euros."
 "¿2 euros? ¡Con eso no te compras ni un döner!"
-"Entonces hagamos un trato: el que en un año tenga menos le compra al otro un jet privado."
-"¡Hecho!"
-Así que Kevin se compra primero una villa en Dubái. Por 5 millones.
+"Ya veremos quién tiene más dentro de un año."
+Así que Jonas se compra primero una mansión en Berlín. Por 5 millones.
 Luego un yate por 4 millones. Y un deportivo por un millón.
-Kevin se ríe: "¡Que te diviertas con tus monedas!"
-¿Y Jonas? Su móvil vibra: 2 euros.
+¿Y el resto? Lo invierte: 40 millones en acciones.
+¿Y Kevin? Su móvil vibra: 2 euros.
 Y otra vez. Y otra. Cada segundo.
 Cada minuto: 120 euros. Cada hora: 7.200.
 Incluso mientras duerme, su cuenta sigue creciendo.
-Cada mañana Jonas baila delante de su móvil.
+Cada mañana Kevin baila delante de su móvil.
 Después de solo una semana: más de un millón.
-Después de un mes: más de 5 millones. Tanto como la villa de Kevin.
-Kevin ve la cifra. Y de repente deja de reírse.
-Después de un año: el ajuste de cuentas. Kevin pone su cuenta sobre la mesa de un golpe.
-"40 millones. ¡Eso no lo alcanzas nunca!"
-Jonas solo sonríe. "2 euros por segundo. Un año entero. ¡Haz la cuenta!"
-¿Cuánto tiene Jonas?
+Después de un mes: más de 5 millones. Tanto como la mansión de Jonas.
+Jonas ve la cifra. Y de repente deja de reírse.
+Pero sus acciones van bien: un 10 % más en un año.
+Después de un año: el ajuste de cuentas. Jonas pone su cuenta sobre la mesa de un golpe.
+"44 millones. ¡Eso no lo alcanzas nunca!"
+Kevin solo sonríe. "2 euros por segundo. Un año entero. ¡Haz la cuenta!"
+¿Cuánto tiene Kevin?
 
 ## Versión corrida con tags de ElevenLabs
 
-[dramatic] Fünfzig Millionen sofort? [excited] Oder zwei Euro pro Sekunde, ein Jahr lang? [curious] Wer ist am Ende reicher? Kevin haut sofort auf den Knopf. [shouts] "Fünfzig Millionen! Bruder, ich bin reich!" [laughs] Jonas dagegen lacht nur. [calm] "Ich nehme die zwei Euro." [laughs] "Zwei Euro? Davon kaufst du dir nicht mal einen Döner!" [mischievously] "Dann machen wir einen Deal: Wer in einem Jahr weniger hat, kauft dem anderen einen Privatjet." [confident] "Abgemacht!" [excited] Also kauft sich Kevin als Erstes eine Villa in Dubai. Für fünf Millionen. Dann eine Yacht für vier Millionen. Und einen Sportwagen für eine Million. [laughs] Kevin lacht: "Viel Spaß mit deinen Münzen!" [curious] Und Jonas? Sein Handy vibriert: zwei Euro. Und gleich wieder. Und wieder. [dramatic] Jede Sekunde. [excited] Jede Minute: hundertzwanzig Euro. Jede Stunde: siebentausendzweihundert. [whispers] Sogar im Schlaf wächst sein Konto weiter. [happy] Jeden Morgen tanzt Jonas vor seinem Handy. [excited] Nach nur einer Woche: über eine Million. Nach einem Monat: über fünf Millionen. So viel wie Kevins Villa. [dramatic] Kevin sieht die Zahl. Und hört plötzlich auf zu lachen. [dramatic] Nach einem Jahr: die Abrechnung. Kevin knallt sein Konto auf den Tisch. [smug] "Vierzig Millionen. Das holst du nie ein!" [confident] Jonas grinst nur. "Zwei Euro pro Sekunde. Ein ganzes Jahr. Rechne selbst!" [curious] Wie viel hat Jonas?
+[dramatic] Fünfzig Millionen sofort? [excited] Oder zwei Euro pro Sekunde, ein Jahr lang? [curious] Wer ist am Ende reicher? Jonas haut sofort auf den Knopf. [shouts] "Fünfzig Millionen! Bruder, ich bin reich!" [calm] Doch Kevin schüttelt den Kopf. [confident] "Nicht dieses Mal. Diesmal bin ich nicht der Dumme. Ich nehme die zwei Euro." [laughs] "Zwei Euro? Davon kaufst du dir nicht mal einen Döner!" [mischievously] "Mal sehen, wer nach einem Jahr mehr hat." [excited] Also kauft sich Jonas als Erstes eine Villa in Berlin. Für fünf Millionen. Dann eine Yacht für vier Millionen. Und einen Sportwagen für eine Million. [curious] Und den Rest? [confident] Den investiert er: vierzig Millionen in Aktien. [curious] Und Kevin? Sein Handy vibriert: zwei Euro. Und gleich wieder. Und wieder. [dramatic] Jede Sekunde. [excited] Jede Minute: hundertzwanzig Euro. Jede Stunde: siebentausendzweihundert. [whispers] Sogar im Schlaf wächst sein Konto weiter. [happy] Jeden Morgen tanzt Kevin vor seinem Handy. [excited] Nach nur einer Woche: über eine Million. Nach einem Monat: über fünf Millionen. So viel wie Jonas' Villa. [dramatic] Jonas sieht die Zahl. Und hört plötzlich auf zu lachen. [relieved] Doch seine Aktien laufen gut: plus zehn Prozent in einem Jahr. [dramatic] Nach einem Jahr: die Abrechnung. Jonas knallt sein Konto auf den Tisch. [smug] "Vierundvierzig Millionen. Das holst du nie ein!" [confident] Kevin grinst nur. "Zwei Euro pro Sekunde. Ein ganzes Jahr. Rechne selbst!" [curious] Wie viel hat Kevin?
 
 ## Descripción (TikTok)
 
-50 Millionen sofort – oder 2 Euro pro Sekunde, ein Jahr lang? 💶⏱️ Kevin nimmt die Millionen, Jonas die 2 Euro. Wer ist nach einem Jahr reicher? Rechne mit und schreib deine Antwort in die Kommentare! 👇
+50 Millionen sofort – oder 2 Euro pro Sekunde, ein Jahr lang? 💶⏱️ Jonas nimmt die Millionen und investiert, Kevin nimmt die 2 Euro. Wer ist nach einem Jahr reicher? Rechne mit und schreib deine Antwort in die Kommentare! 👇
 
-#waswürdestduwählen #geld #millionen #millionär #reich #kevinundjonas #animation #rechnen #fyp #fürdich
+#waswürdestduwählen #geld #millionen #aktien #investieren #reich #kevinundjonas #animation #fyp #fürdich
 
 ## Comentario fijado
 
@@ -72,4 +73,4 @@ Ehrlich: Was hättest DU genommen? 💰 50 Millionen sofort oder ⏱️ 2 Euro p
 
 ## Respuesta con la solución (para quien pregunte)
 
-Lösung: 2 € × 31.536.000 Sekunden = 63.072.000 € für Jonas! 🤯 Kevin hat nur 40 Millionen – also kauft Kevin den Privatjet 😂
+Lösung: 2 € × 31.536.000 Sekunden = 63.072.000 € für Kevin! 🤯 Jonas hat mit seinen Aktien 44 Millionen – Kevin gewinnt trotzdem 😎
