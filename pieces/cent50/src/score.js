@@ -157,6 +157,10 @@
   });
   const play = (t, name, ...a) => { if (SFX[name]) SFX[name](t, ...a); };
 
+  Object.assign(SFX, {
+    rumble: (t, d = 1.6) => { drone(t, t + d, 38, 0.1, { att: 0.4, rel: 0.2 }); noiseHit(t, d, 'lowpass', 180, 0.7, 0.12, 0, 0.3); },
+    drip: (t) => { tone(t, 'sine', 1400, 2600, 0.06, 0.06); tone(t + 0.07, 'sine', 900, 1500, 0.05, 0.03); },
+  });
   // ---- 1) transitions: each type its own sound, varied per cut
   to = 's';
   for (const s of SHOTS) {
@@ -202,21 +206,20 @@
   const CMAJ = [['C3', ['C4', 'E4', 'G4']], ['A2', ['A3', 'C4', 'E4']], ['F2', ['F3', 'A3', 'C4']], ['G2', ['G3', 'B3', 'D4']]];
   const AMIN = [['A2', ['A3', 'C4', 'E4']], ['F2', ['F3', 'A3', 'C4']], ['D2', ['D3', 'F3', 'A3']], ['E2', ['E3', 'Gs3', 'B3']]];
   const FMAJ = [['F2', ['F3', 'A3', 'C4']], ['C3', ['C4', 'E4', 'G4']], ['G2', ['G3', 'B3', 'D4']], ['A2', ['A3', 'C4', 'E4']]];
-  groove(0.25, 5.9, { prog: CMAJ, clapV: 0.9, hat16: true });
-  groove(5.99, 12.2, { prog: CMAJ, hat16: true, clapV: 1.1 });
-  groove(12.28, 17.9, { prog: FMAJ, hat16: true });
-  drone(17.97, 19.3, 52, 0.06, { att: 0.05, rel: 0.05 }); pad(17.97, 19.3, ['A2', 'E3', 'C4'], 0.024, { cut: 900 });
-  groove(19.36, 25.2, { prog: CMAJ, kick: false, clapV: 0.8 });
-  groove(25.26, 33.2, { prog: FMAJ, hat16: true, clapV: 1.1 });
-  pad(33.29, 34.1, ['C3', 'G3', 'E4'], 0.026, { cut: 1200 });
-  groove(34.12, 43.7, { prog: AMIN, hat16: true });
-  drone(43.79, 47.85, 49, 0.06, { att: 0.2, rel: 0.05 }); pad(43.79, 47.85, ['D3', 'A3', 'F4'], 0.022, { cut: 800 });
-  groove(47.9, 52.6, { prog: AMIN, kick: false, clapV: 0.7 });
-  drone(52.68, 55.8, 49, 0.06, { att: 0.1, rel: 0.05 }); for (let t = 52.7; t < 55.7; t += BT / 2) hat(t, 0.4);
-  groove(55.82, 59.6, { prog: CMAJ, hat16: true, clapV: 1.2 });
-  drone(59.65, 64.3, 49, 0.06, { att: 0.3, rel: 0.05 }); pad(59.65, 64.3, ['D3', 'A3', 'F4'], 0.022, { cut: 800 }); for (let t = 59.7; t < 64.2; t += BT / 2) hat(t, 0.4);
-  groove(64.37, 73.6, { prog: CMAJ, kick: false, clapV: 0.8 });
-  pad(73.65, 75.0, ['D3', 'A3', 'F4'], 0.022, { cut: 800, att: 0.1 }); for (let t = 73.7; t < 74.9; t += BT / 2) hat(t, 0.5);
+  groove(0.25, 4.45, { prog: CMAJ, clapV: 0.9, hat16: true });
+  groove(4.49, 10.1, { prog: FMAJ, hat16: true, clapV: 1.1 });
+  groove(10.17, 15.3, { prog: CMAJ, kick: false, clapV: 0.7 });
+  groove(15.34, 18.8, { prog: FMAJ, hat16: true });
+  groove(18.84, 32.6, { prog: CMAJ, hat16: true, clapV: 1.2, pizzV: 1 });
+  groove(32.69, 45.4, { prog: AMIN, hat16: true });
+  drone(45.49, 47.5, 49, 0.06, { att: 0.2, rel: 0.05 }); pad(45.49, 47.5, ['D3', 'A3', 'F4'], 0.022, { cut: 800 });
+  groove(47.57, 54.6, { prog: FMAJ, kick: false, clapV: 0.8 });
+  drone(54.66, 57.1, 49, 0.06, { att: 0.1, rel: 0.05 }); pad(54.66, 57.1, ['D3', 'A3', 'F4'], 0.02, { cut: 700 }); for (let t = 54.7; t < 57.1; t += BT / 2) hat(t, 0.4);
+  drone(57.17, 60.1, 41, 0.08, { att: 0.3, rel: 0.05 }); for (let t = 57.2; t < 60.0; t += BT / 4) hat(t, 0.3 + 0.5 * (t - 57.2) / 2.8);
+  pad(60.47, 62.3, ['A2', 'E3', 'C4'], 0.024, { cut: 900 });
+  groove(62.38, 68.6, { prog: CMAJ, kick: false, clapV: 0.8 });
+  drone(68.64, 72.8, 49, 0.06, { att: 0.2, rel: 0.05 }); pad(68.64, 72.8, ['D3', 'A3', 'F4'], 0.022, { cut: 800 }); for (let t = 68.7; t < 72.8; t += BT / 2) hat(t, 0.45);
+  pad(72.86, 77.6, ['D3', 'A3', 'F4'], 0.022, { cut: 800, att: 0.1 }); for (let t = 72.9; t < 77.4; t += BT / 2) hat(t, 0.5);
   // ---- risers into dramatic hits on the key / reveal moments
   to = 's';
   // a cinematic "braam": a low detuned saw chord through a closing filter, a sub drop and a reverb burst
@@ -229,8 +232,8 @@
   // a rising build that ends exactly on the hit
   function build(t1, d, v = 1) { const t0 = t1 - d; riser(t0, t1 - 0.02, 0.06 * v); for (let x = 0; x < d - 0.05; x += Math.max(0.05, 0.25 * (1 - x / d))) noiseHit(t0 + x, 0.03, 'bandpass', 600 + 2400 * (x / d), 3, 0.03 * v * (0.4 + x / d)); }
   const KEYS = [
-    [0.02, 0, 1.1], [2.55, 0.5, 0.9], [7.59, 0, 0.9], [14.45, 0, 0.85], [17.97, 0, 0.8], [30.86, 0.9, 1.0],
-    [38.34, 1.0, 1.0], [46.9, 1.0, 1.05], [50.97, 0, 0.9], [58.73, 0.8, 1.0], [63.17, 0, 0.9], [73.65, 0.8, 1.05],
+    [0.02, 0, 1.1], [0.95, 0.75, 1.0], [5.1, 0, 0.85], [14.7, 0, 0.75], [29.7, 0.9, 1.0],
+    [44.1, 1.0, 1.0], [47.62, 0, 0.85], [60.1, 2.4, 1.15], [65.0, 0.6, 1.0], [72.9, 1.0, 1.05],
   ];
   for (const [t, d, v] of KEYS) { if (d > 0) build(t, d, v); dramaHit(t, v); }
   // every sticker, pop-text and price tag that springs in gets its own sound (unless the shot already has one there)
@@ -244,7 +247,7 @@
     }
   }
   // dramatic accents where the picture had room to breathe
-  for (const [t, name, ...a] of [[5.99, 'dun'], [12.28, 'dun'], [25.26, 'dun'], [34.12, 'bassDrop'], [43.79, 'dun'], [59.65, 'dun']]) play(t, name, ...a);
+  for (const [t, name, ...a] of [[4.49, 'dun'], [10.17, 'dun'], [18.84, 'bassDrop'], [32.69, 'dun'], [45.49, 'dun'], [54.66, 'dun'], [62.38, 'dun']]) play(t, name, ...a);
   // the hook: a fast zoom on the first frame with its swoosh (the riser starts right under it)
   SFX.whooshDown(0.0, 1.4); SFX.whoosh(0.02, 1.2, 0);
   {

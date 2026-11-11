@@ -1,12 +1,12 @@
 {
-  "name": "zwei",
-  "title": "50 Millionen sofort vs 2 € pro Sekunde, 1 Jahr (DE)",
+  "name": "cent50",
+  "title": "20 Millionen sofort vs 50 Cent pro Sekunde, 1 Jahr (DE)",
   "format": {
     "width": 1440,
     "height": 2560,
     "fps": 30,
-    "duration": 75.0,
-    "frames": 2250
+    "duration": 77.6,
+    "frames": 2328
   },
   "storyFormat": "beat-cut character comedy, a cut every ~2 s, voice-over clock",
   "style": "flat-toon (in src/toon.js)",
@@ -33,6 +33,7 @@
     "src/props14.js",
     "src/props15.js",
     "src/props16.js",
+    "src/props17.js",
     "src/main.js",
     "src/shots.js",
     "src/timeline.js",
