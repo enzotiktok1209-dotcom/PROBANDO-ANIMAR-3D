@@ -376,6 +376,21 @@ def rec(name):
         x = np.interp(np.arange(int(len(x) * SR / sr)) * sr / SR, np.arange(len(x)), x); _RC[name] = x / (np.abs(x).max() + 1e-9)
     return _RC[name]
 
+def water_bloop_f(s): return norm(sine(glide(300, 900, .12), .12) * np.exp(-T(.12) * 18))
+
+# ---------- Hände: efectos nuevos (alias de los existentes + arroyo) ----------
+LIB['creek'] = (lambda s, c: norm(bp(noise(2.0, s), 300, 3000) * (0.6 + 0.4 * np.sin(2 * np.pi * 3.1 * T(2.0)) * np.sin(2 * np.pi * 0.7 * T(2.0))) + seq([(water_bloop_f(s + k), k * 0.23) for k in range(8)], 2.0) * 0.4) * adsr(2.0, .2, .6), .45)
+for _a, _b in [('church_bell', 'bell_far'), ('snow_steps', 'steps_snow'), ('door_close', 'door_slam'), ('truck', 'car'), ('cardboard', 'rummage'), ('truck_door', 'slam'),
+               ('fire', 'fire_crackle'), ('chair_creak', 'wood_creak'), ('cafeteria', 'classroom'), ('tray', 'plate_slide'), ('chairs_scrape', 'chair_roll'), ('gym_echo', 'classroom'),
+               ('ball_bounce', 'thump'), ('ball_roll', 'wheels'), ('bus_engine', 'car'), ('snow_crunch', 'steps_snow'), ('brakes_squeak', 'metal_creak'), ('bus_pass', 'car_pass'),
+               ('snow_splash', 'leaves'), ('crow', 'birds'), ('wind_trees', 'wind'), ('thud_snow', 'thud'), ('stone_step', 'clack'), ('wood_knock', 'knock'), ('pen', 'pencil'),
+               ('kids_chatter', 'murmur'), ('ice_crack', 'glass_crack'), ('camera_click', 'flash'), ('wind_rise', 'wind'), ('blizzard', 'wind'), ('wind_howl', 'wind'),
+               ('teeth_chatter', 'ticks'), ('phone_off', 'button'), ('breath_heavy', 'breath'), ('kid_cry', 'cry_girl'), ('shout', 'shout_m'), ('glove_grab', 'cloth'),
+               ('slip', 'thud'), ('scream_kid', 'scream_girl'), ('water_cold', 'splash'), ('cheer_small', 'cheer'), ('dog_bark', 'bark'), ('lamp_hum', 'neon_buzz'),
+               ('kids_cheer', 'cheer'), ('seat_pat', 'thump'), ('bus_door', 'steam'), ('snowball_hit', 'thud')]:
+    if _a not in LIB: LIB[_a] = LIB[_b]
+REC.update({'snow_steps': 'footsteps', 'snow_crunch': 'footsteps', 'wind_trees': 'wind', 'blizzard': 'wind', 'wind_howl': 'wind', 'wind_rise': 'wind', 'door_close': 'door', 'snowball_hit': 'thud', 'thud_snow': 'thud', 'crow': 'pigeon', 'kids_chatter': 'crowd', 'cafeteria': 'crowd'})
+
 def render(cues, dur):
     out = np.zeros(int((dur + 3) * SR))
     for i, c in enumerate(cues):

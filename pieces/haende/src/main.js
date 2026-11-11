@@ -492,11 +492,11 @@ function renderAt(T) {
   octx.restore(); octx.filter = 'none';
   for (const b of BAD) drawBadge(b); caption(T);
 }
-// portadas 1080×1920 (sin spoilers): 0 = siluetas en la ventisca; 1 = el narrador solo en la parada mientras el bus pasa
+// portadas 1080×1920 (sin spoilers): 0 = los niños se ríen de él en la nieve; 1 = la fila de siluetas en la ventisca
 function coverText(l1, l2, col) { const c = octx; c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
   for (const [t, y, sz, f] of [[l1, H * .12, 118, '#ffffff'], [l2, H * .2, 120, col]]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .92 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
     c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.lineWidth = sz * .22; c.strokeStyle = '#000'; c.strokeText(t, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = f; c.fillText(t, 0, 0); c.restore(); } c.restore(); }
-window.renderCover = v => { const i = v === 0 ? S.findIndex(s => s.t0 === 93.66) : S.findIndex(s => s.t0 === 22.44); const s = S[i], T = s.t0 + (s.t1 - s.t0) * (v === 0 ? .6 : .55);
+window.renderCover = v => { const i = v === 0 ? 0 : S.findIndex(s => s.t0 === 93.66); const s = S[i], T = s.t0 + (s.t1 - s.t0) * (v === 0 ? .7 : .6);
   renderShot(i, T, null, 0); octx.fillStyle = '#000'; octx.fillRect(0, 0, W, H); octx.drawImage(renderer.domElement, 0, 0, W, H);
-  coverText('IN DIESER STADT', v === 0 ? 'HASST MICH JEDER…' : 'HÄLT DER BUS NIE.', v === 0 ? '#E2FD07' : '#ff5a4a'); };
+  coverText('IN DIESER STADT', v === 0 ? 'HASST MICH JEDER…' : '…BIS ZU DIESER NACHT', v === 0 ? '#E2FD07' : '#ff5a4a'); };
 window.renderAt = renderAt; window.DUR = DUR; window.FPS = FPS; window.CUES = CUES; window.SHOTS = S.map(s => [s.t0, s.t1, s.tr, s.zoom]); window.__ready = true;
