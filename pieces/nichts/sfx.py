@@ -362,6 +362,20 @@ for _a, _b in [('rain', 'money_rain'), ('freeze', 'glass_crack'), ('rumble', 'bo
 LIB['fire_whoosh'] = (lambda s, c: norm(mx(bp(noise(1.0, s), 200, 3000) * adsr(1.0, .03, .5), lp(noise(1.0, s + 1), 120) * adsr(1.0, .01, .4) * 1.5)), .55)
 LIB['zap'] = (lambda s, c: norm(saw(glide(900, 200, .35), .35) * env(.35, .002, .2) + hp(noise(.35, s), 3000)[:int(.35 * SR)] * env(.35, .002, .1) * .6), .45)
 LIB['spit'] = (lambda s, c: norm(bp(noise(.22, s), 1500, 6000) * env(.22, .003, .08) + bp(noise(.22, s + 3), 300, 900) * env(.22, .02, .1) * .5), .5)
+# Sonidos grabados (plugins/.../blocky-3d/sfx-reales) que se mezclan con los sintetizados para más realismo
+import os as _os
+_RD = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '../../plugins/animate/skills/animate/styles/blocky-3d/sfx-reales')
+REC = {'steps': 'footsteps', 'steps_heavy': 'stomp', 'door_open': 'door', 'wind': 'wind', 'gasp': 'gasp', 'thud': 'thud', 'crickets': 'crickets', 'cash_reg': 'cashier',
+       'coin_flip': 'coin', 'click_metal': 'click', 'switch': 'click', 'paper': 'paper', 'pages': 'paper', 'plate_slide': 'place', 'knock': 'thud', 'birds': 'pigeon', 'ratchet': 'hammer'}
+_RC = {}
+def rec(name):
+    if name not in _RC:
+        w = wave.open(_os.path.join(_RD, name + '.wav')); sr = w.getframerate(); ch = w.getnchannels()
+        x = np.frombuffer(w.readframes(w.getnframes()), '<i2').astype(float) / 32768
+        if ch > 1: x = x.reshape(-1, ch).mean(1)
+        x = np.interp(np.arange(int(len(x) * SR / sr)) * sr / SR, np.arange(len(x)), x); _RC[name] = x / (np.abs(x).max() + 1e-9)
+    return _RC[name]
+
 def render(cues, dur):
     out = np.zeros(int((dur + 3) * SR))
     for i, c in enumerate(cues):
@@ -372,6 +386,7 @@ def render(cues, dur):
         x = gen(seed, c)
         if name not in ('riser', 'lullaby', 'lullaby2', 'bells7', 'braam'): x = shift(x, R(seed, 0.9, 1.1))   # variación
         at(out, x * lvl * c.get('g', 1), max(0, c['t']))
+        if name in REC: at(out, rec(REC[name]) * lvl * .8 * c.get('g', 1), max(0, c['t']))
     return out[:int(dur * SR)]
 
 def fill_gaps(cues, dur, maxgap=1.1):
@@ -384,7 +399,7 @@ def fill_gaps(cues, dur, maxgap=1.1):
 
 if __name__ == '__main__':
     cues_f, voice_f, music_f, out_f = sys.argv[1:5]
-    cues = json.load(open(cues_f)); DUR = 177.66
+    cues = json.load(open(cues_f)); DUR = 87.19
     cues = fill_gaps(cues, DUR); print(len(cues), 'efectos; hueco máximo', max(np.diff(sorted([0] + [c['t'] for c in cues] + [DUR]))).round(2))
     TEN = {'riser', 'braam', 'riser_short', 'braam_short'}
     ten = render([c for c in cues if c['s'] in TEN], DUR); ten = norm(ten, 0.9)
