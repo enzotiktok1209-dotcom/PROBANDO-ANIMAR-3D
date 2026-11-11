@@ -11,6 +11,7 @@ import { THREE, CUSTOM_FACES, clamp, lerp, applyPose, mixPose, walkPose, runPose
 // 1. CARAS DEL KIT
 // =====================================================================================================
 export const KIT_STYLES = ['plain', 'hero', 'girl', 'kid', 'mustache', 'villain', 'hero_blood'];
+export let EYE_SQ = .74; export const setEyeSq = v => { EYE_SQ = v; };
 export const EYE = { normal: 0, wide: 1, half: 2, closed: 3, happy: 4, squint: 5, side_l: 6, side_r: 7, terror: 8,
   worried: 9, angry: 10, scared: 11, wink: 12, up: 13, down: 14, cry: 15 };
 export const MOUTH = { flat: 0, smile: 1, open_smile: 2, laugh: 3, frown: 4, o: 5, talk: 6, talk_wide: 7, grimace: 8,
@@ -55,12 +56,47 @@ function drawKitFace(c, s) {
   if (s.bags) for (const x of [180, 332]) { c.fillStyle = `rgba(90,50,120,${.18 + .25 * s.bags})`; c.beginPath(); c.ellipse(x, 268, 52, 20, 0, 0, Math.PI); c.fill(); }
   if (s.blush) { c.fillStyle = `rgba(255,110,120,${.22 * s.blush + .08})`; c.beginPath(); c.ellipse(118, 330, 40, 20, 0, 0, 7); c.ellipse(394, 330, 40, 20, 0, 0, 7); c.fill(); }
   if (s.freckles) { c.fillStyle = 'rgba(150,80,50,.5)'; for (const [x, y] of [[112, 312], [136, 326], [98, 334], [400, 312], [376, 326], [414, 334]]) { c.beginPath(); c.arc(x, y, 5, 0, 7); c.fill(); } }
-  cell(IMG[`${style}_eyes`], EYE[e] ?? 0);
+  drawEyes(c, e, s);
   cell(IMG[`${style}_mouth`], MOUTH[m] ?? 0);
   if (s.sweat) { c.fillStyle = 'rgba(120,200,255,.9)'; c.beginPath(); c.moveTo(440, 110); c.quadraticCurveTo(462, 160, 440, 172); c.quadraticCurveTo(418, 160, 440, 110); c.fill(); }
   if (s.veins) { c.strokeStyle = '#d62f3a'; c.lineWidth = 8; c.lineCap = 'round'; const x = 430, y = 70; c.beginPath(); c.moveTo(x - 20, y); c.lineTo(x, y + 10); c.lineTo(x - 6, y + 28); c.moveTo(x + 20, y); c.lineTo(x, y + 10); c.stroke(); }
   if (s.soot) { c.fillStyle = 'rgba(40,30,30,.4)'; for (const [x, y, r] of [[110, 300, 46], [380, 120, 40], [300, 430, 30]]) { c.beginPath(); c.ellipse(x, y, r, r * .6, .4, 0, 7); c.fill(); } }
 }
+// ---------- ojos propios (proporciones normales): almendra blanca, iris, pupila, párpado superior, cejas ----------
+// estado -> [apertura 0..1, párpado inferior 0..1, mirada x, mirada y, ceja: altura, ángulo interior (+ = enfadado), tamaño pupila]
+const EYE_P = {
+  normal: [.78, .08, 0, 0, 0, 0, 1], wide: [1, 0, 0, 0, 14, -4, .8], half: [.42, .12, 0, .15, -4, 2, 1], squint: [.32, .4, 0, 0, -8, 10, 1],
+  side_l: [.66, .1, -1, 0, 0, 2, 1], side_r: [.66, .1, 1, 0, 0, 2, 1], terror: [1, 0, 0, 0, 16, -12, .55], worried: [.72, .1, 0, .1, 6, -12, 1],
+  angry: [.6, .22, 0, 0, -10, 16, 1], scared: [.92, 0, 0, 0, 12, -14, .7], up: [.86, 0, 0, -1, 8, -2, 1], down: [.48, .05, 0, 1, -2, -4, 1], cry: [.62, .2, 0, .4, 6, -14, 1],
+};
+function drawEyes(c, e, s) {
+  const ink = '#1c1414', brow = s.browColor || '#2a1a10', iris = s.iris || '#3a2414', cx = [178, 334], cy = 206, RX = 33, RY = 37;
+  c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
+  const browsAt = (h, ang) => { c.strokeStyle = brow; c.lineWidth = 15; for (const k of [0, 1]) { const sx = k ? -1 : 1, x = cx[k], y = cy - 58 - h; c.beginPath(); c.moveTo(x - sx * 30, y - 2); c.quadraticCurveTo(x, y - 10 - h * .2, x + sx * 30, y + ang); c.stroke(); } };
+  if (e === 'closed' || e === 'happy' || e === 'wink') {
+    browsAt(e === 'happy' ? 6 : -2, e === 'happy' ? -2 : 0);
+    for (const k of [0, 1]) { const x = cx[k]; if (e === 'wink' && k === 1) continue; c.strokeStyle = ink; c.lineWidth = 9; c.beginPath();
+      if (e === 'happy') { c.moveTo(x - RX, cy + 8); c.quadraticCurveTo(x, cy - 26, x + RX, cy + 8); } else { c.moveTo(x - RX, cy); c.quadraticCurveTo(x, cy + 16, x + RX, cy); } c.stroke();
+      for (const d of [-1, 1]) { c.lineWidth = 5; c.beginPath(); c.moveTo(x + d * RX, cy + (e === 'happy' ? 8 : 0)); c.lineTo(x + d * (RX + 8), cy - 6); c.stroke(); } }
+    if (e === 'wink') drawOpen(c, 1, EYE_P.normal, s, cx, cy, RX, RY, ink, iris);
+    c.restore(); return; }
+  const P = EYE_P[e] || EYE_P.normal; browsAt(P[4], P[5]);
+  for (const k of [0, 1]) drawOpen(c, k, P, s, cx, cy, RX, RY, ink, iris);
+  if (e === 'cry') { c.fillStyle = 'rgba(120,200,255,.9)'; for (const x of cx) { c.beginPath(); c.moveTo(x - 8, cy + 20); c.quadraticCurveTo(x - 14, cy + 90, x - 4, cy + 120); c.quadraticCurveTo(x + 6, cy + 90, x + 2, cy + 20); c.fill(); } }
+  c.restore(); }
+function drawOpen(c, k, P, s, cx, cy, RX, RY, ink, iris) {
+  const [op, low, lx, ly, , , pu] = P, x = cx[k], top = cy - RY * op, bot = cy + RY * .55 * (1 - low);
+  const shape = () => { c.beginPath(); c.moveTo(x - RX, cy); c.bezierCurveTo(x - RX * .6, top - 4, x + RX * .6, top - 4, x + RX, cy); c.bezierCurveTo(x + RX * .6, bot + 4, x - RX * .6, bot + 4, x - RX, cy); c.closePath(); };
+  c.save(); shape(); c.fillStyle = '#fbfbf6'; c.fill(); c.clip();
+  const ix = x + lx * RX * .42, iy = cy + 2 + ly * 10, ir = 19;
+  c.fillStyle = iris; c.beginPath(); c.ellipse(ix, iy, ir * .72, ir, 0, 0, 7); c.fill();
+  c.fillStyle = '#0a0606'; c.beginPath(); c.ellipse(ix, iy, ir * .36 * pu, ir * .5 * pu, 0, 0, 7); c.fill();
+  c.fillStyle = 'rgba(255,255,255,.95)'; c.beginPath(); c.ellipse(ix + 5, iy - 7, 4, 5, 0, 0, 7); c.fill();
+  c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(x - RX - 2, top - 6, RX * 2 + 4, 9);   // sombra del párpado
+  c.restore();
+  c.strokeStyle = ink; c.lineWidth = 8; c.beginPath(); c.moveTo(x - RX, cy); c.bezierCurveTo(x - RX * .6, top - 4, x + RX * .6, top - 4, x + RX, cy); c.stroke();   // párpado superior con pestañas
+  c.lineWidth = 4; c.beginPath(); c.moveTo(x + (k ? 1 : -1) * RX, cy); c.lineTo(x + (k ? 1 : -1) * (RX + 7), cy - 7); c.stroke();
+  c.lineWidth = 3; c.globalAlpha = .55; c.beginPath(); c.moveTo(x - RX * .8, cy + 4); c.bezierCurveTo(x - RX * .5, bot + 4, x + RX * .5, bot + 4, x + RX * .8, cy + 4); c.stroke(); c.globalAlpha = 1; }
 // pone la cara del kit a un personaje ya creado (conserva sus extras: rubor, pecas, ojeras...)
 export function kitFace(ch, style = 'plain', extra = {}) {
   const keep = {}; for (const k of ['blush', 'freckles', 'bags', 'skin']) if (ch.spec.face && ch.spec.face[k] != null) keep[k] = ch.spec.face[k];
