@@ -1,6 +1,6 @@
 // Nichts — 70 planos sincronizados con audio/words.json (1080×1920, 30 fps, 87,2 s).
 // Parodia de terror: cada escena se monta como de miedo (penumbra, riser, zoom lento) y se resuelve con lo más normal.
-import { THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl } from './engine.js';
+import { runPose, THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl } from './engine.js';
 import { nightSky } from './sets.js';
 import { rimLight } from './roblox.js';
 import { FONT, tree } from './props.js';
@@ -48,7 +48,25 @@ const ich = makeIch(scene), mama = makeMama(scene), alter = makeAlter(scene), ju
 const fk = Array.from({ length: 6 }, (_, i) => makeFolk(scene, i + 1));
 kitFace(ich, 'hero'); kitFace(mama, 'plain'); kitFace(alter, 'plain'); kitFace(junge, 'kid'); kitFace(kellner, 'plain'); kitFace(arb, 'plain'); kitFace(fahrer, 'plain');
 fk.forEach((c, i) => kitFace(c, ['girl', 'plain', 'kid', 'girl', 'plain', 'villain'][i]));
-const POOL = [ich, mama, alter, junge, kellner, arb, fahrer, ...fk];
+// niños del parque (primer plano)
+const kids = Array.from({ length: 5 }, (_, i) => { const c = makeFolk(scene, 2 + i * 2); c.spec.scale = .58; c.root.scale.setScalar(.58); c.seed = 900 + i; kitFace(c, ['kid', 'girl', 'kid', 'girl', 'kid'][i]); return c; });
+const POOL = [ich, mama, alter, junge, kellner, arb, fahrer, ...fk, ...kids];
+// parque infantil y calle transversal al norte de la Vorstadt (solo para el primer plano)
+const PZ = 66, PARK = (() => { const g = new THREE.Group(); ST.G.add(g); g.position.set(VS, 0, PZ); const wd = mat(0xd8323a, { roughness: .5 }), mt = mat(0x2a6ad8, { metalness: .4, roughness: .4 }), yl = mat(0xf2c23a, { roughness: .4 });
+  const xr = new THREE.Mesh(new THREE.PlaneGeometry(160, 10), mat(0x4a5060, { roughness: .9 })); xr.rotation.x = -Math.PI / 2; xr.position.set(0, .07, -8); g.add(xr); for (let k = -8; k <= 8; k++) box(4, .04, .35, mat(0xffffff), 0, g, k * 10, .1, -8);
+  box(160, .3, 3, mat(0xd8d4cc), .05, g, 0, .15, -14.5); box(160, .3, 3, mat(0xd8d4cc), .05, g, 0, .15, -1.5);
+  const sand = new THREE.Mesh(new THREE.PlaneGeometry(40, 22), mat(0xe8d4a0, { roughness: 1 })); sand.rotation.x = -Math.PI / 2; sand.position.set(0, .08, 12); g.add(sand);
+  for (const [w, d, x, z] of [[40.6, .6, 0, 1], [40.6, .6, 0, 23], [.6, 22, -20, 12], [.6, 22, 20, 12]]) box(w, .6, d, mat(0x8a5a32), .05, g, x, .3, z);
+  // columpio
+  const SW = new THREE.Group(); SW.position.set(-10, 0, 12); g.add(SW); for (const sx of [-4, 4]) for (const sz of [-1.6, 1.6]) { const l = cyl(.18, .18, 8, mt, 8, SW, sx, 3.9, sz * .5); l.rotation.x = sz > 0 ? -.2 : .2; } const bar = cyl(.2, .2, 8.6, mt, 8, SW, 0, 7.6, 0); bar.rotation.z = Math.PI / 2;
+  const swings = [-2, 2].map(x => { const p = new THREE.Group(); p.position.set(x, 7.6, 0); SW.add(p); for (const sx of [-.6, .6]) cyl(.04, .04, 5, mat(0x5a5a5a), 4, p, sx, -2.5, 0); box(1.6, .2, .8, yl, .05, p, 0, -5, 0); return p; });
+  // tobogán
+  const SL = new THREE.Group(); SL.position.set(8, 0, 14); g.add(SL); for (const sx of [-1, 1]) cyl(.15, .15, 6, mt, 8, SL, sx, 3, -2); box(2.6, .3, 2.6, wd, .05, SL, 0, 6, -2); for (let k = 0; k < 6; k++) box(2, .15, .3, mt, .02, SL, 0, .9 + k, -3.4);
+  const ramp = box(2.2, .25, 9, yl, .1, SL, 0, 3.2, 2.6); ramp.rotation.x = .62; for (const sx of [-1.1, 1.1]) { const r = box(.15, .6, 9, yl, .05, SL, sx, 3.5, 2.6); r.rotation.x = .62; }
+  // banco y árboles
+  for (const x of [-26, 26]) tree(g, x, 10, 1); for (const x of [-16, 16]) tree(g, x, 30, 1.1);
+  g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); return { g, swings, SL }; })();
+
 // ---------- atrezo ----------
 const CARS = [0xd8323a, 0xf2c23a, 0x2ab8a8].map(c => car(scene, c)); const TRUCK = truck(scene), TRUCK2 = truck(scene, 'BAUSTOFFE'); const AMP = ampel(scene); const VAN = van(scene); const BOX = stromkasten(scene);
 const BURG = burger(scene), FRIES = fries(scene), FRIES2 = fries(scene), NOTE = phoneOrNote(scene), COINS = coins(scene, 3), THERMO = thermo(scene), MOW = mower(scene);
@@ -69,7 +87,7 @@ function day() { MODE = 'day'; setSky([.26, .58, .98], [.5, .78, 1], [.78, .9, 1
 function night(f = .002) { MODE = 'night'; setSky([.02, .04, .13], [.06, .1, .26], [.13, .18, .36]); hemi.intensity = .6; hemi.color.setRGB(.5, .6, 1); sun.intensity = .45; sun.color.setRGB(.6, .7, 1); rim.intensity = 1.8; scene.fog.color.setRGB(.05, .07, .18); scene.fog.density = f; bloom.strength = .55; VLAMP.forEach(b => b.material.emissiveIntensity = 2.2); winsOn(() => true); }
 function dusk() { MODE = 'dusk'; setSky([.36, .3, .62], [1, .5, .3], [1, .66, .3]); hemi.intensity = 1.1; hemi.color.setRGB(1, .78, .62); sun.intensity = 2; sun.color.setRGB(1, .62, .36); rim.intensity = 1.6; scene.fog.color.setRGB(.9, .6, .4); scene.fog.density = .0012; bloom.strength = .36; VLAMP.forEach(b => b.material.emissiveIntensity = 1.4); winsOn(i => i % 3 !== 0); }
 function inside(h = .9, s = .4) { MODE = 'in'; hemi.intensity = h; sun.intensity = s; bloom.strength = .42; scene.fog.density = .0002; }
-function hideAll() {
+function hideAll() { PARK.g.visible = false;
   for (const c of POOL) { c.root.visible = false; c.root.rotation.set(0, 0, 0); c.root.scale.setScalar(c.spec.scale || 1); applyPose(c, {}); c.setFace({}); if (c.props.cane) c.props.cane.visible = true; }
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); if (p.parent !== scene) { p.parent.remove(p); scene.add(p); } }
   for (const k in SETS) SETS[k].visible = false; GRASS.visible = false; FL.intensity = 0; HL.intensity = 0; KG.setBulb(1); KG.door.rotation.y = 0; DOORP.rotation.y = 0; KG.drum.rotation.z = 0; BURG.userData.plate.visible = true; NG.mbm.color.setHex(0x1d2a4a); NG.lampL.position.set(NX + 3.5, 12.5, 40);
@@ -92,6 +110,7 @@ const spoken = (a, b) => WORDS.filter(w => w[0] >= a - .01 && w[0] < b);
 const talk = (ch, T, a, b, expr = 'talk') => cara(ch, T, { expr, mouth: kitLips(T, spoken(a, b)) || 'flat' });
 const SIT = { crouch: .2, lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5, aLz: .15, aRz: .15 };
 const sit = (ch, x, y, z, ry, extra = {}) => { const s = ch.spec.scale || 1; put(ch, x, y - (2.05 - .2) * s + .08, z, ry); applyPose(ch, { ...SIT, ...extra }); };
+const runPoseK = t => runPose(t, 1);
 const pop = (lt, at = 0) => spring(clamp((lt - at) * 1.8));
 // vecinos de fondo: caminan por la acera izquierda o hacen cosas
 function vecinos(T, z0, n = 3) { for (let i = 0; i < n; i++) { const c = fk[i], dir = i % 2 ? 1 : -1; caminar(c, T + i * 3, { x: VS - 9 - (i % 2) * .4, z: z0 - 24 + i * 9 - dir * 5, ry: dir > 0 ? 0 : Math.PI, speed: 2.6 + i * .3, accel: .01, T }); cara(c, T, { expr: 'smile' }); } }
@@ -122,7 +141,25 @@ const S = []; const shot = (t0, tr, zoom, fn, sfx = []) => S.push({ t0, tr, zoom
 const PI = Math.PI, NARR = VS + 9;
 const drone = (L, k0) => { use('ST'); vecinos(L.T, -10, 3); const k = easeOut(clamp(L.lt / .35)); cam([VS + 34 - L.lt * 2, lerp(78, 44, k) - L.lt * 2, lerp(120, 76, k) - L.lt * 3], [VS, 4, -14], lerp(72, 52, k) - L.lt); sh(V(VS, 0, -10), 80); };
 // 1 «In dieser Stadt» — golpe de zoom en el fotograma 0 sobre la Vorstadt
-shot(0, 'C', null, L => drone(L), [[0, 'birds', .5], [.3, 'wind', .5]]);
+// 1 «In dieser Stadt» — golpe de zoom: el narrador en primer plano, detrás la vida normal (coches, corredores, gente paseando, niños en el parque)
+shot(0, 'C', null, L => { use('ST'); PARK.g.visible = true; const T = L.T, z0 = PZ;
+  put(ich, VS + .5, 0, z0 - 18, PI + .15); actuar(ich, L.lt, [[0, 'shrug'], [.25, { aLx: .4, aLz: .9, aRx: .4, aRz: .9, aLe: .4, aRe: .4, headX: -.1 }, { anti: .2 }]], { T }); cara(ich, T, { expr: 'happy' });
+  // coches por la calle transversal
+  show(CARS[0], VS - 9 + T * 18, 0, z0 - 10.5, PI / 2); show(CARS[1], VS + 13 - T * 16, 0, z0 - 5.5, -PI / 2); show(CARS[2], VS - 30 + T * 18, 0, z0 - 10.5, PI / 2);
+  // corredores y paseantes en las aceras
+  caminar(fk[0], T, { x: VS - 9, z: z0 - 14.5, ry: PI / 2, run: true, speed: 7, accel: .01, T }); cara(fk[0], T, { expr: 'determined' });
+  caminar(fk[1], T, { x: VS + 9, z: z0 - 1.5, ry: -PI / 2, run: true, speed: 6.5, accel: .01, T }); cara(fk[1], T, { expr: 'happy' });
+  caminar(fk[2], T, { x: VS + 12, z: z0 - 1.2, ry: -PI / 2, speed: 2.6, accel: .01, T }); cara(fk[2], T, { expr: 'smile' });
+  caminar(fk[3], T, { x: VS - 6, z: z0 - 1, ry: PI / 2, speed: 2.4, accel: .01, T }); cara(fk[3], T, { expr: 'smile' });
+  put(fk[4], VS + 4, 0, z0 + 3.5, PI + .3); actuar(fk[4], L.lt, [[0, (t) => ({ aLx: 2.8, aRx: 2.8, aLz: .5, aRz: .5, crouch: Math.max(0, Math.sin(t * 9)) * .4, lLx: .3, lRx: .3, lLk: Math.max(0, Math.sin(t * 9)) * .8, lRk: Math.max(0, Math.sin(t * 9)) * .8 })]], { T }); cara(fk[4], T, { expr: 'joy' });   // gimnasia
+  // niños: columpio, tobogán, pilla-pilla
+  const a = Math.sin(T * 3.2) * .7; PARK.swings[0].rotation.x = a; PARK.swings[1].rotation.x = -a * .8; const sp = PARK.swings[0]; sp.updateMatrixWorld(true); const seat = V(0, -5, 0).applyMatrix4(sp.matrixWorld);
+  put(kids[0], seat.x, seat.y - 1.0, seat.z, 0); kids[0].root.rotation.x = a; applyPose(kids[0], { crouch: .2, lLx: 1.4, lRx: 1.4, lLk: .3 + a * .6, lRk: .3 + a * .6, aLx: 2.6, aRx: 2.6, aLe: .3, aRe: .3 }); cara(kids[0], T, { expr: 'joy' });
+  const sk = (T * .5) % 1; put(kids[1], VS + 8, 5.0 - sk * 4.6, z0 + 12.9 + sk * 7.4, 0); applyPose(kids[1], { crouch: .2, lLx: 1.5, lRx: 1.5, aLx: 2.8, aRx: 2.8, aLz: .5, aRz: .5 }); cara(kids[1], T, { expr: 'joy' });
+  for (let i = 2; i < 5; i++) { const ang = T * 1.6 + i * 2.1, x = VS + Math.cos(ang) * 3.5 - 1, z = z0 + 9 + Math.sin(ang) * 3; put(kids[i], x, 0, z, ang + PI); applyPose(kids[i], runPoseK(T + i)); cara(kids[i], T, { expr: i === 2 ? 'grin' : 'joy' }); }
+  // cámara: golpe de zoom (en renderShot) + travelling que gira alrededor del narrador
+  const q = easeOut(clamp(L.lt / .74)); cam([VS + lerp(5.5, 2.5, q), lerp(8.4, 6.2, q), z0 - 18 - lerp(19, 13, q)], [VS + .5, lerp(1.4, 1.8, q), z0 - 9], 50); sh(V(VS, 0, z0 - 6), 45); }, [[0, 'birds', .5], [.05, 'kids_laugh', .5], [.2, 'car_pass', .5], [.4, 'steps', .4]]);
+
 // 2 «ist alles normal.» — el narrador saluda en la acera; el vecino corta el césped
 shot(.74, 'W', null, L => { use('ST'); put(ich, VS - 9, 0, 14, .5); actuar(ich, L.lt, [[0, 'idle'], [.2, 'wave', { anti: .2 }]], { T: L.T }); cara(ich, L.T, { expr: 'happy' });
   caminar(fk[1], L.lt, { x: VS - 16, z: 4, ry: 0, speed: 2, T: L.T, extra: { aLx: 1.2, aRx: 1.2, aLe: .5, aRe: .5, lean: .2 } }); const p = fk[1].root.position; show(MOW, p.x, 0, p.z + 3.4, PI); cara(fk[1], L.T, { expr: 'smile' });
