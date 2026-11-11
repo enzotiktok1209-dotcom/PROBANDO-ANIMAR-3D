@@ -99,7 +99,7 @@ export function restaurant(scene, X) {
   // mesas: A (x = -6) y B (x = 6) en z = -3, sillas mirando a la cámara en z = -5.6
   const tables = []; for (const [x, z] of [[-6, -3], [6, -3], [-6, 7], [6, 7]]) { const t = new THREE.Group(); t.position.set(x, 0, z); g.add(t); box(5.4, .3, 3.6, mat(0xf4f4f4, { roughness: .3 }), .1, t, 0, 3.3, 0); box(5.5, .15, 3.7, mat(0xd83a3a), .05, t, 0, 3.1, 0); cyl(.25, .4, 3.1, mat(0xc0c0c8, { metalness: .8 }), 10, t, 0, 1.55, 0);
     cyl(.18, .18, .6, mat(0xd83a3a), 10, t, 1.8, 3.75, -.8); cyl(.14, .14, .7, mat(0xf2c23a), 10, t, 2.2, 3.8, -.8); box(.9, .5, .3, mat(0x1a1a1a), .05, t, -2, 3.7, -1.2);
-    for (const s of [-1, 1]) { const c = new THREE.Group(); c.position.set(0, 0, s * 2.6); t.add(c); box(3, .4, 2, mat(0xd83a3a, { roughness: .5 }), .15, c, 0, 1.8, 0); box(3, 3.4, .5, mat(0xd83a3a, { roughness: .5 }), .15, c, 0, 3.4, s * 1.1); for (const sx of [-1.2, 1.2]) cyl(.1, .1, 1.6, mat(0xc0c0c8, { metalness: .8 }), 6, c, sx, .8, 0); } tables.push(t); }
+    for (const s of [-1]) { const c = new THREE.Group(); c.position.set(0, 0, s * 2.6); t.add(c); box(3, .4, 2, mat(0xd83a3a, { roughness: .5 }), .15, c, 0, 1.8, 0); box(3, 3.4, .5, mat(0xd83a3a, { roughness: .5 }), .15, c, 0, 3.4, s * 1.1); for (const sx of [-1.2, 1.2]) cyl(.1, .1, 1.6, mat(0xc0c0c8, { metalness: .8 }), 6, c, sx, .8, 0); } tables.push(t); }
   return { g: shade(g), F, door: dG, tables, sign };
 }
 // ---------- Bad (X) ----------
@@ -148,7 +148,7 @@ export function nacht(scene, X) {
   for (const x of [-22, 18, 30]) tree(g, x, 14, .9); for (const x of [-30, -12, 22]) tree(g, x, 46, 1);
   // valla del jardín
   for (let k = -12; k <= 12; k++) box(.3, 1.6, .2, trim, .05, g, k * 1.1, .8, 19.5); box(28, .2, .15, trim, .02, g, 0, 1.2, 19.5);
-  return { g: shade(g), MB, LP, lampL, lampR, lampB, lampB2, R, doorH };
+  return { g: shade(g), MB, mbm, LP, lampL, lampR, lampB, lampB2, R, doorH };
 }
 // ---------- Supermarkt (dentro del grupo de la Vorstadt, en z0) ----------
 export function supermarkt(parent, z0) {
@@ -191,7 +191,7 @@ export function stromkasten(scene) { const g = new THREE.Group(); scene.add(g); 
 export function burger(scene) { const g = new THREE.Group(); scene.add(g); const bun = mat(0xd8902e, { roughness: .6 });
   const top = new THREE.Mesh(new THREE.SphereGeometry(.8, 18, 10, 0, 6.283, 0, Math.PI / 2), bun); top.position.y = .62; top.scale.y = .8; g.add(top); for (let k = 0; k < 8; k++) sphere(.05, mat(0xfff4d0), g, Math.sin(k * 2.3) * .5, 1.15 - (k % 2) * .08, Math.cos(k * 2.3) * .5, 4, 3);
   cyl(.85, .85, .14, mat(0x4cb64a, { roughness: .9 }), 18, g, 0, .5, 0); box(1.6, .08, 1.6, mat(0xffc020), .02, g, 0, .43, 0).rotation.y = .5; cyl(.8, .8, .26, mat(0x5a2a14, { roughness: .9 }), 18, g, 0, .3, 0); cyl(.8, .75, .26, bun, 18, g, 0, .08, 0);
-  const plate = cyl(1.4, 1.3, .1, mat(0xffffff, { roughness: .2 }), 24, g, 0, -.1, 0); return shade(g); }
+  const plate = cyl(1.4, 1.3, .1, mat(0xffffff, { roughness: .2 }), 24, g, 0, -.1, 0); g.userData.plate = plate; return shade(g); }
 export function fries(scene) { const g = new THREE.Group(); scene.add(g); box(1, 1.1, .7, mat(0xd8323a, { roughness: .5 }), .06, g, 0, .55, 0); for (let k = 0; k < 14; k++) { const f = box(.11, .9, .11, mat(0xf2c23a, { roughness: .7 }), .02, g, -.35 + (k % 7) * .12, 1.2 + (k % 3) * .08, -.15 + Math.floor(k / 7) * .25); f.rotation.z = (k % 5 - 2) * .1; } return shade(g); }
 export function phoneOrNote(scene) { const g = new THREE.Group(); scene.add(g); box(.9, 1.2, .08, mat(0xffffff), .02, g, 0, 0, 0); for (let k = 0; k < 4; k++) box(.6, .05, .02, mat(0x2a2a8a), 0, g, 0, .35 - k * .2, .05); return g; }
 export function coins(scene, n = 3) { const g = new THREE.Group(); scene.add(g); for (let k = 0; k < n; k++) { const c = cyl(.3, .3, .07, mat(0xe9c23a, { metalness: .9, roughness: .2 }), 16, g, k * .3, k * .08, 0); } return g; }
