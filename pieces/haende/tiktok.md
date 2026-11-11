@@ -1,10 +1,10 @@
 # Hände — textos para TikTok
 
 ## Descripción (alemán)
-In dieser Stadt hasst mich jeder wegen meiner Hautfarbe… bis 22 Kinder mitten im Schneesturm genau mich brauchten. 🥶❄️ Achtet am Ende auf ihre Hände 🥺 Hättet ihr mir vertraut? 👇
-#storytime #roblox #robloxstory #animation #fürdich #fyp #deutsch #gänsehaut #emotional #zusammenhalt
+In dieser Stadt hasst mich jeder wegen meiner Hautfarbe… bis zu dieser einen Nacht im Schneesturm. 🥶❄️ Was dann passierte, hätte keiner gedacht. Bleib bis zum Ende 🥺👇
+#storytime #roblox #robloxstory #animation #fürdich #fyp #deutsch #gänsehaut #emotional
 
-**Traducción:** En esta ciudad todos me odian por mi color de piel… hasta que 22 niños, en plena tormenta de nieve, me necesitaron justo a mí. 🥶❄️ Fijaos al final en sus manos 🥺 ¿Vosotros habríais confiado en mí? 👇
+**Traducción:** En esta ciudad todos me odian por mi color de piel… hasta aquella noche en la tormenta de nieve. 🥶❄️ Lo que pasó después nadie se lo esperaba. Quédate hasta el final 🥺👇
 
 ## Comentario fijado (sin spoilers)
 Wärst du ihm im Dunkeln gefolgt? 👇
