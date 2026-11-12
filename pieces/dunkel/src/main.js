@@ -178,7 +178,9 @@ let DARK = 0;
 function coverText(l1, l2, col) { const c = octx; c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
   for (const [t, y, sz, f] of [[l1, H * .115, 132, '#ffffff'], [l2, H * .195, 112, col]]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .92 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
     c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.lineWidth = sz * .22; c.strokeStyle = '#000'; c.strokeText(t, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = f; c.fillText(t, 0, 0); c.restore(); } c.restore(); }
-const COVERS = [];
+// portadas (sin spoilers), sujeto centrado, más nitidez y viñeta: 0 = yo de espaldas ante el monstruo gigante bajo los focos; 1 = la cara del monstruo con los ojos encendidos a oscuras
+const COVERS = [{ i: 0, k: .9, cam: () => cam([2.2, 1.6, 66], [0, 27, 4], 64), l2: 'BEWEGT SICH IM DUNKELN…' },
+  { i: 1, k: .45, cam: () => { const h = wpos(MON.head); cam([h.x - 6, h.y + 2, h.z + 36], [h.x, h.y + 2.6, h.z], 40); }, l2: 'WENN DAS LICHT AUSGEHT…' }];
 window.renderCover = v => { const C = COVERS[v], s = S[C.i], T = s.t0 + (s.t1 - s.t0) * C.k; COVER = C; renderShot(C.i, T, null, 0); COVER = null;
   octx.fillStyle = '#000'; octx.fillRect(0, 0, W, H); octx.drawImage(renderer.domElement, 0, 0, W, H); coverText('IN DIESER STADT', C.l2, '#E2FD07'); };
 window.renderAt = renderAt; window.DUR = DUR; window.FPS = FPS; window.CUES = CUES; window.SHOTS = S.map(s => [s.t0, s.t1, s.tr, s.zoom]); window.__ready = true;
