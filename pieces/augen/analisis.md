@@ -1,4 +1,4 @@
-# Análisis de la referencia (Download_63) — «la ciudad de los ciegos»
+# Análisis de la referencia (Download_63) — «la ciudad de los ciegos» (nuestra versión: todos mudos)
 
 - 576×1024, 30 fps, 159,2 s. **108 cortes** detectados → plano medio **≈1,47 s**.
 - Doblaje alemán (TTS, mala traducción del inglés); subtítulos en inglés, una palabra blanca. Marca de agua de otro creador (no se copia).
