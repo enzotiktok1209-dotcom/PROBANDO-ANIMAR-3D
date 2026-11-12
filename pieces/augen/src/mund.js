@@ -22,7 +22,7 @@ const PAD = (() => { const g = new THREE.SphereGeometry(.6, 20, 10); g.scale(1, 
 const throatTex = () => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); const g = x.createRadialGradient(32, 32, 2, 32, 32, 32); g.addColorStop(0, '#000000'); g.addColorStop(.6, '#1a0206'); g.addColorStop(1, '#5a0e18'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
 const TONG = (() => { const g = new THREE.SphereGeometry(.24, 12, 8); g.scale(1, .38, .45); g.translate(0, -.05, -.01); return g; })();
 
-export function makeMundMonster(scene, nMouths = 190) {
+export function makeMundMonster(scene, nMouths = 240) {
   const skin = new THREE.MeshStandardMaterial({ color: 0xffffff, map: SKIN(), roughness: .62, metalness: .05 });
   const root = new THREE.Group(); scene.add(root);
   const hips = new THREE.Group(); hips.position.y = 7.4; root.add(hips);
@@ -37,8 +37,8 @@ export function makeMundMonster(scene, nMouths = 190) {
   const hm = new THREE.Mesh(hg, skin); head.add(hm);
   // bocas repartidas por la superficie (Fibonacci), sin la parte de abajo (cuello)
   const BASE = [], r = RNG(11); const N = nMouths;
-  for (let i = 0; i < N * 1.6 && BASE.length < N; i++) { const y = 1 - (i + .5) / (N * 1.6) * 2, rad = Math.sqrt(1 - y * y), th = i * 2.399963; const d = V3(Math.cos(th) * rad, y, Math.sin(th) * rad);
-    if (d.y < -.72) continue; const pos = d.clone().multiply(V3(1.9, 1.9 * 1.15, 1.9)).multiplyScalar(1.0); pos.y += .9;
+  for (let i = 0; i < N; i++) { const y = 1 - (i + .5) / N * 1.88, rad = Math.sqrt(1 - y * y), th = i * 2.399963; const d = V3(Math.cos(th) * rad, y, Math.sin(th) * rad);
+    const pos = d.clone().multiply(V3(1.9, 1.9 * 1.15, 1.9)).multiplyScalar(1.0); pos.y += .9;
     const s = .3 + r() * .22, q = new THREE.Quaternion().setFromUnitVectors(V3(0, 0, 1), d.clone().normalize()); q.multiply(new THREE.Quaternion().setFromAxisAngle(V3(0, 0, 1), (r() - .5) * .5));
     BASE.push({ pos: pos.addScaledVector(d, .09), q, s, col: new THREE.Color().setHSL(.98 + r() * .03, .45 + r() * .2, .32 + r() * .14), f: 5 + r() * 7, ph: r() * 100, w: .55 + r() * .45 }); }
   const lipM = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .3, metalness: 0 }), thM = new THREE.MeshStandardMaterial({ color: 0xeee6d2, roughness: .35 });
