@@ -1,4 +1,4 @@
-# Ziegen — análisis del video de referencia
+# Gänse — análisis del video de referencia
 
 (El video de referencia y sus fotogramas no se suben al repo.)
 
@@ -46,4 +46,4 @@ cabra, seguir para siempre, esconder, primera cita, cine, alcalde, tractor, 312,
 
 ## Propuesta de reparto (inventado)
 - **Yo** (narrador), Papa, **Lena** de la panadería (en vez de Amy), **Jonas** el vecino (en vez de Kevin), el **alcalde Brandt**, conductor del bus, taquillera del cine, pareja de la primera cita.
-- Pueblo: **Hufenbach**. Cabras de varias razas y colores (blancas, marrones, negras, manchadas), cada una con collar distinto.
+- Pueblo: **Hufenbach**. Por petición del usuario, las cabras pasan a ser **gansos** (blancos, grises, de Toulouse, con manchas), cada uno con lazo o collar distinto.
