@@ -30,5 +30,6 @@
 ## Nuestro cambio
 La segunda mitad de la referencia es publicidad y no sirve para un storytime. Mantenemos el gancho y los ejemplos (profesor/lava, abuela/mamut a 999 €, amigo con el portátil quemado) y lo convertimos en historia con la fórmula de la casa:
 regla absurda (todos ven los vídeos) → me afecta (los vídeos se cumplen: suelo caliente, mamut real) → pista (el mismo reloj en todos) → guarida secreta (la torre del ayuntamiento llena de pantallas) → el poder contraataca (las cámaras se giran, sirena) → botón (ALLES LÖSCHEN) → celebración → giro final peor (vídeo nuevo sobre mí, subido por Jonas, el amigo que fingía no saber hacerlos).
-Números en pantalla: 999 €, 3:33, Hunderte, 2 Millionen.
+Datos cambiados respecto a la referencia: lava cada 20 minutos (no cada hora), mamut por 1.499 € (no 999), vídeos a las 4:44, Jonas lo intenta 3 noches, más de 500 pantallas, la tele se enciende sola (no el móvil), 4 millones de visitas.
+Números en pantalla: 20 Minuten, 1.499 €, 4:44, 3 Nächte, 500, 4 Millionen.
 Personajes inventados: Herr Brandt (profesor), Oma Gerda, Jonas (mejor amigo), el protagonista (yo).
