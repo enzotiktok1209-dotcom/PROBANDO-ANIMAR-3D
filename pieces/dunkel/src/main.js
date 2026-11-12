@@ -52,11 +52,11 @@ const AIR = aire(scene, 300);
 function setSky(top, mid, hor) { const u = sky.sky.material.uniforms; u.top.value.setRGB(...top); u.mid.value.setRGB(...mid); u.hor.value.setRGB(...hor); }
 let MODE = 'night', WET = 0;
 function night(k = 1) { MODE = 'night'; setSky([.02, .04, .14], [.06, .1, .3], [.16, .2, .42]); sky.moon.visible = true; sky.moon.position.set(-500, 700, -1200); hemi.intensity = .9; hemi.color.setRGB(.55, .66, 1); hemi.groundColor.setRGB(.18, .18, .28); sun.intensity = 1.1; sun.color.setRGB(.72, .78, 1); rim.intensity = 1.8;
-  scene.fog.color.setRGB(.1, .14, .28); scene.fog.density = .0011; bloom.strength = .4; bloom.threshold = .88; cityLights(k); towersOn(1); SPOTS.forEach(s => s.intensity = 130); FILL.intensity = 35; }
-function day() { MODE = 'day'; setSky([.22, .5, .95], [.5, .74, 1], [.84, .93, 1]); sky.moon.visible = false; hemi.intensity = 1.3; hemi.color.setRGB(.88, .94, 1); hemi.groundColor.setRGB(.5, .5, .45); sun.intensity = 2.6; sun.color.setRGB(1, .95, .86); rim.intensity = 1.1;
+  scene.fog.color.setRGB(.1, .14, .28); scene.fog.density = .0011; bloom.strength = .26; bloom.threshold = .93; renderer.toneMappingExposure = .92; cityLights(k); towersOn(1); SPOTS.forEach(s => s.intensity = 130); FILL.intensity = 16; }
+function day() { MODE = 'day'; renderer.toneMappingExposure = .95; setSky([.22, .5, .95], [.5, .74, 1], [.84, .93, 1]); sky.moon.visible = false; hemi.intensity = 1.3; hemi.color.setRGB(.88, .94, 1); hemi.groundColor.setRGB(.5, .5, .45); sun.intensity = 2.6; sun.color.setRGB(1, .95, .86); rim.intensity = 1.1;
   scene.fog.color.setRGB(.82, .9, 1); scene.fog.density = .0009; bloom.strength = .22; bloom.threshold = .9; cityLights(0); SPOTS.forEach(s => s.intensity = 0); FILL.intensity = 60; }
 function dawn() { day(); setSky([.25, .35, .75], [.85, .6, .7], [1, .72, .45]); sun.color.setRGB(1, .78, .5); sun.intensity = 2.2; hemi.intensity = 1.0; scene.fog.color.setRGB(.95, .8, .7); bloom.strength = .35; }
-function inside(h = .7) { MODE = 'in'; hemi.intensity = h; sun.intensity = 0; rim.intensity = .6; bloom.strength = .4; scene.fog.density = .0002; SPOTS.forEach(s => s.intensity = 0); FILL.intensity = 120; }
+function inside(h = .7) { MODE = 'in'; hemi.intensity = h * .8; sun.intensity = 0; rim.intensity = .6; bloom.strength = .22; renderer.toneMappingExposure = .9; scene.fog.density = .0002; SPOTS.forEach(s => s.intensity = 0); FILL.intensity = 120; }
 function towersOn(v, only = null) { LP.towers.forEach((t, k) => t.set(only ? (only.includes(k) ? v : 1) : v)); }
 function hideAll() {
   for (const c of POOL) { c.root.visible = false; c.root.rotation.set(0, 0, 0); c.root.scale.setScalar(c.spec.scale || 1); applyPose(c, {}); c.setFace({}); if (c.props.vest) c.props.vest.visible = false; }
@@ -65,7 +65,7 @@ function hideAll() {
   for (const k in SETS) SETS[k].visible = false; LP.GUARD.visible = true; MON.root.visible = false; MON.root.position.set(0, 0, 0); MON.root.rotation.set(0, 0, 0); MON.root.scale.setScalar(SC); MON.glow(0); poseMonster(MON, MPOSE.frozen);
   RAIN.update(0, V(0, 0, 0), 0); SPARK.update(V(0, 0, 0), -1); SPLASH.update(V(0, 0, 0), -1); BOLT.visible = false; LP.alarmM.emissiveIntensity = .4; LP.VKhot.emissiveIntensity = 0; LP.towers.forEach(t => t.hot.emissiveIntensity = 0);
   LS.LA.intensity = 0; LS.alarm.emissiveIntensity = .3; FE.L.intensity = 0; setWet(0); DARK = 0; papa.root.traverse(m => { if (m.userData.sk0) m.material.color.setHex(0xf0c09c); }); LP.towers[1].gen.children.forEach(m => { if (m.material && m.material.emissive && m.material.color.getHex() === 0x2f8a4a) m.material.emissiveIntensity = 0; });
-  grade.uniforms.vig.value = .42; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.4; grade.uniforms.sharp.value = 1.0; grade.uniforms.sepia.value = 0; night(); }
+  grade.uniforms.vig.value = .42; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.4; grade.uniforms.sharp.value = 1.1; grade.uniforms.sepia.value = 0; night(); }
 function setWet(k) { WET = k; LP.pm.roughness = lerp(.7, .42, k); LP.pm.color.setScalar(lerp(1, .7, k)); LP.ground.material.roughness = lerp(.85, .45, k); }
 const use = (...n) => { for (const k of n) SETS[k].visible = true; };
 // estado de las luces de la historia: todas encendidas; a las 46,3 s revienta la torre 3; a las 81,3 s se apaga toda la ciudad (y las torres)

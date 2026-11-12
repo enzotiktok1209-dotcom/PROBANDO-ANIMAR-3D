@@ -427,6 +427,20 @@ def render(cues, dur):
         if name in REC: at(out, rec(REC[name]) * lvl * .8 * c.get('g', 1), max(0, c['t']))
     return out[:int(dur * SR)]
 
+# ---- Dunkel: parpadeo eléctrico, trueno, lluvia y el chillido metálico del monstruo ----
+def _flicker(s):
+    d = .7; x = lp(np.sign(sine(100, d)), 3000) * .5 + hp(noise(d, s), 2500) * .3; g = np.zeros(int(d * SR)); r = np.random.default_rng(s); t = 0
+    while t < d: L = r.uniform(.02, .09); g[int(t * SR):int((t + L) * SR)] = r.uniform(.3, 1) if r.random() < .6 else 0; t += L + r.uniform(.01, .05)
+    return norm(x * g + seq([(click(.02, 2500, s + k) * .6, k * .12) for k in range(5)], d))
+LIB['flicker'] = (lambda s, c: _flicker(s), .4)
+LIB['thunder'] = (lambda s, c: norm(pad(hp(noise(.25, s), 1500) * env(.25, .002, .12) * .8, 3.2) + pad(lp(noise(3.2, s + 1), 140) * adsr(3.2, .05, 2.4) * (1 + .5 * np.sin(2 * np.pi * 3 * T(3.2))), 3.2)[:int(3.2 * SR)]), .7)
+LIB['rain'] = (lambda s, c: norm(bp(noise(2.6, s), 900, 9000) * adsr(2.6, .4, .8) + seq([(click(.01, 4000 + (k * 731) % 3000, s + k) * .25, k * .043) for k in range(60)], 2.6)), .35)
+def _mscream(s):
+    d = 2.0; t = T(d); f = glide(260, 820, d) * (1 + .06 * np.sin(2 * np.pi * 11 * t)); x = saw(f, d) * .6 + saw(f * 1.51, d) * .35 + svf_bp(noise(d, s), 2200, 3) * .8
+    return norm(x * adsr(d, .06, .7) * (1 + .3 * np.sin(2 * np.pi * 23 * t)))
+LIB['monster_scream'] = (lambda s, c: _mscream(s), .75)
+REC.update({'alarm': 'alarm', 'explosion': 'boom', 'thunder': 'boom', 'crowd_run': 'crowd', 'glass_break': 'window'})
+
 def fill_gaps(cues, dur, maxgap=1.1):
     ts = sorted(c['t'] for c in cues); extra = []; fill = ['cloth', 'steps', 'breath', 'paper', 'steps_heavy', 'wind', 'drip', 'wood_creak']
     prev = 0.0
@@ -437,7 +451,7 @@ def fill_gaps(cues, dur, maxgap=1.1):
 
 if __name__ == '__main__':
     cues_f, voice_f, music_f, out_f = sys.argv[1:5]
-    cues = json.load(open(cues_f)); DUR = 100.0
+    cues = json.load(open(cues_f)); DUR = 142.4
     cues = fill_gaps(cues, DUR); print(len(cues), 'efectos; hueco máximo', max(np.diff(sorted([0] + [c['t'] for c in cues] + [DUR]))).round(2))
     TEN = {'riser', 'braam', 'riser_short', 'braam_short'}
     ten = render([c for c in cues if c['s'] in TEN], DUR); ten = norm(ten, 0.9)

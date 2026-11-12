@@ -15,7 +15,7 @@ shot(73.57, 'R', null, L => { plaza(L); mon(MPOSE.frozen); CARRING(L, 20, 46, 0,
   const a = L.k * .5; cm([Math.sin(a) * 8, 120, Math.cos(a) * 8 + 4, 0, 0, 0, 50], [Math.sin(a) * 8, 112, Math.cos(a) * 8 + 4, 0, 0, 0, 50], L.k); sh(V(0, 0, 0), 60); }, [[0, 'run_cobble', .6], [.6, 'steps', .5], [1.2, 'whistle', .5]]);
 // 44 «die Taschenlampen nach oben.» — contrapicado: todos levantan la linterna a la vez y los haces se cruzan hacia el monstruo
 shot(75.61, 'W', null, L => { plaza(L); mon(MPOSE.frozen); CARRING(L, 20, 46, 0, 1); const k = easeOut(clamp(L.lt / .4)); RING(L, GUARDS(), -.7, .7, 35, { pose: { aRx: lerp(.3, 2.5, k), aRe: .1, headX: -.6 } });
-  cm([12, 1.4, 41, 0, 26, 10, 64], [12, 1.4, 39.5, 0, 27, 10, 62], L.k); sh(V(0, 0, 35), 30); }, [[0, 'click_metal', .7], [.1, 'click', .6], [.2, 'cloth', .5]]);
+  cm([12, 1.4, 41, 0, 26, 10, 64], [12, 1.4, 39.5, 0, 27, 10, 62], L.k); sh(V(0, 0, 35), 30); }, [[0, 'click_metal', .7], [.1, 'click_metal', .6], [.2, 'cloth', .5]]);
 // 45 «Und aus jedem Fenster ringsum» — la fachada de los vecinos: las ventanas se van encendiendo una tras otra
 shot(76.88, 'Z', null, L => { use('FE'); night(); FE.L.intensity = 80; const who = [oma, kind, nach, WA[5], K[3], K[4]]; FE.holes.forEach(([x, y], i) => { const on = L.lt > .25 + i * .25; if (!on) return; const c = put(who[i], FX + x, y - 4.6, -1.8, 0); const it = i % 2 ? PHONE : null;
     actuar(c, L.lt, [[0, { aRx: 1.9, aRe: .3, headX: -.2 }]], { T: L.T + i }); if (i === 0) attach(BLAMP, c.aR.hand, [0, -.5, .5], [0, 0, 0], 1); if (i === 1) attach(PHONE, c.aR.hand, [0, -.5, .3], [-.3, 0, 0], 1.2); cara(c, L.T, { expr: 'determined' }); });
@@ -24,11 +24,11 @@ shot(76.88, 'Z', null, L => { use('FE'); night(); FE.L.intensity = 80; const who
 shot(78.92, 'C', null, L => { use('FE'); night(); FE.L.intensity = 80; const o = put(oma, FX - 9, 8 - 4.4, -1.4, 0), k = put(kind, FX, 8 - 3.4, -1.2, 0);
   actuar(o, L.lt, [[0, { aRx: 1.7, aRe: .2, aLx: 1.5, aLe: .3, lean: .15 }]], { T: L.T }); attach(BLAMP, oma.aR.hand, [0, -.6, .6], [-.3, 0, 0], 1.1); cara(o, L.T, { expr: 'determined' });
   actuar(k, L.lt, [[0, { aRx: 2.0, aRe: .1, lean: .1 }]], { T: L.T }); attach(PHONE, kind.aR.hand, [0, -.5, .3], [-.5, 0, 0], 1.3); cara(k, L.T, { expr: 'joy' });
-  cm([FX - 4, 8.6, 22, FX - 4.5, 7.6, 0, 50], [FX - 4.2, 8.6, 20, FX - 4.5, 7.6, 0, 48], L.k); }, [[0, 'switch', .5], [.4, 'click', .4], [.8, 'cloth', .4]]);
+  cm([FX - 4, 8.6, 22, FX - 4.5, 7.6, 0, 50], [FX - 4.2, 8.6, 20, FX - 4.5, 7.6, 0, 48], L.k); }, [[0, 'switch', .5], [.4, 'click_metal', .4], [.8, 'cloth', .4]]);
 // 47 «Dann – klick –» — sala de control: clic y se apagan de golpe todas las pantallas
 shot(80.76, 'F', null, L => { use('LS'); inside(L.T < BLACK ? .7 : .12); if (L.T >= BLACK) LS.L.intensity = 0; const off = L.T >= BLACK; LS.mons.forEach((m, i) => m.userData.draw(off ? 'off' : 'on' + i, (cc, w, h) => { cc.fillStyle = off ? '#000' : '#0a2a3a'; cc.fillRect(0, 0, w, h); if (!off) txt(cc, ['T1-8', 'NETZ', 'NOTSTROM'][i], w / 2, h / 2, 48, '#ffb43a'); }));
   LS.wallS.userData.draw(off ? 'off' : 'on', (cc, w, h) => { cc.fillStyle = off ? '#000' : '#0a1a2a'; cc.fillRect(0, 0, w, h); if (!off) txt(cc, 'STROM: 3 %', w / 2, h / 2, 80, '#ff5a4a'); });
-  const c = put(tech, LX - 1, 0, -1.4, .3); actuar(c, L.lt, [[0, { headX: -.1 }]], { T: L.T }); cara(c, L.T, { expr: off ? 'shock' : 'worried' }); if (off) { attach(PHONE, tech.aR.hand, [0, -.5, .3], [-.5, 0, 0], 1.2); actuar(c, L.lt, [[0, { aRx: 1.6, aRe: .5, headX: -.1 }]], { T: L.T }); } LS.L.intensity = off ? 0 : 220;
+  const c = put(tech, LX - 1, 0, -1.4, .3); actuar(c, L.lt, [[0, { headX: -.1 }]], { T: L.T }); cara(c, L.T, { expr: off ? 'shock' : 'worried' }); if (off) { attach(PHONE, tech.aR.hand, [0, -.5, .3], [-.5, 0, 0], 1.2); actuar(c, L.lt, [[0, { aRx: 1.6, aRe: .5, headX: -.1 }]], { T: L.T }); } LS.L.intensity = off ? 0 : 110;
   cm([LX + 3, 6.4, 12, LX - 1, 5.6, -3, 50], [LX + 2.6, 6.4, 11, LX - 1, 5.6, -3, 48], L.k); }, [[.54, 'switch', 1], [.6, 'power_on', .3]]);
 // 48 «ging in der ganzen Stadt das Licht aus.» — la ciudad entera se apaga en una ola, de los rascacielos del fondo hacia la plaza
 shot(81.83, 'S', null, L => { plaza(L); mon(MPOSE.frozen); const k = clamp(L.lt / 1.4); const n = LIT.sky.length; LIT.sky.forEach((m, i) => m.emissiveIntensity = i / n > k ? 1.2 : 0); LIT.win.forEach((m, i) => m.emissiveIntensity = i / LIT.win.length > k * 1.2 - .2 ? 1.5 : 0); LIT.lamp.forEach(m => m.emissiveIntensity = k < .6 ? 3 : 0);

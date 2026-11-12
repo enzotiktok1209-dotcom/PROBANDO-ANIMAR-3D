@@ -12,7 +12,7 @@ const hex = c => '#' + c.toString(16).padStart(6, '0');
 const S = o => ({ noBelt: true, ...o, skinCss: hex(o.skin) });
 // uniforme de vigilante: chaqueta con cremallera, bolsillos, franjas reflectantes, hombreras y placa
 export const guardJacket = (col, refl = 0xe8f040, badge = 0xd9a531) => sp => { const j = mat(col, { roughness: .6 }); box(2.16, 2.1, 1.18, j, .14, sp, 0, 1.02, 0);
-  for (const y of [.45, 1.25]) box(2.2, .17, 1.22, mat(refl, { emissive: refl, emissiveIntensity: .35, roughness: .3 }), .03, sp, 0, y, 0);
+  for (const y of [.45, 1.25]) box(2.2, .15, 1.22, mat(refl, { emissive: refl, emissiveIntensity: .08, roughness: .5 }), .03, sp, 0, y, 0);
   box(.06, 1.95, .05, mat(0xb8b8c0, { metalness: .8 }), 0, sp, 0, 1.02, .6); for (const s of [-1, 1]) { box(.55, .45, .06, j, .04, sp, s * .55, 1.62, .61); box(.3, .1, .9, mat(0x1a1a24), .03, sp, s * .8, 2.08, 0); }
   const b = new THREE.Mesh(new THREE.CircleGeometry(.17, 5), mat(badge, { metalness: .8, roughness: .25 })); b.position.set(-.55, 1.66, .65); sp.add(b);
   const c = box(1.6, .35, 1.25, j, .12, sp, 0, 2.05, 0); };
@@ -21,9 +21,9 @@ export const peakCap = (col, band = 0x1a1a24, badge = 0xd9a531) => o => { const 
   const v = box(1.1, .07, .62, mat(0x0e0e12, { roughness: .2 }), .03, o.head, 0, 1.2, .62); v.rotation.x = .2; const e = new THREE.Mesh(new THREE.CircleGeometry(.14, 6), mat(badge, { metalness: .85, roughness: .2 })); e.position.set(0, 1.42, .74); o.head.add(e); };
 const beard = col => o => { const m = mat(col, { roughness: 1 }); box(1.2, .42, .3, m, .14, o.head, 0, .2, .6); for (const s of [-1, 1]) box(.26, .7, .5, m, .1, o.head, s * .56, .45, .42); };
 // chaleco reflectante (para Ich, se pone y se quita)
-function vest(o) { const g = new THREE.Group(); o.spine.add(g); const m = mat(0xff7a1a, { roughness: .6, emissive: 0x6a2000, emissiveIntensity: .25 });
+function vest(o) { const g = new THREE.Group(); o.spine.add(g); const m = mat(0xff7a1a, { roughness: .7, emissive: 0x6a2000, emissiveIntensity: .05 });
   for (const s of [-1, 1]) box(.7, 1.95, 1.24, m, .08, g, s * .68, 1.0, 0); box(2.24, 1.9, .3, m, .08, g, 0, 1.0, -.5);
-  for (const y of [.5, 1.3]) box(2.28, .14, 1.28, mat(0xe8e8e0, { emissive: 0xffffff, emissiveIntensity: .45 }), .02, g, 0, y, 0); o.props.vest = g; g.visible = false; }
+  for (const y of [.5, 1.3]) box(2.28, .14, 1.28, mat(0xd8d8d0, { emissive: 0xffffff, emissiveIntensity: .08 }), .02, g, 0, y, 0); o.props.vest = g; g.visible = false; }
 
 export function makeIch(scene) { return mk(scene, S({ seed: 2101, scale: .86, skin: 0xc68e66, shirt: 0xd8343a, shirt2: 0xd8343a, cuffs: 0xb02028, pants: 0x1e1e26, shoes: 0xf6f6f2, sole: 0xd8d8d8, hair: 0x2a1a10, hairBuild: curlyTop(0x2a1a10),
   torsoDetail: oversizeHoodie(0xd8343a, 0xffffff), face: { iris: '#3a2410', browColor: '#2a1a10', blush: .3 } }), [vest]); }

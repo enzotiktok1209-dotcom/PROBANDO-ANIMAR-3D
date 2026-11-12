@@ -22,7 +22,7 @@ const winTex = (floors, cols, seed, base, frame) => { const r = RNG(seed); const
       if (em) { if (lit[i]) { c.fillStyle = lit[i] === 2 ? '#bfe0ff' : '#ffcf7a'; c.fillRect(x - ww / 2, y - hh / 2, ww, hh); } }
       else { c.fillStyle = frame; c.fillRect(x - ww / 2 - 4, y - hh / 2 - 4, ww + 8, hh + 10); c.fillStyle = '#1a2236'; c.fillRect(x - ww / 2, y - hh / 2, ww, hh); c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(x - 1, y - hh / 2, 2, hh); } } };
   const W_ = cols * 48, H_ = floors * 64; return [canvasTex(W_, H_, (c, w, h) => draw(c, w, h, false)), canvasTex(W_, H_, (c, w, h) => draw(c, w, h, true))]; };
-export function cityLights(k) { for (const m of LIT.win) m.emissiveIntensity = 1.5 * k; for (const m of LIT.lamp) m.emissiveIntensity = 3 * k; for (const m of LIT.sky) m.emissiveIntensity = 1.2 * k; }
+export function cityLights(k) { for (const m of LIT.win) m.emissiveIntensity = .9 * k; for (const m of LIT.lamp) m.emissiveIntensity = 2.2 * k; for (const m of LIT.sky) m.emissiveIntensity = .8 * k; }
 
 // bloque de pisos (Altbau / años 60): fachada con ventanas pintadas (y su mapa de luz), cornisa, balcones, tienda abajo con rótulo en alemán
 const SHOPS = ['APOTHEKE', 'BÄCKEREI', 'KIOSK', 'IMBISS', 'FRISEUR', 'BLUMEN', 'DÖNER', 'CAFÉ', 'BÜCHER', 'SPÄTI'];
@@ -150,7 +150,7 @@ export function gasse(scene, X) { const g = new THREE.Group(); g.position.x = X;
     c.fillStyle = '#7a6a5a'; c.beginPath(); c.arc(96, 110, 26, 0, 7); c.fill(); c.fillRect(66, 140, 60, 36); txt(c, n, w / 2, 200, 30, '#1a1a1a'); txt(c, 'Seit 14.10.', w / 2, 232, 22, '#5a5a5a'); });
     p.position.set(-6 + (i % 3) * 4, 6 + Math.floor(i / 3) * 4.8 + (i % 2) * .3, -7.45); p.rotation.z = (RNG(i)() - .5) * .14; g.add(p); posters.push(p); });
   const lampB = new THREE.MeshStandardMaterial({ color: 0xfff4d8, emissive: 0xffc870, emissiveIntensity: 3 }); box(.3, .3, 2, mat(0x2a2a30), .05, g, 8, 16, -7); const lb = box(1.2, 1, 1.2, lampB, .1, g, 8, 15.3, -6);
-  const L = new THREE.PointLight(0xffc880, 200, 50, 1.6); L.position.set(8, 14, -5); g.add(L);
+  const L = new THREE.PointLight(0xffc880, 120, 50, 1.6); L.position.set(8, 14, -5); g.add(L);
   for (const [x, z] of [[10, 0], [11, 4]]) { cyl(1.1, 1, 2.6, mat(0x3a5a3a, { metalness: .4 }), 14, g, x, 1.3, z); cyl(1.2, 1.2, .2, mat(0x2a4a2a), 14, g, x, 2.7, z); }
   // bicicleta tirada
   const bike = new THREE.Group(); bike.position.set(-5, .5, 6); bike.rotation.set(0, .5, Math.PI / 2 - .05); g.add(bike); for (const z of [-1.6, 1.6]) { const w = new THREE.Mesh(new THREE.TorusGeometry(1, .1, 6, 20), mat(0x1a1a1a)); w.position.z = z; w.rotation.y = Math.PI / 2; bike.add(w); }
@@ -167,7 +167,7 @@ export function leitstelle(scene, X) { const g = new THREE.Group(); g.position.x
   cal.position.set(-14.75, 7, -3); cal.rotation.y = Math.PI / 2; g.add(cal);
   const meter = screenPlane(3, 3, 240, 240, 1.4); meter.position.set(14.75, 7, -2); meter.rotation.y = -Math.PI / 2; g.add(meter);
   const alarm = new THREE.MeshStandardMaterial({ color: 0xff2a2a, emissive: 0xff1a1a, emissiveIntensity: .3, toneMapped: false }); cyl(.7, .7, 1, alarm, 14, g, 8, 13.3, -6);
-  const L = new THREE.PointLight(0xdfe8ff, 220, 40, 1.4); L.position.set(0, 12, 2); g.add(L); const LA = new THREE.PointLight(0xff2a2a, 0, 40, 1.4); LA.position.set(8, 12, -4); g.add(LA);
+  const L = new THREE.PointLight(0xdfe8ff, 110, 40, 1.4); L.position.set(0, 12, 2); g.add(L); const LA = new THREE.PointLight(0xff2a2a, 0, 40, 1.4); LA.position.set(8, 12, -4); g.add(LA);
   const mug = new THREE.Group(); mug.position.set(5, 3.45, -4); desk.parent.add(mug); cyl(.35, .32, .7, mat(0x2a6ad8), 14, mug, 0, .35, 0);
   const chair = new THREE.Group(); chair.position.set(-1, 0, -1.5); g.add(chair); box(2.4, .3, 2.4, mat(0x1a1a20), .1, chair, 0, 2.2, 0); box(2.4, 2.6, .3, mat(0x1a1a20), .1, chair, 0, 3.6, 1.1); cyl(.15, .15, 2, mat(0x5a5a60), 8, chair, 0, 1.1, 0);
   return shade(g), { g, mons, wallS, meter, alarm, L, LA }; }
