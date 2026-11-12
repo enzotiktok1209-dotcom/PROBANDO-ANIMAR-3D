@@ -153,14 +153,17 @@ const plazaHerd = (n, seed, o = {}) => field(o.cx ?? -6, o.cz ?? -10, o.w ?? 90,
 // Herd de fondo de la plaza (gente con sus gansos): grupos que caminan
 function townLife(L, n = 120, seed = 7) { const l = plazaHerd(n, seed, { honk: .1 }); for (const q of l) { q.x += Math.sin(q.ry) * L.T * 1.2; q.z += Math.cos(q.ry) * L.T * 1.2; q.x = ((q.x + 56) % 100 + 100) % 100 - 56; q.z = ((q.z + 90) % 150 + 150) % 150 - 90; } return l; }
 
-// 1 «In dieser Stadt» — golpe de zoom: dron que baja sobre la plaza llena de gansos, el Rathaus al fondo
-shot(0, 'Z', null, L => { town(L); HERD.set(townLife(L, 260, 1));
-  [[K[1], -20, 10, 2.6], [K[4], 4, -6, -2.4], [K[6], -30, -30, .7], [K[3], 10, 26, PI + .3]].forEach(([c, x, z, ry], i) => { const p = caminar(c, L.lt, { x, z, ry, speed: 3, T: L.T + i }); cara(c, L.T, { expr: 'neutral' }); HERD.list.push(...trail(p, ry, 6, L.T, { seed: i })); });
-  cm([20, 46, 70, -6, 8, -60, 54], [16, 34, 58, -6, 10, -64, 52], L.k, easeOut); sh(V(-6, 0, -10), 80); }, [[0, 'honk_crowd', .6], [.2, 'city_amb', .5]]);
-// 2 «kriegst du jedes Mal eine Gans,» — ¡puf! aparece un ganso junto al chico
-shot(.82, 'C', null, L => { town(L); const c = put(K[0], -24, 0, 14, .5); const pop = L.T - 2.18; actuar(c, L.lt, [[0, 'idle'], [1.36, 'recoil', { anti: .2 }]], { T: L.T }); cara(c, L.T, { expr: pop > 0 ? 'shock' : 'neutral' });
-  if (pop > 0) { const s = spring(clamp(pop / .35)); goose(GG[0], -20.5, 17, -2.2, L.T, { neck: .8, pitch: -.2, eyes: 'normal' }); GG[0].root.scale.setScalar(GG[0].scale * s); feathers(V(-20.5, 1, 17), 2.18, L.T, 20, 3); }
-  cm([-14, 5.4, 27, -22, 3.4, 15.4, 46], [-15.6, 5, 24.6, -22, 3.2, 15.4, 42], L.k); sh(V(-22, 0, 15), 22); }, [[1.36, 'pop', .8], [1.38, 'feathers', .7], [1.45, 'honk', .7]]);
+// 1 «In dieser Stadt» — golpe de zoom: yo camino hacia la cámara con el cayado y detrás me sigue una marea de gansos (travelling hacia atrás, cámara baja)
+shot(0, 'Z', null, L => { town(L); const p = caminar(ich, L.lt + .6, { x: 4, z: 14, ry: 0, speed: 3.2, T: L.T, extra: { aRx: .5, aRe: 1.0, aRz: .1 } }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [PI - .4, 0, 0], 1.0); cara(ich, L.T, { expr: 'bored', eyes: 'half' });
+  const l = trail(p, 0, 320, L.T, { w: 16, gap: 4.5, sp: 2.4, seed: 101 }).map(q => ({ ...q, honk: Math.random() < .2, flap: q.x % 7 < .6 ? 1 : 0 })); HERD.set(l); goose(GG[0], p.x - 3.2, p.z - 3.4, .15, L.T, { walk: L.T * 1.9, moving: 1, neck: .8, eyes: 'normal' }); goose(GG[2], p.x + 3.4, p.z - 4, -.1, L.T, { walk: L.T * 1.9 + .5, moving: 1, neck: .7, honk: Math.max(0, Math.sin(L.T * 9)) });
+  feathers(V(p.x, 3, p.z - 8), 0, L.T, 16, 3, 2);
+  cm([p.x + 3, 6.4, p.z + 11, p.x, 1.4, p.z - 5, 58], [p.x + 2.4, 8.4, p.z + 15, p.x, .6, p.z - 9, 56], L.k, easeOut); sh(V(p.x, 0, p.z - 10), 40); }, [[0, 'honk_crowd', .8], [.1, 'steps', .5], [.3, 'feathers', .5]]);
+// 2 «kriegst du jedes Mal eine Gans,» — un chico cruza la plaza llena de vida… ¡puf! le aparece un ganso al lado y se lleva un susto
+shot(.82, 'C', null, L => { town(L); const pop = L.T - 2.18; const p = caminar(K[0], L.lt, { x: -26.6, z: 9.4, ry: .5, speed: 2.6, stopAt: 1.24, accel: .14, T: L.T }); const c = K[0];
+  if (pop > 0) { actuar(c, pop, [[0, 'recoil', { anti: .2 }]], { T: L.T }); c.root.position.set(p.x, 0, p.z); } cara(c, L.T, { expr: pop > 0 ? 'shock' : 'neutral', eyes: pop > 0 ? 'wide' : undefined });
+  HERD.set(townLife(L, 140, 2).filter(q => Math.hypot(q.x - p.x, q.z - p.z) > 7)); [[K[4], -40, 2, 1.2], [K[6], -12, 30, -2.4], [K[5], -44, 26, 2.2]].forEach(([w, x, z, ry], i) => { const q = caminar(w, L.lt, { x, z, ry, speed: 2.4, T: L.T + i }); cara(w, L.T, { expr: 'neutral' }); HERD.list.push(...trail(q, ry, 5 + i * 2, L.T, { seed: 20 + i })); });
+  if (pop > 0) { const s = spring(clamp(pop / .35)); goose(GG[0], p.x + 3, p.z - 1.8, -1.2, L.T, { neck: .8, pitch: -.2, eyes: 'normal' }); GG[0].root.scale.setScalar(GG[0].scale * s); feathers(V(p.x + 3, 1, p.z - 1.8), 2.18, L.T, 22, 3); }
+  cam([p.x + 9.5, 5, p.z + 8.5], [p.x + 1.2, 3.4, p.z + 1.2], lerp(48, 42, easeInOut(L.k))); sh(V(p.x, 0, p.z), 25); }, [[0, 'steps', .5], [.4, 'city_amb', .4], [1.36, 'pop', .8], [1.38, 'feathers', .7], [1.45, 'honk', .7], [1.5, 'gasp', .5]]);
 // 3 «wenn du goonst.» — se rasca la nuca, colorado; el ganso le mira de reojo
 shot(2.6, 'Z', null, L => { town(L); const c = put(K[0], -24, 0, 14, .5); actuar(c, L.lt, [[0, { aRx: 2.5, aRz: .65, aRe: 2.0, headZ: .15, headX: .08, lean: .05 }]], { T: L.T }); cara(c, L.T, { expr: 'smile', eyes: 'side_r', mouth: 'grimace' }); sweat(c, L.T);
   goose(GG[0], -21.6, 16.6, -2.4, L.T, { neck: .9, pitch: .25, yaw: -.3, eyes: 'sus' }); cm([-25.6, 5.2, 26, -22.6, 4.0, 15.2, 42], [-25.2, 5, 24.6, -22.6, 4.0, 15.2, 38], L.k); sh(V(-22, 0, 15), 20); }, [[.1, 'honk', .5], [.3, 'cloth', .4]]);
@@ -233,14 +236,14 @@ shot(31.5, 'S', null, L => { town(L); put(ich, ST.x + 2, 0, ST.z, -PI / 2); actu
   HERD.set(trail(V(ST.x + 2, 0, ST.z), PI / 2 + PI, 15, L.T, { walk: 0, gap: 3, seed: 20 }).map(q => ({ ...q, x: q.x + 6 }))); show(BUS, 23, 0, lerp(-60, 60, L.lt / 1.8), 0, .85);
   cm([ST.x + 12, 4.4, ST.z + 18, ST.x - 2, 4, ST.z - 2, 48], [ST.x + 11, 4.2, ST.z + 16, ST.x - 2, 4, ST.z - 2, 46], L.k); sh(ST, 30); }, [[0, 'car_pass', .9], [.4, 'wind', .4], [1.0, 'sigh', .5]]);
 // 21 «und ich laufe mit einem Hirtenstab zur Arbeit.» — camino con el cayado y la fila de gansos detrás
-shot(33.3, 'W', null, L => { town(L, 'morning'); const p = caminar(ich, L.lt, { x: 16, z: 120, ry: 0, speed: 3, T: L.T, extra: { aRx: .5, aRe: 1.0, aRz: .1 } }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [-.4, 0, 0], 1.0); cara(ich, L.T, { expr: 'determined' });
+shot(33.3, 'W', null, L => { town(L, 'morning'); const p = caminar(ich, L.lt, { x: 16, z: 120, ry: 0, speed: 3, T: L.T, extra: { aRx: .5, aRe: 1.0, aRz: .1 } }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [PI - .4, 0, 0], 1.0); cara(ich, L.T, { expr: 'determined' });
   HERD.set(trail(p, 0, 60, L.T, { w: 4, gap: 5, sp: 2.8, seed: 21 })); cam([p.x + 6, 3.2, p.z + 13], [p.x - 1, 4, p.z - 2], 48); sh(V(p.x, 0, p.z), 30); }, [[0, 'steps', .6], [.3, 'wood_creak', .4], [1.0, 'honk', .4], [1.5, 'steps', .5]]);
 // 22 «Wie Moses teile ich jeden Morgen» — cenital: la marea de gansos se abre a mi paso
-shot(35.39, 'Z', null, L => { town(L, 'morning'); const p = caminar(ich, L.lt, { x: 4, z: 40, ry: PI, speed: 3, T: L.T, extra: { aRx: .5, aRe: 1.0 } }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [-.4, 0, 0], 1.0); cara(ich, L.T, { expr: 'determined' });
+shot(35.39, 'Z', null, L => { town(L, 'morning'); const p = caminar(ich, L.lt, { x: 4, z: 40, ry: PI, speed: 3, T: L.T, extra: { aRx: .5, aRe: 1.0 } }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [PI - .4, 0, 0], 1.0); cara(ich, L.T, { expr: 'determined' });
   const l = field(4, 20, 40, 60, 360, 22, { spread: .4, ry: 0 }); for (const q of l) { const dz = q.z - p.z, dx = q.x - p.x; if (dz < 6) { const push = Math.max(0, 7 - Math.abs(dx)) * clamp((6 - dz) / 6); q.x += Math.sign(dx || 1) * push; q.ry = Math.sign(dx || 1) * PI / 2 * clamp(push / 3); q.walk = push > .5 ? 1 : 0; } } HERD.set(l);
   cam([p.x + 6, 30, p.z + 12], [p.x, 0, p.z - 6], 52); sh(V(p.x, 0, p.z - 6), 40); }, [[0, 'honk_crowd', .7], [.4, 'feathers', .4], [.9, 'steps', .4]]);
 // 23 «ein Meer aus Federn.» — contrapicado: alzo el cayado entre dos muros de gansos que aletean; plumas al sol
-shot(36.79, 'C', null, L => { town(L, 'morning'); put(ich, 4, 0, 24, PI); actuar(ich, L.lt, [[0, { aRx: 2.8, aRz: .2, aRe: .2, headX: -.25, lean: -.1 }]], { T: L.T }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [-.4, 0, 0], 1.0); cara(ich, L.T, { expr: 'determined' });
+shot(36.79, 'C', null, L => { town(L, 'morning'); put(ich, 4, 0, 24, PI); actuar(ich, L.lt, [[0, { aRx: 2.8, aRz: .2, aRe: .2, headX: -.25, lean: -.1 }]], { T: L.T }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [PI - .4, 0, 0], 1.0); cara(ich, L.T, { expr: 'determined' });
   const l = field(4, 10, 40, 50, 260, 23, { spread: .4, ry: 0 }).filter(q => Math.abs(q.x - 4) > 6).map(q => ({ ...q, flap: 1, ry: q.x > 4 ? -PI / 2 : PI / 2 })); HERD.set(l); feathers(V(4, 6, 20), 36.8, L.T, 26, 6, 2);
   cm([5.4, 1.2, 13, 4, 7, 26, 56], [5, 1.4, 15, 4, 8, 26, 52], L.k); sh(V(4, 0, 18), 30); }, [[0, 'feathers', .7], [.2, 'honk_crowd', .7], [.6, 'choir', .3]]);
 // 24 «Und jeden Morgen wartet eine neue vor der Tür.» — abro la puerta y hay otro ganso en el felpudo, con lazo
@@ -378,7 +381,7 @@ shot(94.99, 'C', 'slow', L => { town(L, 'morning'); papaWin(L, 1); actuar(papa, 
   onFace(papa, 7, .4, -1.6, 40, L.k, 4.8); }, [[0, 'heartbeat', .5]]);
 // 59 «„Junge … ich glaube,» — yo, en el jardín con el cayado, me giro hacia él con la boca abierta
 shot(96.78, 'W', null, L => { town(L, 'morning'); papaWin(L, 1); actuar(papa, L.lt, [[0, { headX: .3, aRx: 2.4, aRz: -.1, aRe: 2.3 }]], { T: L.T }); papa.root.traverse(m => { if (m.isMesh && m.userData.skin0) m.material.color.copy(m.userData.skin0).lerp(RED, 1); }); talk(papa, L.T, 96.78, 98.23, 'smile');
-  put(ich, 15.6, 0, 97.4, -PI / 2 + .5); actuar(ich, L.lt, [[0, 'idle'], [.3, 'shock', { anti: .2 }]], { T: L.T }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [-.4, 0, 0], 1.0); cara(ich, L.T, { expr: 'shock' });
+  put(ich, 15.6, 0, 97.4, -PI / 2 + .5); actuar(ich, L.lt, [[0, 'idle'], [.3, 'shock', { anti: .2 }]], { T: L.T }); attach(CROOK, ich.aR.hand, [0, -.3, .4], [PI - .4, 0, 0], 1.0); cara(ich, L.T, { expr: 'shock' });
   cm([22, 8.8, 95.6, 9.6, 6.6, 100, 46], [21.2, 8.6, 96, 9.6, 6.6, 100, 44], L.k); sh(V(14, 0, 98), 22); }, [[0, 'gasp', .5], [.6, 'cloth', .3]]);
 // 60 «die gehört mir.“» — en el felpudo, un ganso gris con gafitas y bigote como Papa, le mira enamorado
 shot(98.23, 'C', null, L => { town(L, 'morning'); goose(PG, DM.x + .4, DM.z, -.31, L.T, { neck: 1, pitch: -.4, eyes: 'happy' }); papaWin(L, 1); put(papa, 8.4, 1.5, 100, PI / 2); papa.root.traverse(m => { if (m.isMesh && m.userData.skin0) m.material.color.copy(m.userData.skin0).lerp(RED, 1); }); applyPose(papa, { headX: .3, aRx: 2.4, aRz: -.1, aRe: 2.3 }); cara(papa, L.T, { expr: 'smile', eyes: 'side_r' });
