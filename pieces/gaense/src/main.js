@@ -406,7 +406,8 @@ function renderShot(i, T, tr, a) {
   if (i === 0) { const k = clamp(T / .2); camera.fov *= lerp(.62, 1, easeOut(k)); grade.uniforms.vig.value = lerp(.36, .6, clamp(T / .8)); }
   let sh_ = 0; for (const c of CUES) { if (c.t > T) break; if (['impact', 'braam', 'zoom_fast'].includes(c.s) && T - c.t < .14) sh_ = 1 - (T - c.t) / .14; }
   if (sh_) { const r = RNG(Math.floor(T * FPS) + 1); camera.position.x += (r() - .5) * .22 * sh_; camera.position.y += (r() - .5) * .22 * sh_; }
-  camaraEnMano(camera, T, 1); camera.updateProjectionMatrix();
+  if (COVER != null) { COVER.cam(); grade.uniforms.sharp.value = 1.5; grade.uniforms.vig.value = .58; grade.uniforms.sat.value = 1.5; grade.uniforms.lift.value = .015; }
+  else camaraEnMano(camera, T, 1); camera.updateProjectionMatrix();
   if (tr === 'W' || tr === 'S') { grade.uniforms.blurAmt.value = a * .07; grade.uniforms.dir.value.set(tr === 'W' ? 1 : 0, tr === 'W' ? 0 : 1); } else grade.uniforms.blurAmt.value = 0;
   if (tr === 'F') grade.uniforms.flash.value = Math.max(grade.uniforms.flash.value, a * .95);
   const dir = new THREE.Vector3(); camera.getWorldDirection(dir); const ctr = camera.position.clone().addScaledVector(dir, 14);
@@ -431,10 +432,13 @@ function renderAt(T) {
 }
 // portadas (sin spoilers): 0 = el chico con el ganso que aparece; 1 = la marea de 312 gansos
 function coverText(l1, l2, col) { const c = octx; c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
-  for (const [t, y, sz, f] of [[l1, H * .12, 118, '#ffffff'], [l2, H * .2, 112, col]]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .92 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
+  for (const [t, y, sz, f] of [[l1, H * .115, 132, '#ffffff'], [l2, H * .195, 118, col]]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .92 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
     c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.lineWidth = sz * .22; c.strokeStyle = '#000'; c.strokeText(t, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = f; c.fillText(t, 0, 0); c.restore(); } c.restore(); }
-window.renderCover = v => { const i = v === 0 ? 1 : S.findIndex(s => s.t0 === 30.32); const s = S[i], T = s.t0 + (s.t1 - s.t0) * (v === 0 ? .9 : .7);
-  renderShot(i, T, null, 0); octx.fillStyle = '#000'; octx.fillRect(0, 0, W, H); octx.drawImage(renderer.domElement, 0, 0, W, H);
-  coverText('IN DIESER STADT', v === 0 ? 'KRIEGST DU EINE GANS…' : '…WENN DU GOONST', '#E2FD07'); };
+let COVER = null;
+// portadas (sin spoilers), sujeto centrado, más nitidez y viñeta: 0 = yo al frente de la marea de gansos; 1 = el chico y el ganso que le aparece
+const COVERS = [{ i: 0, k: .9, cam: () => { const p = ich.root.position; cam([p.x + 1.4, 5.6, p.z + 13.5], [p.x, 3.4, p.z - 2], 50); }, l2: 'KRIEGST DU EINE GANS…' },
+  { i: 1, k: .95, cam: () => { const p = K[0].root.position; cam([p.x + 9, 5.2, p.z + 8], [p.x + 1.4, 3.6, p.z + .4], 46); }, l2: '…WENN DU GOONST' }];
+window.renderCover = v => { const C = COVERS[v], s = S[C.i], T = s.t0 + (s.t1 - s.t0) * C.k; COVER = C; renderShot(C.i, T, null, 0); COVER = null;
+  octx.fillStyle = '#000'; octx.fillRect(0, 0, W, H); octx.drawImage(renderer.domElement, 0, 0, W, H); coverText('IN DIESER STADT', C.l2, '#E2FD07'); };
 window.renderAt = renderAt; window.DUR = DUR; window.FPS = FPS; window.CUES = CUES; window.SHOTS = S.map(s => [s.t0, s.t1, s.tr, s.zoom]); window.__ready = true;
 window.DBG = { renderer, composer, bloom, sun, HERD, grade, scene };
