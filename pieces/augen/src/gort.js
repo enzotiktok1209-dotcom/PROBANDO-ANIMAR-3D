@@ -21,11 +21,11 @@ function facade(col, fach, ci) { return canvasTex(160, 200, (c, w, h) => {
   c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.moveTo(52, 140); c.lineTo(70, 50); c.lineTo(80, 50); c.lineTo(62, 140); c.fill(); c.fillStyle = '#ffffff'; c.fillRect(77, 47, 6, 98); c.fillRect(47, 92, 66, 6);
   c.fillStyle = ['#f2e2c8', '#e8c8d8', '#d8e8c8'][ci % 3]; c.fillRect(47, 47, 14, 98); c.fillRect(99, 47, 14, 98); c.fillStyle = '#ffffff'; c.fillRect(34, 152, 92, 8);
   for (let i = 0; i < 6; i++) { c.fillStyle = ['#e8323a', '#ff8ad0', '#ffd23f'][(i + ci) % 3]; c.beginPath(); c.arc(44 + i * 15, 150, 6, 0, 7); c.fill(); c.fillStyle = '#3f9a45'; c.fillRect(42 + i * 15, 150, 4, 4); } }, true); }
-const FAC = ['#f2b8c6', '#a8d8f0', '#f6dc8a', '#b9e3b0', '#d4b8f2', '#f4c09a', '#9fd0c8', '#f6a8a0'];
+const FAC = ['#ff4f9a', '#9a4fff', '#ff3d3d', '#22d4a0', '#ffd21f', '#2fa8ff', '#ff8a1a', '#7ae02a', '#ff6ad8', '#3ae8e0'];
 // casa estrecha alemana: tejado a dos aguas, buhardilla, chimenea, jardineras con geranios, planta baja con puerta y escaparate/tienda opcional
 export function townhouse(parent, x, z, wid, floors, ci, rot = 0, o = {}) {
   const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rot; parent.add(g);
-  const fh = 9, h = 7 + floors * fh, d = 20, col = FAC[ci % FAC.length], fach = ci % 3 === 0; const t = facade(col, fach, ci); t.repeat.set(wid / 8, floors);
+  const fh = 9, h = 7 + floors * fh, d = 20, col = FAC[ci % FAC.length], fach = ci % 7 === 3; const t = facade(col, fach, ci); t.repeat.set(wid / 8, floors);
   box(wid, h - 7, d, mat(0xffffff, { map: t, roughness: .75 }), 0, g, 0, 7 + (h - 7) / 2, 0); box(wid, 7, d, mat(fach ? 0xd9cdb8 : col, { roughness: .8 }), 0, g, 0, 3.5, 0);
   for (let i = 0; i < Math.floor(wid / 8); i++) { const fx = -wid / 2 + 4 + i * 8; box(4.4, .8, 1.2, mat(0x7a4a2a), .15, g, fx, 9.2, d / 2 + .6); for (let j = 0; j < 5; j++) sphere(.42, mat(j % 2 ? 0xe8323a : 0x3f9a45), g, fx - 1.6 + j * .8, 9.8, d / 2 + .6, 8, 6); }
   box(wid + .8, .9, d + .8, mat(0xffffff), .1, g, 0, 7.2, 0); box(wid + 1.4, 1.1, d + 1.4, mat(0xffffff), .1, g, 0, h + .4, 0);
