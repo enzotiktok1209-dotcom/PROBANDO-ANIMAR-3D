@@ -58,7 +58,7 @@ function hideAll() {
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); if (p.parent !== scene) { p.parent.remove(p); scene.add(p); } }
   MATCH.userData.lit(0);
   for (const k in SETS) SETS[k].visible = false; MON.root.visible = false; MON.root.position.set(0, 0, 0); MON.root.rotation.set(0, 0, 0); MON.root.scale.setScalar(1); poseMund(MON, MP.stand, 0);
-  FILL.color.setRGB(.91, .93, 1); rim.color.set(0x9fc8ff); ZI.MOON.intensity = 220; ZI.L.intensity = 0; TR.L.intensity = 0; KU.L.intensity = 130; WE.L.intensity = 110; ZI.DOOR.rotation.y = 0;
+  FILL.color.setRGB(.91, .93, 1); rim.color.set(0x9fc8ff); ZI.MOON.intensity = 60; ZI.L.intensity = 0; TR.L.intensity = 0; KU.L.intensity = 130; WE.L.intensity = 110; ZI.DOOR.rotation.y = 0;
   DF.H.forEach((h, i) => { if (h.board.userData.txt !== undefined) { h.board.userData.write(h.board.userData.txt0); delete h.board.userData.txt; } });
   grade.uniforms.vig.value = .42; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.4; grade.uniforms.sharp.value = 1.1; grade.uniforms.sepia.value = 0; DARK = 0; day(); }
 const use = (...n) => { for (const k of n) SETS[k].visible = true; };

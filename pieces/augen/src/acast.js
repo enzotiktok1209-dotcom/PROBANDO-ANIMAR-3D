@@ -28,7 +28,7 @@ const brooch = o => sphere(.12, mat(0x8a3ad8, { metalness: .5, roughness: .2 }),
 
 export function makeIch(scene, kid = false) { return mk(scene, S({ seed: kid ? 3102 : 3101, scale: kid ? .62 : .9, skin: 0xe8b48c, shirt: 0x2a7a7a, shirt2: 0x2a7a7a, cuffs: 0xe8dcc0, pants: kid ? 0x3a5a9a : 0x7a5a3a, shoes: 0x5a3a1a, sole: 0x2a1a0a, hair: 0x3a2214, hairBuild: curtain(0x3a2214),
   torsoDetail: kid ? apron(0x3a5a9a, 0xf2c23a) : knitSweater(0x2a7a7a, 0xe8dcc0), face: { iris: '#4a6a3a', browColor: '#3a2214', blush: .35 } })); }
-export function makeMama(scene) { return mk(scene, S({ seed: 3103, scale: .88, skin: 0xf0c4a2, shirt: 0xd8a030, shirt2: 0xd8a030, cuffs: 0xc08a20, pants: 0x1c2a4a, shoes: 0x3a2a1a, hair: 0xa8482a, hairBuild: lowBun(0xa8482a),
+export function makeMama(scene) { return mk(scene, S({ seed: 3103, scale: .88, skin: 0xf0c4a2, shirt: 0xd8a030, shirt2: 0xd8a030, cuffs: 0xc08a20, pants: 0x1c2a4a, shoes: 0x3a2a1a, hair: 0x7a3418, hairBuild: longBangs(0x7a3418),
   skirt: 0x1c2a4a, torsoDetail: cardigan(0xd8a030, 0xf8f4ec), face: { iris: '#4a6a3a', browColor: '#8a3a20', blush: .45 } })); }
 export function makeWendt(scene) { return mk(scene, S({ seed: 3104, scale: .82, skin: 0xf4d0b8, shirt: 0xb898d8, shirt2: 0xb898d8, cuffs: 0x9878b8, pants: 0x4a4a6a, shoes: 0x2a2a3a, hair: 0xf2f2f2, hairBuild: whiteCurls(0xf2f2f2),
   skirt: 0x5a4a7a, face: { iris: '#5a7a9a', browColor: '#cfcfcf', blush: .5 } }), [o => glasses(o.head), brooch]); }

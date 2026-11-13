@@ -118,7 +118,7 @@ export function zimmer(scene, X) { const g = room(scene, X, 34, 30, 16, wallpape
   const W = windowNight(g, -6, 8.5, -14.7);
   const BED = new THREE.Group(); BED.position.set(-6, 0, -6); g.add(BED); box(7, 2.2, 13, mat(0x9a6a3a), .2, BED, 0, 1.3, 0); box(7.4, 5.4, .6, mat(0x9a6a3a), .2, BED, 0, 3.2, -6.5);
   const quilt = mat(0xffffff, { map: rep(canvasTex(128, 128, (c, w, h) => { const C = ['#e8505b', '#f2c23a', '#5ab8e8', '#6ac86a', '#b878e8', '#f28a3a']; for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) { c.fillStyle = C[(x * 3 + y * 5) % 6]; c.fillRect(x * 32, y * 32, 32, 32); c.strokeStyle = 'rgba(255,255,255,.6)'; c.setLineDash([4, 3]); c.strokeRect(x * 32 + 2, y * 32 + 2, 28, 28); } }, true), 2, 3), roughness: 1 });
-  const Q = box(6.9, 1, 9, quilt, .4, BED, 0, 2.9, 1.8); box(5, 1.1, 2.6, mat(0xf4f4f0), .5, BED, 0, 3.2, -4.6);
+  const Q = box(6.9, 1, 9, quilt, .4, BED, 0, 2.9, 1.8); box(5, 1.1, 2.6, mat(0xa8b4cc), .5, BED, 0, 3.2, -4.6);
   const NS = new THREE.Group(); NS.position.set(-11.6, 0, -11); g.add(NS); box(3.4, 3.6, 3, mat(0x8a5a2a), .1, NS, 0, 1.8, 0); box(2.6, .9, .1, mat(0x6a4a2a), .05, NS, 0, 2.6, 1.52); sphere(.15, mat(0xd9a531), NS, 0, 2.6, 1.6, 6, 4); cyl(.5, .5, 1.2, mat(0x5a8ad8, { roughness: .3 }), 12, NS, -.6, 4.2, 0);
   // armario, estante con juguetes viejos, dibujos (casa, sol, mamá y yo)
   const AR = new THREE.Group(); AR.position.set(12.5, 0, -12); g.add(AR); box(8, 13, 4.4, mat(0xd8a050), .2, AR, 0, 6.5, 0); box(.1, 12, .1, mat(0x5a3a1a), 0, AR, 0, 6.5, 2.22); for (const s of [-1, 1]) sphere(.2, mat(0xd9a531), AR, s * .6, 6.5, 2.3, 6, 4);
