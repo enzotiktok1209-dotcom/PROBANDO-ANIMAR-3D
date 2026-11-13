@@ -121,11 +121,11 @@ const BAD_ = []; const badge = (kind, text, x, y, k, a = 1, sc = 1) => BAD_.push
 const badge3 = (kind, text, w3, k, sc = 1) => BAD_.push({ kind, text, w3, s: spring(clamp(k) * 1.6) * sc, a: 1, on: k > 0 });
 const bubble = (ch, text, k, dy = 2.4) => BAD_.push({ kind: 'bubble', text, w3: hp(ch).add(V(0, dy * (ch.spec.scale || 1) + .6, 0)), s: spring(clamp(k) * 1.6), a: 1, on: k > 0 });
 // contador de mentiras sobre la cabeza: cnt(ch, n, k, {gold, pop (s desde el cambio), sc, dy})
-const cnt = (ch, n, k = 1, o = {}) => { const pop = o.pop != null && o.pop >= 0 && o.pop < .35 ? 1 + Math.sin(o.pop / .35 * Math.PI) * .35 : 1; BAD_.push({ kind: 'cnt', text: String(n), gold: o.gold, w3: hp(ch).add(V(0, (o.dy ?? 1.9) * (ch.spec.scale || 1), 0)), s: spring(clamp(k) * 1.6) * (o.sc ?? .8) * pop, a: 1, on: k > 0, flash: o.pop != null && o.pop >= 0 && o.pop < .2 }); };
+const cnt = (ch, n, k = 1, o = {}) => { const pop = o.pop != null && o.pop >= 0 && o.pop < .35 ? 1 + Math.sin(o.pop / .35 * Math.PI) * .35 : 1; BAD_.push({ kind: 'cnt', text: String(n), gold: o.gold, w3: hp(ch).add(V(0, (o.dy ?? 1.9) * (ch.spec.scale || 1), 0)), s: spring(clamp(k) * 1.6) * Math.max(o.sc ?? .8, .78) * 1.25 * pop, a: 1, on: k > 0, flash: o.pop != null && o.pop >= 0 && o.pop < .2 }); };
 // cuenta que baja en ciertos tiempos locales: cntDrop(ch, L.lt, start, [t1, t2...])
 const cntDrop = (ch, lt, n0, times, o = {}) => { let n = n0, last = -9; for (const t of times) if (lt >= t) { n--; last = t; } cnt(ch, Math.max(0, n), o.k ?? 1, { ...o, pop: lt - last }); return n; };
 function drawBadge(b) {
-  if (!b.on) return; if (b.w3) { const [x, y, z] = proj(b.w3); if (z >= 1) return; b.x = clamp(x, 200, W - 200); b.y = clamp(y, 180, H * .64); } if (b.s <= .01 || b.a <= 0) return;
+  if (!b.on) return; if (b.w3) { const [x, y, z] = proj(b.w3); if (z >= 1) return; if (b.kind === 'cnt' && (x < -30 || x > W + 30 || y < 0)) return; b.x = b.kind === 'cnt' ? clamp(x, 170, W - 170) : clamp(x, 200, W - 200); b.y = clamp(y, 150, H * .64); } if (b.s <= .01 || b.a <= 0) return;
   const c = octx; c.save(); c.globalAlpha = b.a; c.translate(b.x, b.y); c.scale(b.s * U, b.s * U); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
   if (b.kind === 'big' || b.kind === 'red' || b.kind === 'num' || b.kind === 'green') { c.font = `700 ${b.kind === 'num' ? 74 : 92}px ${FONT}`; const tw = c.measureText(b.text).width; if (tw > 600) { const k = 600 / tw; c.scale(k, k); }
     c.lineWidth = 22; c.strokeStyle = b.kind === 'red' ? '#4a0008' : b.kind === 'green' ? '#04300e' : '#0e1226'; c.strokeText(b.text, 0, 0); const g = c.createLinearGradient(0, -50, 0, 50); if (b.kind === 'red') { g.addColorStop(0, '#ff6a6a'); g.addColorStop(1, '#d6202f'); } else if (b.kind === 'green') { g.addColorStop(0, '#8aff9a'); g.addColorStop(1, '#1ab84a'); } else { g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#ffe07a'); } c.fillStyle = g; c.fillText(b.text, 0, 0); }
@@ -134,7 +134,7 @@ function drawBadge(b) {
   else if (b.kind === 'q') { c.font = `700 120px ${FONT}`; c.lineWidth = 18; c.strokeStyle = '#0e1226'; c.strokeText(b.text || '?', 0, 0); c.fillStyle = '#ffd23f'; c.fillText(b.text || '?', 0, 0); }
   else if (b.kind === 'cnt') { const G = b.gold; c.shadowColor = 'rgba(0,0,0,.45)'; c.shadowBlur = 14; c.shadowOffsetY = 5; c.fillStyle = b.flash ? '#ffffff' : '#141a36'; c.beginPath(); c.roundRect(-104, -40, 208, 80, 40); c.fill(); c.shadowColor = 'transparent';
     c.lineWidth = 6; c.strokeStyle = G ? '#ffd23f' : '#ff4a8a'; c.stroke(); const gg = c.createLinearGradient(0, -32, 0, 32); gg.addColorStop(0, G ? '#ffe68a' : '#ff7aa8'); gg.addColorStop(1, G ? '#e0a020' : '#e01a5a'); c.fillStyle = gg; c.beginPath(); c.arc(-62, 0, 32, 0, 7); c.fill();
-    c.font = `700 17px ${FONT}`; c.fillStyle = G ? '#3a2400' : '#ffffff'; c.fillText('LÜGEN', -62, 1); c.font = `700 58px ${FONT}`; c.fillStyle = b.flash ? '#e01a5a' : (b.text === '0' ? '#ff6a6a' : '#ffffff'); c.fillText(b.text, 34, 4); }
+    c.font = `700 21px ${FONT}`; c.fillStyle = G ? '#3a2400' : '#ffffff'; c.lineWidth = 3; c.strokeStyle = G ? 'rgba(255,255,255,.5)' : 'rgba(80,0,30,.6)'; c.strokeText('LÜGEN', -62, 1); c.fillText('LÜGEN', -62, 1); c.font = `700 62px ${FONT}`; c.fillStyle = b.flash ? '#e01a5a' : (b.text === '0' ? '#ff6a6a' : '#ffffff'); c.fillText(b.text, 34, 4); }
   c.restore(); }
 const KEY = /^(Stadt|zehnmal|lügen|Wahrheit|Neujahr|zehn|Lügen|Lüge|Januar|pleite|Februar|Eltern|alles|Weihnachtsessen|Lecker|Sammler|Silvesterabend|Riesig|Lächeln|Koffer|wertvollsten|Klick|immer|leerer|Kind|riecht|zweitausendmal|Hund|Nein|zweiten|dritten|Krümel|Silvester|elf|Schnee|kreidebleich|null|schuld|Kowalski|Juli|Spiegel|Auto|angelogen|Ja|Dackel|Bruno|nie|nochmal|allein|Leine|Hand|eiskalt|Sohn|Zehn|Frage|nachfragt|besiegen|fünf|Drei|Zwei|Eins|letzte|umdreht|zurück|Geige|Bäcker|Familie|Mitternacht|gelogen|Jahres)$/;
 const CAPS = WORDS.map(w => { const t = w[2].replace(/[„“"”.,!?:…–]/g, '').replace(/^-|-$/g, '').trim(); return { t: w[0], txt: t, key: KEY.test(t) }; }).filter(w => w.txt);
@@ -157,13 +157,17 @@ const inDoor = (ch, Hh, side = 0, lry = 0) => putH(ch, Hh, Hh.dx + side, Hh.F + 
 const atDoor = (ch, Hh, dist = 4.2, side = 0) => putH(ch, Hh, Hh.dx + side, Hh.F + Math.max(dist, 3.6), 0, PI);
 const warmAt = (p, k = 70) => { WARM.position.copy(p); WARM.intensity = k; };
 // gente andando por la calle (extras con contador)
-function walkers(L, list, z0, n0 = 10, o = {}) { list.forEach(([c, x, dz, sp, ry], i) => { caminar(c, L.lt, { x, z: z0 + dz, ry: ry ?? 0, speed: sp ?? 2.6, T: L.T + i }); cara(c, L.T + i * 1.3, { expr: o.expr ?? 'neutral' }); if (o.cnt !== false) cnt(c, typeof n0 === 'function' ? n0(i) : n0, clamp(L.lt * 3 - i * .15), { sc: .55 }); }); }
+function walkers(L, list, z0, n0 = 10, o = {}) { list.forEach(([c, x, dz, sp, ry], i) => { caminar(c, L.lt, { x, z: z0 + dz, ry: ry ?? 0, speed: sp ?? 2.6, T: L.T + i }); cara(c, L.T + i * 1.3, { expr: o.expr ?? 'neutral' }); if (o.cnt !== false) cnt(c, typeof n0 === 'function' ? n0(i) : n0, clamp(L.lt * 3 - i * .15), { sc: .7 }); }); }
 
 // 1 · gancho: la calle nevada, todos con su contador de 10 mentiras; yo en el centro
 shot(0, 'Z', null, L => { street(); const z0 = -40;
   const me = caminar(ich, L.lt, { x: 0, z: z0, ry: 0, speed: 2.4, T: L.T }); cara(ich, L.T, { expr: 'happy' }); cnt(ich, 10, clamp(L.lt * 3), { sc: .7 });
-  walkers(L, [[LE[0], -4.2, -3, 2.6], [LE[4], 4.4, -2.5, 2.5], [LE[2], -7.6, -7, 2.3], [LE[6], 7.8, -8, 2.7], [KI[1], -2.4, -6, 2.4], [LE[3], 2.6, -11, 2.2]], z0, 10, { expr: 'smile' });
-  cm([0, 3.4, me.z + 15.5, 0, 3.6, me.z - 4, 50], [0, 3.0, me.z + 11.5, 0, 3.4, me.z - 4, 48], L.k, easeOut); sh(V(0, 0, me.z), 40); }, [[.05, 'steps_snow', .6], [.4, 'pling', .5], [1.2, 'wind', .3]]);
+  walkers(L, [[LE[0], -3.1, -2.6, 2.4], [LE[4], 3.1, -3.2, 2.4]], z0, 10, { expr: 'smile' });
+  cm([0, 3.6, me.z + 16.5, 0, 4.6, me.z - 4, 50], [0, 3.4, me.z + 14.5, 0, 4.6, me.z - 4, 48], L.k, easeOut); sh(V(0, 0, me.z), 40); }, [[.05, 'steps_snow', .6], [.4, 'pling', .5], [1.2, 'wind', .3]]);
+// 1b · «…kannst du nur zehnmal im Jahr lügen.»: más cerca, todos alrededor de mí, cada uno con su 10
+shot(.74, 'W', null, L => { street(); const z0 = -72; const me = put(ich, 0, 0, z0, 0); actuar(me, L.lt, [[0, {}], [.5, { aRx: 2.6, aRz: .3, aRe: .2 }, { dur: .3 }]], { T: L.T }); cara(me, L.T, { expr: 'happy', mouth: 'open_smile' }); cnt(me, 10, clamp(L.lt * 4), { sc: .9 });
+  [[LE[5], -3.0, -2.2, .25], [LE[1], 3.2, -2.6, -.25], [KI[2], -1.6, -4.6, .1], [LE[7], 1.8, -5.0, -.1]].forEach(([c, x, dz, ry], i) => { put(c, x, 0, z0 + dz, ry); actuar(c, L.lt, [[0, {}], [.3 + i * .12, 'wave', { dur: .3 }]], { T: L.T + i }); cara(c, L.T + i, { expr: 'smile' }); cnt(c, 10, clamp(L.lt * 4 - .3 - i * .25), { sc: .8 }); });
+  cm([1.2, 4.2, z0 + 13.5, 0, 4.4, z0 - 2.5, 50], [.6, 3.8, z0 + 11.5, 0, 4.4, z0 - 2.5, 48], L.k); sh(V(0, 0, z0), 30); }, [[.05, 'pop', .5], [.4, 'pling', .45], [.8, 'pling', .45], [1.4, 'steps_snow', .4]]);
 // 2 · «danach kommt nur noch die Wahrheit»: un vecino con el contador a 0; la verdad se le escapa (WAHRHEIT)
 shot(2.81, 'C', null, L => { street(); const c = put(LE[1], 1.2, 0, -58, -.35);
   actuar(c, L.lt, [[0, { aLx: .3, aRx: .3 }], [.8, { ...GEST.hands_face, aLx: 1.7, aRx: 1.7 }, { dur: .4 }]], { T: L.T });
@@ -230,7 +234,7 @@ shot(23.01, 'S', null, L => { use('ES'); inside(.7, 35);
   const P = [[LE[0], -5.4, -4.5, PI / 2], [LE[3], -5.4, 0, PI / 2], [LE[6], -5.4, 4.5, PI / 2], [LE[5], 5.4, -4.5, -PI / 2], [LE[1], 5.4, 0, -PI / 2], [LE[7], 5.4, 4.5, -PI / 2]];
   P.forEach(([c, x, z, ry], i) => { put(c, EX + x, 0, z, ry); applyPose(c, { lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5, hipY: 2.0, aLx: .9, aRx: .9, aLe: .5, aRe: .5, headX: .15, headY: Math.sin(L.T * 1.3 + i) * .3 }); c.root.position.y = .3; cara(c, L.T + i, { expr: 'bored', eyes: i % 2 ? 'side_l' : 'half', mouth: 'flat' }); cnt(c, 10, clamp(L.lt * 3 - i * .1), { gold: true, sc: .45 }); });
   badge('tag', 'WEIHNACHTEN', W / 2, H * .1, L.lt * 3);
-  cm([EX, 14, 20, EX, 3.5, 0, 46], [EX, 13, 18.4, EX, 3.5, 0, 46], L.k); sh(V(EX, 0, 0), 25); }, [[.05, 'bell_far', .5], [.4, 'spoon', .4], [1.0, 'clock_tick', .4], [1.5, 'chew', .3]]);
+  cm([EX, 21, 25, EX, 2.5, -.5, 46], [EX, 20, 24, EX, 2.5, -.5, 46], L.k); sh(V(EX, 0, 0), 25); }, [[.05, 'bell_far', .5], [.4, 'spoon', .4], [1.0, 'clock_tick', .4], [1.5, 'chew', .3]]);
 // 16 · «„Lecker!“, weil es eben nicht lecker ist»: el ganso quemado humea; el abuelo mastica con cara de sufrimiento: «…»
 shot(24.85, 'C', null, L => { use('ES'); inside(.7, 35); const c = put(LE[3], EX - 5.4, .3, 0, PI / 2);
   applyPose(c, { lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5, hipY: 2.0, aRx: 1.3, aRe: 1.8, aLx: .8, aLe: .5, headZ: Math.sin(L.T * 9) * .04 }); cara(c, L.T, { expr: 'sad', eyes: 'squint', mouth: Math.sin(L.T * 10) > 0 ? 'wavy' : 'grimace' });

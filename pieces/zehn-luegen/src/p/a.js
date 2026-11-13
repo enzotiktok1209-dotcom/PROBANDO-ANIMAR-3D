@@ -4,13 +4,17 @@ const inDoor = (ch, Hh, side = 0, lry = 0) => putH(ch, Hh, Hh.dx + side, Hh.F + 
 const atDoor = (ch, Hh, dist = 4.2, side = 0) => putH(ch, Hh, Hh.dx + side, Hh.F + Math.max(dist, 3.6), 0, PI);
 const warmAt = (p, k = 70) => { WARM.position.copy(p); WARM.intensity = k; };
 // gente andando por la calle (extras con contador)
-function walkers(L, list, z0, n0 = 10, o = {}) { list.forEach(([c, x, dz, sp, ry], i) => { caminar(c, L.lt, { x, z: z0 + dz, ry: ry ?? 0, speed: sp ?? 2.6, T: L.T + i }); cara(c, L.T + i * 1.3, { expr: o.expr ?? 'neutral' }); if (o.cnt !== false) cnt(c, typeof n0 === 'function' ? n0(i) : n0, clamp(L.lt * 3 - i * .15), { sc: .55 }); }); }
+function walkers(L, list, z0, n0 = 10, o = {}) { list.forEach(([c, x, dz, sp, ry], i) => { caminar(c, L.lt, { x, z: z0 + dz, ry: ry ?? 0, speed: sp ?? 2.6, T: L.T + i }); cara(c, L.T + i * 1.3, { expr: o.expr ?? 'neutral' }); if (o.cnt !== false) cnt(c, typeof n0 === 'function' ? n0(i) : n0, clamp(L.lt * 3 - i * .15), { sc: .7 }); }); }
 
 // 1 · gancho: la calle nevada, todos con su contador de 10 mentiras; yo en el centro
 shot(0, 'Z', null, L => { street(); const z0 = -40;
   const me = caminar(ich, L.lt, { x: 0, z: z0, ry: 0, speed: 2.4, T: L.T }); cara(ich, L.T, { expr: 'happy' }); cnt(ich, 10, clamp(L.lt * 3), { sc: .7 });
-  walkers(L, [[LE[0], -4.2, -3, 2.6], [LE[4], 4.4, -2.5, 2.5], [LE[2], -7.6, -7, 2.3], [LE[6], 7.8, -8, 2.7], [KI[1], -2.4, -6, 2.4], [LE[3], 2.6, -11, 2.2]], z0, 10, { expr: 'smile' });
-  cm([0, 3.4, me.z + 15.5, 0, 3.6, me.z - 4, 50], [0, 3.0, me.z + 11.5, 0, 3.4, me.z - 4, 48], L.k, easeOut); sh(V(0, 0, me.z), 40); }, [[.05, 'steps_snow', .6], [.4, 'pling', .5], [1.2, 'wind', .3]]);
+  walkers(L, [[LE[0], -3.1, -2.6, 2.4], [LE[4], 3.1, -3.2, 2.4]], z0, 10, { expr: 'smile' });
+  cm([0, 3.6, me.z + 16.5, 0, 4.6, me.z - 4, 50], [0, 3.4, me.z + 14.5, 0, 4.6, me.z - 4, 48], L.k, easeOut); sh(V(0, 0, me.z), 40); }, [[.05, 'steps_snow', .6], [.4, 'pling', .5], [1.2, 'wind', .3]]);
+// 1b · «…kannst du nur zehnmal im Jahr lügen.»: más cerca, todos alrededor de mí, cada uno con su 10
+shot(.74, 'W', null, L => { street(); const z0 = -72; const me = put(ich, 0, 0, z0, 0); actuar(me, L.lt, [[0, {}], [.5, { aRx: 2.6, aRz: .3, aRe: .2 }, { dur: .3 }]], { T: L.T }); cara(me, L.T, { expr: 'happy', mouth: 'open_smile' }); cnt(me, 10, clamp(L.lt * 4), { sc: .9 });
+  [[LE[5], -3.0, -2.2, .25], [LE[1], 3.2, -2.6, -.25], [KI[2], -1.6, -4.6, .1], [LE[7], 1.8, -5.0, -.1]].forEach(([c, x, dz, ry], i) => { put(c, x, 0, z0 + dz, ry); actuar(c, L.lt, [[0, {}], [.3 + i * .12, 'wave', { dur: .3 }]], { T: L.T + i }); cara(c, L.T + i, { expr: 'smile' }); cnt(c, 10, clamp(L.lt * 4 - .3 - i * .25), { sc: .8 }); });
+  cm([1.2, 4.2, z0 + 13.5, 0, 4.4, z0 - 2.5, 50], [.6, 3.8, z0 + 11.5, 0, 4.4, z0 - 2.5, 48], L.k); sh(V(0, 0, z0), 30); }, [[.05, 'pop', .5], [.4, 'pling', .45], [.8, 'pling', .45], [1.4, 'steps_snow', .4]]);
 // 2 · «danach kommt nur noch die Wahrheit»: un vecino con el contador a 0; la verdad se le escapa (WAHRHEIT)
 shot(2.81, 'C', null, L => { street(); const c = put(LE[1], 1.2, 0, -58, -.35);
   actuar(c, L.lt, [[0, { aLx: .3, aRx: .3 }], [.8, { ...GEST.hands_face, aLx: 1.7, aRx: 1.7 }, { dur: .4 }]], { T: L.T });
@@ -77,7 +81,7 @@ shot(23.01, 'S', null, L => { use('ES'); inside(.7, 35);
   const P = [[LE[0], -5.4, -4.5, PI / 2], [LE[3], -5.4, 0, PI / 2], [LE[6], -5.4, 4.5, PI / 2], [LE[5], 5.4, -4.5, -PI / 2], [LE[1], 5.4, 0, -PI / 2], [LE[7], 5.4, 4.5, -PI / 2]];
   P.forEach(([c, x, z, ry], i) => { put(c, EX + x, 0, z, ry); applyPose(c, { lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5, hipY: 2.0, aLx: .9, aRx: .9, aLe: .5, aRe: .5, headX: .15, headY: Math.sin(L.T * 1.3 + i) * .3 }); c.root.position.y = .3; cara(c, L.T + i, { expr: 'bored', eyes: i % 2 ? 'side_l' : 'half', mouth: 'flat' }); cnt(c, 10, clamp(L.lt * 3 - i * .1), { gold: true, sc: .45 }); });
   badge('tag', 'WEIHNACHTEN', W / 2, H * .1, L.lt * 3);
-  cm([EX, 14, 20, EX, 3.5, 0, 46], [EX, 13, 18.4, EX, 3.5, 0, 46], L.k); sh(V(EX, 0, 0), 25); }, [[.05, 'bell_far', .5], [.4, 'spoon', .4], [1.0, 'clock_tick', .4], [1.5, 'chew', .3]]);
+  cm([EX, 21, 25, EX, 2.5, -.5, 46], [EX, 20, 24, EX, 2.5, -.5, 46], L.k); sh(V(EX, 0, 0), 25); }, [[.05, 'bell_far', .5], [.4, 'spoon', .4], [1.0, 'clock_tick', .4], [1.5, 'chew', .3]]);
 // 16 · «„Lecker!“, weil es eben nicht lecker ist»: el ganso quemado humea; el abuelo mastica con cara de sufrimiento: «…»
 shot(24.85, 'C', null, L => { use('ES'); inside(.7, 35); const c = put(LE[3], EX - 5.4, .3, 0, PI / 2);
   applyPose(c, { lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5, hipY: 2.0, aRx: 1.3, aRe: 1.8, aLx: .8, aLe: .5, headZ: Math.sin(L.T * 9) * .04 }); cara(c, L.T, { expr: 'sad', eyes: 'squint', mouth: Math.sin(L.T * 10) > 0 ? 'wavy' : 'grimace' });
