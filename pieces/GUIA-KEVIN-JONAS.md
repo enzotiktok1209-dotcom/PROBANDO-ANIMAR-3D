@@ -19,7 +19,7 @@
 - No repetir el formato "X sofort vs Y pro Sekunde" ni la estructura de 40 Mio. (gasta/gana/videollamada/puerta/portátil/pantalla partida).
 - Gancho = una situación nueva ("Kevin hat 24 Stunden…"), algo que no se calcule en 2 s, una meta o cuenta atrás visible.
 - Cada pieza cambia: ropa (otros colores, misma silueta), subtítulos, HUD, transiciones, música, escenarios, final y portada.
-- Portada con composición propia (no los botones), título grande y un objeto/dato fuerte.
+- Portada con composición propia (no los botones), título grande y un objeto/dato fuerte. TikTok la recorta a 3:4 en el perfil: todo lo importante dentro del centro (en 1440x2560, entre y=320 y y=2240). Entregar también la versión 3:4.
 - Más de 1:30 si el usuario lo pide; escenas cortas que siguen la frase, datos que aparecen de golpe.
 
 ## Reglas del vídeo (prompt de producción del usuario)
