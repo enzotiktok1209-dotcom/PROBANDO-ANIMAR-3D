@@ -83,7 +83,7 @@ shot(24.85, 'C', null, L => { use('ES'); inside(.7, 35); const c = put(LE[3], EX
   applyPose(c, { lLx: 1.5, lRx: 1.5, lLk: 1.5, lRk: 1.5, hipY: 2.0, aRx: 1.3, aRe: 1.8, aLx: .8, aLe: .5, headZ: Math.sin(L.T * 9) * .04 }); cara(c, L.T, { expr: 'sad', eyes: 'squint', mouth: Math.sin(L.T * 10) > 0 ? 'wavy' : 'grimace' });
   ES.gans.userData.smk.forEach((s, i) => { s.visible = true; const ph = (L.T * .5 + i / 6) % 1; s.position.set(Math.sin(i * 2 + L.T) * .4, 1.4 + ph * 3, Math.cos(i) * .3); s.scale.setScalar(.6 + ph * 1.6); s.material.opacity = .45 * (1 - ph); });
   bubble(c, '…', (L.lt - .5) * 3, 2.0); cnt(c, 10, 1, { gold: true, sc: .55 });
-  cm([EX + 2.2, 6.4, 1.2, EX, 4.6, 0, 46], [EX + 2.2, 6.6, 1.2, EX - 5.2, 5.8, 0, 44], L.k, easeInOut); sh(V(EX, 0, 0), 20); }, [[.1, 'pan_sizzle', .4], [.6, 'chew', .5], [1.2, 'gulp', .5]]);
+  cm([EX + 4.6, 8.2, 3.2, EX, 4.4, 0, 46], [EX + 2.2, 6.6, 1.2, EX - 5.2, 5.8, 0, 44], L.k, easeInOut); sh(V(EX, 0, 0), 20); }, [[.1, 'pan_sizzle', .4], [.6, 'chew', .5], [1.2, 'gulp', .5]]);
 // 17 · «Und wieso das Ganze? Wegen dem…»: la calle se vacía, la gente entra deprisa y cierra puertas
 shot(26.55, 'W', null, L => { street(); const z0 = -14;
   [[LE[6], 1.6, 0, PI / 2 - .3], [KI[1], -2.2, -5, -PI / 2 + .3], [LE[2], 2.8, -11, PI / 2 - .2]].forEach(([c, x, dz, ry], i) => { caminar(c, L.lt, { x, z: z0 + dz, ry, speed: 4.2, run: true, T: L.T + i }); cara(c, L.T, { expr: 'scared' }); });
