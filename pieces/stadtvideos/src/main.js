@@ -6,7 +6,7 @@ import { rimLight } from './roblox.js';
 import { FONT, txt } from './props.js';
 import { makeKumpel, makeJonas, makePapa, makeSie, makeEr, makeLena, makeKassiererin, makeFahrer, makeMayor, makeFeuerwehr, makeHero, makeOma, makeMama } from './gvolk.js';
 import { stadt, kueche, bad, zimmer, klasse, flur, omaStube, barrio, mammut, turmRaum, hinterUhr, schacht, phone, vidTex, drawVid, faceIcon, fig, HERO_C, JONAS_C, drawHouses } from './svsets.js';
-import { loadKitFaces, kitFace, kitLips, eyesAlive, actuar, mirar, caminar, saltar, aire, bandada, camaraEnMano, shiver } from './vivo.js';
+import { loadKitFaces, kitFace, kitLips, eyesAlive, GEST, actuar, mirar, caminar, saltar, aire, bandada, camaraEnMano, shiver } from './vivo.js';
 
 await document.fonts.load('700 40px Cap'); await loadKitFaces();
 const WORDS = await (await fetch('./audio/words.json')).json();
@@ -80,8 +80,8 @@ const attach = (obj, parent, p = [0, 0, 0], r = [0, 0, 0], s = 1) => { parent.ad
 // teléfono en la mano derecha, pantalla hacia la cara (con la pose 'phone_look')
 const holdPhone = (i, ch, kind = 'lava', o = {}, r = 1) => { const p = attach(PH[i], (r ? ch.aR : ch.aL).hand, [0, -.55, .5], [-.35, 0, 0], 1.0); p.userData.set(kind, o); return p; };
 // enseñar el móvil a cámara (pantalla hacia delante)
-const SHOW = { aRx: 1.25, aRz: -.12, aRe: .55, aLz: .1, aLe: .2, headX: .12 };
-const holdShow = (i, ch, kind = 'lava', o = {}, s = 1.3) => { const p = attach(PH[i], ch.aR.hand, [0, -.85, .05], [1.8, 0, 0], s); p.userData.set(kind, o); return p; };
+const SHOW = { aRx: 1.0, aRz: -.12, aRe: .65, aLz: .1, aLe: .2, headX: .12 };
+const holdShow = (i, ch, kind = 'lava', o = {}, s = 1.3) => { const p = attach(PH[i], ch.aR.hand, [0, -.85, .05], [1.65, 0, 0], s); p.userData.set(kind, o); return p; };
 // pantallas especiales del móvil/tableta (texturas cacheadas)
 const PT = new Map(); const ptex = (key, fn, w = 300, h = 533) => { if (!PT.has(key)) { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; PT.set(key, t); } return PT.get(key); };
 const LOOK = { aRx: 1.25, aRz: -.25, aRe: 1.6, aLx: .9, aLz: -.15, aLe: 1.6, headX: .38 };
@@ -144,7 +144,7 @@ function caption(T) { let cur = null; for (const w of CAPS) { if (w.t <= T) cur 
 // ---------- planos ----------
 const S = []; const shot = (t0, tr, zoom, fn, sfx = []) => S.push({ t0, tr, zoom, fn, sfx });
 const PI = Math.PI;
-let DARK = 0, TINT = null;
+let DARK = 0, TINT = null; const COVERS = [];
 //@@PLANOS@@
 
 // ---------- transiciones, sonidos, render ----------
@@ -195,7 +195,6 @@ function renderAt(T) {
 function coverText(l1, l2, col) { const c = octx; c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
   for (const [t, y, sz, f] of [[l1, H * .115, 132, '#ffffff'], [l2, H * .195, 112, col]]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .92 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
     c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.lineWidth = sz * .22; c.strokeStyle = '#000'; c.strokeText(t, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = f; c.fillText(t, 0, 0); c.restore(); } c.restore(); }
-const COVERS = window.COVERS || [];
 window.renderCover = v => { const C = COVERS[v], s = S[C.i], T = s.t0 + (s.t1 - s.t0) * C.k; COVER = C; renderShot(C.i, T, null, 0); COVER = null;
   octx.fillStyle = '#000'; octx.fillRect(0, 0, W, H); octx.drawImage(renderer.domElement, 0, 0, W, H); coverText('IN DIESER STADT', C.l2, '#E2FD07'); };
 window.renderAt = renderAt; window.DUR = DUR; window.FPS = FPS; window.CUES = CUES; window.SHOTS = S.map(s => [s.t0, s.t1, s.tr, s.zoom]); window.__ready = true;
