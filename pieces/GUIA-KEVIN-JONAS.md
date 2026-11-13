@@ -4,6 +4,7 @@
 - GTA 6 + exclusividad ("als Einziger", "eine Woche früher") + cifra grande + historia con conflicto -> el de GTA 6 vs 40 Mio. hizo ~65.000 vistas con muy buena retención.
 - Virales antiguos: "X Mio. sofort vs 1 €/1 Cent pro Sekunde, 1 Jahr" (349k-420k).
 - Fracasos: dos pagos parecidos (6.000 €/Woche vs 1 Cent/s), condiciones en el gancho ("nur im Schlaf"), escenas abstractas (gráficos).
+- cent50 (20 Mio. vs 50 Cent/s): retención muy mala, caída fuerte en el gancho y luego lenta. Era la historia de 40 Mio. parafraseada: el público lo nota. Además, vídeos con aspecto de plantilla probablemente pierden las recompensas adicionales (originalidad).
 
 ## Reglas del guion
 - Gancho (primeros 10 s): lo más impactante + pregunta que se responde al final; tono de anuncio.
@@ -13,6 +14,13 @@
 - Que los dos aparezcan a lo largo de toda la historia; Jonas alegre, no siempre tranquilo.
 - 70-75 s (más de 1 min para el RPM), público alemán, temas gaming/tecnología/dinero.
 - Entrega: alemán + traducción al español + versión corrida con tags de ElevenLabs + descripción + comentario fijado con la solución.
+
+## Anti-plantilla (desde million24)
+- No repetir el formato "X sofort vs Y pro Sekunde" ni la estructura de 40 Mio. (gasta/gana/videollamada/puerta/portátil/pantalla partida).
+- Gancho = una situación nueva ("Kevin hat 24 Stunden…"), algo que no se calcule en 2 s, una meta o cuenta atrás visible.
+- Cada pieza cambia: ropa (otros colores, misma silueta), subtítulos, HUD, transiciones, música, escenarios, final y portada.
+- Portada con composición propia (no los botones), título grande y un objeto/dato fuerte.
+- Más de 1:30 si el usuario lo pide; escenas cortas que siguen la frase, datos que aparecen de golpe.
 
 ## Reglas del vídeo (prompt de producción del usuario)
 - Recortar silencios; cortes cada <=2 s (más rápidos en enumeraciones); transiciones con sonido variado; un efecto cada ~1 s.
