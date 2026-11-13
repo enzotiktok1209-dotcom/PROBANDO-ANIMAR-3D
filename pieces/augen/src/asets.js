@@ -134,7 +134,7 @@ export function zimmer(scene, X) { const g = room(scene, X, 34, 30, 16, wallpape
 export function wendt(scene, X) { const g = room(scene, X, 36, 30, 17, wallpaper('#e8b8a0', '#dca890'), floorM());
   const rug = new THREE.Mesh(new THREE.CircleGeometry(9, 28), mat(0xffffff, { map: canvasTex(128, 128, (c, w, h) => { for (let r = 64; r > 0; r -= 10) { c.fillStyle = ['#a83a3a', '#f2c23a', '#3a6a8a', '#e8e0d0'][(r / 10) % 4 | 0]; c.beginPath(); c.arc(64, 64, r, 0, 7); c.fill(); } }) })); rug.rotation.x = -Math.PI / 2; rug.position.y = .03; g.add(rug);
   windowDay(g, 8, 9, -14.7); const SES = sessel(0x2f6a4a); SES.position.set(-7, 0, -6); SES.rotation.y = .35; g.add(SES);
-  const SES2 = sessel(0xa83a5a); SES2.position.set(7, 0, 3); SES2.rotation.y = -2.2; g.add(SES2);
+  const SES2 = sessel(0xa83a5a); SES2.position.set(12, 0, -9); SES2.rotation.y = -.6; g.add(SES2);
   const TB = new THREE.Group(); TB.position.set(0, 0, -6); g.add(TB); cyl(2, 2, .3, mat(0x8a5a2a, { roughness: .4 }), 20, TB, 0, 4, 0); cyl(.3, .5, 4, mat(0x6a4a2a), 10, TB, 0, 2, 0); cyl(1.4, 1.4, .2, mat(0x6a4a2a), 16, TB, 0, .1, 0);
   const PH = new THREE.Group(); PH.position.set(.8, 4.15, -.6); PH.rotation.y = -.3; TB.add(PH); box(1.6, 2, .2, mat(0xd9a531, { metalness: .7, roughness: .3 }), .05, PH, 0, 1, 0);
   const pic = textPlane(1.3, 1.65, 100, 128, (c, w, h) => { c.fillStyle = '#d8c8a8'; c.fillRect(0, 0, w, h); c.fillStyle = '#f0c09c'; c.fillRect(30, 30, 40, 40); c.fillStyle = '#6a6a6a'; c.fillRect(28, 22, 44, 12); c.fillStyle = '#1a1a1a'; c.fillRect(40, 44, 6, 6); c.fillRect(56, 44, 6, 6); c.fillRect(36, 60, 28, 4); c.fillStyle = '#4a5a3a'; c.fillRect(18, 72, 64, 56); }); pic.position.set(0, 1, .11); PH.add(pic);

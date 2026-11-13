@@ -24,3 +24,10 @@ function lieMama(L, extra = {}) { mama.root.visible = true; mama.root.position.s
 const matchIn = (ch, lit, T) => { attach(MATCH, ch.aR.hand, [0, -.55, .35], [PI * .55, 0, 0], 1.3); MATCH.userData.lit(lit, T); return MATCH; };
 // cámara mirando a la cara de alguien tumbado, desde arriba y un lado
 function lieCam(ch, dist, side = 0, fov = 40, k = 0, dist2 = null, up = 0) { const f = faceUp(ch), d = lerp(dist, dist2 ?? dist * .8, easeInOut(k)); cam([f.x + side, f.y + d, f.z + d * .45 + up], [f.x, f.y, f.z - .2], fov); }
+// el monstruo junto a mi cama alarga las garras hasta un punto (la cara): se coloca de modo que las manos lleguen ahí
+function monReach(L, target, o = {}) { const p = { ...MP.loom, crouch: .45, lean: .75, headX: .7, aLx: 1.15, aRx: 1.15, aLe: .5, aRe: .5, aLz: -.05, aRz: -.05, curl: .2, ...(o.pose || {}) };
+  mon(p, V(0, 0, 0), o.ry ?? -PI / 2, L.T, o.talk ?? .5, o.wide ?? 0, o.focus || null); MON.root.updateMatrixWorld(true);
+  const hs = o.one ? wpos(MON.aR.hand) : wpos(MON.aL.hand).add(wpos(MON.aR.hand)).multiplyScalar(.5); MON.root.position.add(target.clone().sub(hs).add(V(0, 1.2, 0))); MON.root.updateMatrixWorld(true);
+  if (o.focus) MON.mouths(L.T, o.talk ?? .5, o.wide ?? 0, MON.head.worldToLocal(o.focus.clone())); }
+// sentado en una silla (la silla mira hacia ry)
+function sit(ch, x, z, ry, extra = {}) { put(ch, x, 1.35, z, ry); applyPose(ch, { lLx: 1.5, lRx: 1.5, lLk: -1.5, lRk: -1.5, ...extra }); return ch; }

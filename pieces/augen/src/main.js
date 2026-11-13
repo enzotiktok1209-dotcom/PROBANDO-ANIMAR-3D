@@ -38,8 +38,9 @@ const POOL = [ich, kid, mama, frau, timo, tmom, hilde, ...NB]; POOL.forEach(c =>
 // ---------- atrezo ----------
 const GLO = glocke(); scene.add(GLO); const CANE = cane(); scene.add(CANE); const MATCH = streichholz(); scene.add(MATCH);
 const SLATE = tafel(2.2, 1.6, ''); scene.add(SLATE); const BOX = (() => { const g = new THREE.Group(); scene.add(g); box(.9, .25, .6, mat(0x3a6ad8), .03, g, 0, 0, 0); box(.92, .1, .62, mat(0xd8323a), .02, g, 0, .14, 0); return g; })();
+const BEANIE = (() => { const g = new THREE.Group(); scene.add(g); const m = mat(0xd8283a, { roughness: 1 }); const c = new THREE.Mesh(new THREE.SphereGeometry(.8, 20, 10, 0, 6.283, 0, 1.5), m); c.scale.y = .8; g.add(c); cyl(.8, .8, .35, m, 20, g, 0, 0, 0); sphere(.26, mat(0xf4f4f0, { roughness: 1 }), g, 0, .75, 0, 10, 8); return g; })();
 const SWEAT = sphere(.14, mat(0x9fd8ff, { roughness: .05, transparent: true, opacity: .85 }), scene, 0, 0, 0, 10, 8);
-const PROPS = [GLO, CANE, MATCH, SLATE, BOX, SWEAT]; [GLO, CANE].forEach(p => outline(p, .008));
+const PROPS = [GLO, CANE, MATCH, SLATE, BOX, SWEAT, BEANIE]; [GLO, CANE].forEach(p => outline(p, .008));
 // ---------- ambiente ----------
 const AIR = aire(scene, 300);
 function setSky(top, mid, hor) { const u = sky.sky.material.uniforms; u.top.value.setRGB(...top); u.mid.value.setRGB(...mid); u.hor.value.setRGB(...hor); }
@@ -101,6 +102,8 @@ const door = i => DF.H[i].door, doorRy = i => DF.H[i].face;   // puerta i (posic
 const BAD = []; const badge = (kind, text, x, y, k, a = 1, sc = 1) => BAD.push({ kind, text, x, y, s: spring(clamp(k) * 1.6) * sc, a, on: k > 0 });
 const badge3 = (kind, text, w3, k, sc = 1) => BAD.push({ kind, text, w3, s: spring(clamp(k) * 1.6) * sc, a: 1, on: k > 0 });
 const bubble = (ch, text, k, dy = 2.4) => BAD.push({ kind: 'bubble', text, w3: hp(ch).add(V(0, dy * (ch.spec.scale || 1) + .6, 0)), s: spring(clamp(k) * 1.6), a: 1, on: k > 0 });
+// notas musicales que salen de un punto y suben ondulando
+const notes = (w3, lt, n = 4, col = '#ffd23f') => { for (let i = 0; i < n; i++) { const t = lt * .9 - i * .35; if (t < 0) continue; const ph = t % 1.4; BAD.push({ kind: 'note', text: '', w3: w3.clone().add(V(Math.sin(t * 3 + i) * 1.2, ph * 3.2, 0)), s: Math.min(1, ph * 4) * (1 - Math.max(0, ph - 1.1) * 3), a: 1, on: true, rot: Math.sin(t * 4) * .3, col }); } };
 const knock = (w3, k, n = 2) => BAD.push({ kind: 'knock', text: '', w3, n, s: spring(clamp(k) * 1.6), a: 1, on: k > 0, k });
 function drawBadge(b) {
   if (!b.on) return; if (b.w3) { const [x, y, z] = proj(b.w3); if (z >= 1) return; b.x = clamp(x, 220, W - 220); b.y = clamp(y, 200, H * .62); } if (b.s <= .01 || b.a <= 0) return;
@@ -109,6 +112,7 @@ function drawBadge(b) {
     c.lineWidth = 22; c.strokeStyle = b.kind === 'red' ? '#4a0008' : '#0e1226'; c.strokeText(b.text, 0, 0); const g = c.createLinearGradient(0, -50, 0, 50); if (b.kind === 'red') { g.addColorStop(0, '#ff6a6a'); g.addColorStop(1, '#d6202f'); } else { g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#ffe07a'); } c.fillStyle = g; c.fillText(b.text, 0, 0); }
   else if (b.kind === 'tag') { c.font = `700 50px ${FONT}`; const w = c.measureText(b.text).width + 60; c.fillStyle = '#0e1226'; c.beginPath(); c.roundRect(-w / 2, -40, w, 80, 40); c.fill(); c.lineWidth = 6; c.strokeStyle = '#ffd23f'; c.stroke(); c.fillStyle = '#fff'; c.fillText(b.text, 0, 3); }
   else if (b.kind === 'bubble') { c.font = `700 42px ${FONT}`; const w = Math.max(160, c.measureText(b.text).width + 60); c.fillStyle = '#fff'; c.strokeStyle = '#1a1a1a'; c.lineWidth = 6; c.beginPath(); c.roundRect(-w / 2, -44, w, 88, 36); c.fill(); c.stroke(); c.beginPath(); c.moveTo(-18, 42); c.lineTo(10, 42); c.lineTo(-24, 78); c.closePath(); c.fill(); c.stroke(); c.fillStyle = '#1a1a1a'; c.fillText(b.text, 0, 3); }
+  else if (b.kind === 'note') { c.rotate(b.rot || 0); c.fillStyle = b.col || '#ffd23f'; c.strokeStyle = '#1a1a1a'; c.lineWidth = 7; c.beginPath(); c.ellipse(0, 30, 24, 17, -.4, 0, 7); c.fill(); c.stroke(); c.fillRect(17, -50, 9, 80); c.strokeRect(17, -50, 9, 80); c.beginPath(); c.moveTo(26, -50); c.quadraticCurveTo(60, -30, 46, 0); c.lineTo(40, -2); c.quadraticCurveTo(48, -26, 26, -34); c.closePath(); c.fill(); c.stroke(); }
   else if (b.kind === 'knock') { for (let i = 0; i < b.n; i++) { const kk = clamp(b.k * b.n * 1.2 - i); if (kk <= 0) continue; c.save(); c.translate(i * 120 - (b.n - 1) * 60, -i * 30); c.scale(.6 + kk * .5, .6 + kk * .5); c.globalAlpha = 1 - Math.max(0, kk - .7) * 2;
       c.fillStyle = '#ffd23f'; c.strokeStyle = '#1a1a1a'; c.lineWidth = 8; c.beginPath(); for (let j = 0; j < 16; j++) { const r = j % 2 ? 34 : 70, a = j / 16 * 6.283; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.closePath(); c.fill(); c.stroke(); c.font = `700 40px ${FONT}`; c.fillStyle = '#1a1a1a'; c.fillText('KLOPF', 0, 3); c.restore(); } }
   c.restore(); }
