@@ -161,13 +161,13 @@ function walkers(L, list, z0, n0 = 10, o = {}) { list.forEach(([c, x, dz, sp, ry
 
 // 1 · gancho: la calle nevada, todos con su contador de 10 mentiras; yo en el centro
 shot(0, 'Z', null, L => { street(); const z0 = -40;
-  const me = caminar(ich, L.lt, { x: 0, z: z0, ry: 0, speed: 2.4, T: L.T }); cara(ich, L.T, { expr: 'happy' }); cnt(ich, 10, clamp(L.lt * 3), { sc: .7 });
-  walkers(L, [[LE[0], -3.1, -2.6, 2.4], [LE[4], 3.1, -3.2, 2.4]], z0, 10, { expr: 'smile' });
-  cm([0, 3.6, me.z + 16.5, 0, 4.6, me.z - 4, 50], [0, 3.4, me.z + 14.5, 0, 4.6, me.z - 4, 48], L.k, easeOut); sh(V(0, 0, me.z), 40); }, [[.05, 'steps_snow', .6], [.4, 'pling', .5], [1.2, 'wind', .3]]);
+  const me = caminar(ich, L.lt, { x: -1.6, z: z0, ry: 0, speed: 2.4, T: L.T }); cara(ich, L.T, { expr: 'happy' }); cnt(ich, 10, clamp(L.lt * 3), { sc: .7 });
+  walkers(L, [[LE[0], 1.9, -.4, 2.4], [LE[4], -3.4, -5.6, 2.4], [LE[6], .4, -9.0, 2.4]], z0, 10, { expr: 'smile' });
+  cm([0, 7.6, me.z + 19, 0, 2.6, me.z - 3, 50], [0, 7.4, me.z + 17.5, 0, 2.6, me.z - 3, 48], L.k, easeOut); sh(V(0, 0, me.z), 40); }, [[.05, 'steps_snow', .6], [.4, 'pling', .5], [1.2, 'wind', .3]]);
 // 1b · «…kannst du nur zehnmal im Jahr lügen.»: más cerca, todos alrededor de mí, cada uno con su 10
 shot(.74, 'W', null, L => { street(); const z0 = -72; const me = put(ich, 0, 0, z0, 0); actuar(me, L.lt, [[0, {}], [.5, { aRx: 2.6, aRz: .3, aRe: .2 }, { dur: .3 }]], { T: L.T }); cara(me, L.T, { expr: 'happy', mouth: 'open_smile' }); cnt(me, 10, clamp(L.lt * 4), { sc: .9 });
-  [[LE[5], -3.0, -2.2, .25], [LE[1], 3.2, -2.6, -.25], [KI[2], -1.6, -4.6, .1], [LE[7], 1.8, -5.0, -.1]].forEach(([c, x, dz, ry], i) => { put(c, x, 0, z0 + dz, ry); actuar(c, L.lt, [[0, {}], [.3 + i * .12, 'wave', { dur: .3 }]], { T: L.T + i }); cara(c, L.T + i, { expr: 'smile' }); cnt(c, 10, clamp(L.lt * 4 - .3 - i * .25), { sc: .8 }); });
-  cm([1.2, 4.2, z0 + 13.5, 0, 4.4, z0 - 2.5, 50], [.6, 3.8, z0 + 11.5, 0, 4.4, z0 - 2.5, 48], L.k); sh(V(0, 0, z0), 30); }, [[.05, 'pop', .5], [.4, 'pling', .45], [.8, 'pling', .45], [1.4, 'steps_snow', .4]]);
+  [[LE[5], -2.6, -3.0, .25], [LE[1], 2.6, -3.4, -.25], [LE[7], -.2, -10.0, -.1]].forEach(([c, x, dz, ry], i) => { put(c, x, 0, z0 + dz, ry); actuar(c, L.lt, [[0, {}], [.3 + i * .12, 'wave', { dur: .3 }]], { T: L.T + i }); cara(c, L.T + i, { expr: 'smile' }); cnt(c, 10, clamp(L.lt * 4 - .3 - i * .25), { sc: .8 }); });
+  cm([1.0, 7.4, z0 + 17.5, 0, 2.6, z0 - 3, 50], [.6, 7.0, z0 + 16, 0, 2.6, z0 - 3, 48], L.k); sh(V(0, 0, z0), 30); }, [[.05, 'pop', .5], [.4, 'pling', .45], [.8, 'pling', .45], [1.4, 'steps_snow', .4]]);
 // 2 · «danach kommt nur noch die Wahrheit»: un vecino con el contador a 0; la verdad se le escapa (WAHRHEIT)
 shot(2.81, 'C', null, L => { street(); const c = put(LE[1], 1.2, 0, -58, -.35);
   actuar(c, L.lt, [[0, { aLx: .3, aRx: .3 }], [.8, { ...GEST.hands_face, aLx: 1.7, aRx: 1.7 }, { dur: .4 }]], { T: L.T });
