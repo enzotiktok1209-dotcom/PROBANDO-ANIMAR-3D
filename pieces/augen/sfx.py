@@ -441,6 +441,18 @@ def _mscream(s):
 LIB['monster_scream'] = (lambda s, c: _mscream(s), .75)
 REC.update({'alarm': 'alarm', 'explosion': 'boom', 'thunder': 'boom', 'crowd_run': 'crowd', 'glass_break': 'window'})
 
+# cerilla: rascado áspero + llamarada que prende y crepita; soplido: aire que apaga la llama
+def _match(s):
+    d = 1.1; t = T(d); out = np.zeros(int(d * SR))
+    sc = bp(noise(.16, s), 1800, 6000) * np.exp(-T(.16) * 8); at(out, norm(sc) * .8, 0)
+    fl = bp(noise(.9, s + 1), 200, 2500) * adsr(.9, .02, .0) ; at(out, norm(fl) * .7, .12)
+    for k in range(6): at(out, click(.02, 2500 + k * 300, s + k) * .25, .3 + k * .1)
+    return norm(out)
+LIB['match_strike'] = (lambda s, c: _match(s), .8)
+def _blow(s):
+    d = .9; x = bp(noise(d, s), 300, 1800) * adsr(d, .08, .0); return norm(x)
+LIB['blow_out'] = (lambda s, c: _blow(s), .75)
+
 def fill_gaps(cues, dur, maxgap=1.1):
     ts = sorted(c['t'] for c in cues); extra = []; fill = ['cloth', 'steps', 'breath', 'paper', 'steps_heavy', 'wind', 'drip', 'wood_creak']
     prev = 0.0
