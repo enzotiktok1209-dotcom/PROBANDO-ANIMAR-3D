@@ -88,4 +88,4 @@ shot(120.01, 'C', null, L => { nightRoom(1); ZI.tvS.userData.draw('jonas', (c, w
 shot(120.65, 'C', null, L => { use('JZ'); inside(.12, 0); JZ.LMP.intensity = 0; JZ.BLUE.intensity = 60; JZ.lapS.userData.draw('jn', (c, w, h) => drawVid(c, w, h, 'junge', { fade: 1 })); sit(jonas, JX - 6, 3.25, -6.4, PI); actuar(jonas, L.lt, [[0, { ...SIT, aLx: 1.3, aRx: 1.3, aLe: 1.6, aRe: 1.6, aLz: -.3, aRz: -.3, headX: -.05 }]], { T: L.T }); cara(jonas, L.T, { expr: 'sus', mouth: 'smirk', eyes: 'squint' });
   onFace(jonas, 6, .1, 1.2, 44, L.k, 4.6); sh(V(JX - 6, 0, -8), 15); }, [[0, 'evil_laugh', .7]]);
 // portadas: 0 = yo en la plaza entre la gente con móviles y la pantalla gigante; 1 = la sala de las 500 pantallas con mi cara
-COVERS.push({ i: 0, k: .9, cam: () => cam([0, 3.2, 17.5], [0, 2.8, 4], 50), l2: 'SCHAUT JEDER DIESE VIDEOS…' }, { i: 55, k: .6, cam: () => cam([TX + 3, 7, 10], [TX, 6.5, -8], 62), l2: '…UND DANN SAH ICH MICH' });
+COVERS.push({ i: 0, k: .9, cam: () => cam([0, 3.2, 17.5], [0, 2.8, 4], 50), l2: 'SCHAUT JEDER DIESE VIDEOS…' }, { i: 55, k: .6, cam: () => cam([TX - 6, 6, -18.5], [TX + .6, 5.6, -7], 56), l2: '…UND DANN SAH ICH MICH' });
