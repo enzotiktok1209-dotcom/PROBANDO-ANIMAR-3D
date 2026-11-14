@@ -5,6 +5,9 @@ cuentas "con token" en eBay hasta 10.000 $, Epic avisa de que son estafa. Dibuja
 
 Solución: 137.500 − 30 × 1.000 = 107.500 Truhen. Jonas pierde 12.000 €.
 
+## Audio
+En el audio de ElevenLabs se cortó "selbst suchen" del gancho (quedaba largo y con un tono que no gustaba): queda "…kaufen? Oder mit einer Chance von 1 zu 137.500?" con un fundido suave tras "Oder". En pantalla sí aparece "ODER SELBST SUCHEN?".
+
 ## Gancho (ES)
 "¿Comprar una cuenta de Fortnite con el token pirata por 10.000 €? ¿O buscarlo tú mismo, con una probabilidad de 1 entre 137.500?"
 
