@@ -33,7 +33,7 @@ Und du? Hättest du auch die Sekunden genommen?
 
 ## Descripción
 100 € pro Stunde oder 1 Cent pro Sekunde? 💸 Toni war sich SO sicher… Und du? Hättest du auch die Sekunden genommen? 👇
-#geld #challenge #wasistmehr #rechnen #kevinundtoni #fyp #fürdich #viral #animation
+#geld #challenge #wasistmehr #rechnen #fyp #fürdich #viral #animation
 
 ## Comentario fijado
 1 Cent pro Sekunde = nur 36 € pro Stunde 😅 Nach 24 h: Toni 864 €, Kevin 2.400 €. Ehrlich: Wer von euch hätte auch die Sekunden genommen? 👇
