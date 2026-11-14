@@ -43,3 +43,12 @@ Extrovertido, ruidoso, aspirante a influencer: siempre grabándose con el móvil
 Aspecto: pelo rubio platino despeinado hacia arriba, gafas de sol subidas en la frente, bomber verde neón abierta
 sobre camiseta blanca, cadena dorada, pantalón cargo negro, zapatillas blancas con suela neón. Sonrisa enorme,
 gestos grandes (señalar a cámara, brazos arriba, bailecito, selfie), cuando pierde: drama exagerado.
+
+## Producción (audio ElevenLabs 14-11-2026)
+- Audio 93,3 s -> 82,3 s tras recortar silencios. Coincide palabra por palabra con el guion (verificado tramo a tramo con whisper-small);
+  ElevenLabs añadió un suspiro antes de "Da ging's" y un gruñido antes de "Ich hasse es" (runs '-').
+- ~57 planos (1,0–1,8 s). Escenarios: azotea de noche, Berlín, cuarto LED de Toni (nuevo), cocina de Kevin (nueva, día y noche),
+  amanecer (nuevo), Döner-Imbiss. HUD nuevo: reloj de la historia + totales de los dos. Subtítulos nuevos: bloque entero,
+  palabra hablada sobre una caja del color de quien habla (Kevin granate, Toni verde, narrador amarillo).
+- Ropa: Kevin sudadera granate + gorro negro; Toni bomber verde neón, camiseta blanca, cadena, gafas de sol en el pelo.
+- Música nueva "bounce" (118 BPM, tuba + stabs) alternando con trap/groove/drone; golpes en 0,2 / 15,45 / 34,0 / 46,15 / 61,9 / 68,0 / 73,2 s.
