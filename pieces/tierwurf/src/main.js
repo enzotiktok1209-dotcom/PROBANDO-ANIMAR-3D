@@ -84,7 +84,7 @@ function hideAll() {
   for (const b of BEASTS) { b.root.visible = false; b.root.rotation.set(0, 0, 0); b.root.scale.setScalar(1); b.pose(0, {}); if (b.root.parent !== scene) { b.root.parent.remove(b.root); scene.add(b.root); } }
   for (const h of HERDS) h.show(0);
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); if (p.parent !== scene) { p.parent.remove(p); scene.add(p); } }
-  for (const k in SETS) SETS[k].visible = false; OR.FEST.visible = false; GT.MONEY.visible = false; ZI.JAR.userData.set(0); KU.DOOR.visible = true; KU.DOOR.rotation.set(0, 0, 0); KU.DOOR.position.set(-2.8, 0, 2.15); if (KU.DOOR.parent !== KU.fr) { KU.DOOR.parent.remove(KU.DOOR); KU.fr.add(KU.DOOR); } KU.FL.intensity = 0; KS.DOOR.rotation.y = 0;
+  for (const k in SETS) SETS[k].visible = false; FE.arch.visible = true; OR.FEST.visible = false; GT.MONEY.visible = false; ZI.JAR.userData.set(0); KU.DOOR.visible = true; KU.DOOR.rotation.set(0, 0, 0); KU.DOOR.position.set(-2.8, 0, 2.15); if (KU.DOOR.parent !== KU.fr) { KU.DOOR.parent.remove(KU.DOOR); KU.fr.add(KU.DOOR); } KU.FL.intensity = 0; KS.DOOR.rotation.y = 0;
   TORCH.intensity = 0; FILL.color.setRGB(1, .96, .91); BA.foam.position.y = 0; sun.color.setRGB(1, .95, .86); grade.uniforms.vig.value = .4; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.45; grade.uniforms.sharp.value = 1.08; grade.uniforms.sepia.value = 0; DARK = 0; TINT = null; BIRDSON = 1; SHAKE = 0; day(); }
 const use = (...n) => { for (const k of n) SETS[k].visible = true; };
 function put(ch, x, y, z, ry = 0) { ch.root.visible = true; ch.root.position.set(x, y, z); ch.root.rotation.set(0, ry, 0); return ch; }

@@ -84,7 +84,7 @@ function hideAll() {
   for (const b of BEASTS) { b.root.visible = false; b.root.rotation.set(0, 0, 0); b.root.scale.setScalar(1); b.pose(0, {}); if (b.root.parent !== scene) { b.root.parent.remove(b.root); scene.add(b.root); } }
   for (const h of HERDS) h.show(0);
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); if (p.parent !== scene) { p.parent.remove(p); scene.add(p); } }
-  for (const k in SETS) SETS[k].visible = false; OR.FEST.visible = false; GT.MONEY.visible = false; ZI.JAR.userData.set(0); KU.DOOR.visible = true; KU.DOOR.rotation.set(0, 0, 0); KU.DOOR.position.set(-2.8, 0, 2.15); if (KU.DOOR.parent !== KU.fr) { KU.DOOR.parent.remove(KU.DOOR); KU.fr.add(KU.DOOR); } KU.FL.intensity = 0; KS.DOOR.rotation.y = 0;
+  for (const k in SETS) SETS[k].visible = false; FE.arch.visible = true; OR.FEST.visible = false; GT.MONEY.visible = false; ZI.JAR.userData.set(0); KU.DOOR.visible = true; KU.DOOR.rotation.set(0, 0, 0); KU.DOOR.position.set(-2.8, 0, 2.15); if (KU.DOOR.parent !== KU.fr) { KU.DOOR.parent.remove(KU.DOOR); KU.fr.add(KU.DOOR); } KU.FL.intensity = 0; KS.DOOR.rotation.y = 0;
   TORCH.intensity = 0; FILL.color.setRGB(1, .96, .91); BA.foam.position.y = 0; sun.color.setRGB(1, .95, .86); grade.uniforms.vig.value = .4; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.45; grade.uniforms.sharp.value = 1.08; grade.uniforms.sepia.value = 0; DARK = 0; TINT = null; BIRDSON = 1; SHAKE = 0; day(); }
 const use = (...n) => { for (const k of n) SETS[k].visible = true; };
 function put(ch, x, y, z, ry = 0) { ch.root.visible = true; ch.root.position.set(x, y, z); ch.root.rotation.set(0, ry, 0); return ch; }
@@ -557,17 +557,17 @@ shot(159.73, 'Z', null, L => { nightField(); show(EYES, FX + 6, 110, -300, 0, 34
   cam([FX + 1, 3.2, 12], [FX + 2, 16, -60], 56); sh(V(FX, 0, 0), 30); }, [[0, 'impact_soft', .5], [.3, 'heartbeat', .55], [1.0, 'growl', .5]]);
 // ---------- portadas (fuera del vídeo): yo lanzando el queso dorado, los Tiere corriendo hacia mí y el elefante de oro en el cielo ----------
 function coverTxt(l1, l2) { const c = octx; c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
-  for (const [t, y, sz, f] of [[l1, H * .405, 128, '#ffffff'], [l2, H * .475, 104, '#E2FD07']]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .92 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
+  for (const [t, y, sz, f] of [[l1, H * .43, 112, '#ffffff'], [l2, H * .49, 92, '#E2FD07']]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .84 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
     c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 24; c.lineWidth = sz * .24; c.strokeStyle = '#000'; c.strokeText(t, 0, 0); c.shadowColor = 'transparent'; c.fillStyle = f; c.fillText(t, 0, 0); c.restore(); } c.restore(); }
-window.renderCover = v => { const T = 3.3; hideAll(); BAD_.length = 0; field(); BIRDSON = 0;
+window.renderCover = v => { const T = 3.3; hideAll(); BAD_.length = 0; field(); BIRDSON = 0; FE.arch.visible = false;
   const me = put(ich, FX, 0, -12, .1); armsK(me, .9); applyPose(me, { aRx: 2.7, aRz: .35, aRe: .2, aLx: .7, aLz: .5, aLe: .5, lean: -.08, lLx: .25, lRx: -.2, headX: -.25 }); cara(me, T, { eyes: 'wide', mouth: 'grin', noBlink: 1 });
   me.root.updateMatrixWorld(true); const hp_ = me.aR.hand.getWorldPosition(V(0, 0, 0)); show(FOODS.kaese, hp_.x - .2, hp_.y + 1.6, hp_.z + .3, .5, .8); FOODS.kaese.rotation.x = .3;
-  beast(EG, FX, 24, -56, .2, 1.8).pose(1.1, { fly: 1, trunkUp: 1, face: { eyes: 'open' } });
+  beast(EG, FX, 19, -56, .2, 1.6).pose(1.1, { fly: 1, trunkUp: 1, face: { eyes: 'open' } });
   beast(TG[0], FX - 5.2, 0, -23, .35).pose(.6, { walk: 1, face: { eyes: 'wide', mouth: 'open' } }); beast(CH, FX + 5.4, 0, -22, -.35).pose(1.3, { cheer: 1, face: { eyes: 'happy', mouth: 'grin' } });
   beast(NB[1], FX - 3.3, 0, -9.4, .3).pose(.2, { wave: 1, face: { eyes: 'happy', mouth: 'grin' } }); beast(LI[0], FX + 3.5, 0, -10, -.35).pose(.9, { trunkUp: 1, face: { eyes: 'wide' } });
   beast(CA, FX - 10, 0, -32, .4).pose(.4, { stance: 1 }); beast(TR, FX + 10.5, 0, -34, -.5).pose(.4, { walk: 1 });
   coinPop(V(FX + 4.4, 3, -10.6), 0, .55, 5, 0, .8); coinPop(V(FX - 6.4, 5, -22), 0, .7, 5, 6, .8); coinPop(V(FX + 6.2, 5, -21), 0, .45, 5, 12, .8); trail(V(hp_.x, hp_.y + 1.4, hp_.z), V(0, -1, 0), T, 8, .4);
-  cam([FX, 3.6, 4], [FX, 9.6, -30], 54); sh(V(FX, 0, -20), 50);
+  cam([FX, 6.5, 9], [FX, 9, -30], 64); sh(V(FX, 0, -20), 50);
   grade.uniforms.sharp.value = 1.5; grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55; grade.uniforms.blurAmt.value = 0; camera.updateProjectionMatrix();
   sky.sky.position.copy(camera.position); composer.render(); octx.fillStyle = '#000'; octx.fillRect(0, 0, W, H); octx.drawImage(renderer.domElement, 0, 0, W, H);
   for (const b of BAD_) drawBadge(b);
