@@ -1,5 +1,5 @@
 // ---------- a: gancho, las fiestas de cada noche, nadie entrena (0 – 16,15 s) ----------
-const dance = (ch, T, ph = 0, extra = {}) => { const b = Math.sin(T * 9 + ph); applyPose(ch, { aLx: 2.5 + b * .4, aLz: .5, aRx: 2.5 - b * .4, aRz: .5, aLe: .4, aRe: .4, lean: Math.sin(T * 4.5 + ph) * .08, sx: Math.sin(T * 4.5 + ph) * .25, crouch: .12 + Math.abs(b) * .1, lLk: .2 + Math.max(0, b) * .5, lRk: .2 + Math.max(0, -b) * .5, lLx: Math.max(0, b) * .4, lRx: Math.max(0, -b) * .4, headZ: Math.sin(T * 4.5 + ph) * .15, ...extra }); };
+const dance = (ch, T, ph = 0, extra = {}) => { const b = Math.sin(T * 9 + ph); applyPose(ch, { aLx: .35, aLz: 2.2 + b * .35, aRx: .35, aRz: 2.2 - b * .35, aLe: .3, aRe: .3, lean: Math.sin(T * 4.5 + ph) * .08, sx: Math.sin(T * 4.5 + ph) * .25, crouch: .12 + Math.abs(b) * .1, lLk: .2 + Math.max(0, b) * .5, lRk: .2 + Math.max(0, -b) * .5, lLx: Math.max(0, b) * .4, lRx: Math.max(0, -b) * .4, headZ: Math.sin(T * 4.5 + ph) * .15, ...extra }); };
 const party = (chs, T, base, sp = 4.2, ry = 0) => chs.forEach((c, i) => { const r = RNG(i * 7 + 3); put(c, base.x + (i % 3 - 1) * sp + (r() - .5) * 1.4, base.y, base.z - Math.floor(i / 3) * sp * .9 + (r() - .5), ry + (r() - .5) * .8); hat(c); dance(c, T, i * 1.3); grin(c, T); });
 const holdBall = (ch, T) => { applyPose(ch, { aRx: .35, aRz: .15, aRe: 1.6, aLz: .15, aLe: .3, headX: .02 }); const w = loc(ch, 1.2, 2.55, .45); show(BALL, w.x, w.y, w.z); return w; };
 // 1 «In dieser Stadt geht jeder auf Partys»: la calle de noche llena de fiesta; yo delante con el balón bajo el brazo
@@ -12,13 +12,13 @@ shot(0, 'Z', null, L => { street(); OR.FEST.visible = true; windows('party', L.T
 shot(2.21, 'C', 'punch', L => { bolz(); const me = put(ich, BX, 0, 6, 0); holdBall(me, L.T); talk(me, L.T, 2.21, 3.03, 'smug');
   onFace(me, 9.2, -.4, .8, 38, L.k, 8.2); sh(V(BX, 0, 4), 30); }, [[0, 'thump', .6], [.2, 'hmm', .3]]);
 // 3 HUSS (toques): contrapicado frontal, el balón sube y baja de un pie al otro
-shot(3.03, 'W', null, L => { bolz(); const ts = hussIn(3.0, 4.2); const me = put(ich, BX, 0, 2, .1); const b = juggle(me, BALL, L.T, ts); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
-   orb(L.k, V(BX, 2.6, 2), null, [12, .15, -.05, 46], [10.5, .3, -.04, 44]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .5]]);
+shot(3.03, 'W', null, L => { bolz(); const ts = hussIn(3.0, 4.2); const me = put(ich, BX, 0, 2, .1); const b = trick(me, BALL, L.T, ts, ['roll', 'step', 'elastico', 'step', 'roll']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
+   orb(L.k, V(BX, 1.9, 2), null, [11.5, .2, .06, 46], [10.5, .45, .06, 46]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .5]]);
 // 4 HUSS (toques y tiro a la portería pequeña): plano lateral, el balón entra y la red se hincha
-shot(3.48, 'F', null, L => { bolz(); const ts = hussIn(3.0, 3.9); const me = put(ich, BX + .5, 0, -4, PI + .25); const kt = 3.93;
-  if (L.T < kt - .15) { const b = juggle(me, BALL, L.T, ts);  } else { applyPose(me, kickPose(clamp((L.T - (kt - .15)) / .3))); const a = loc(me, .5, 1.0, 1.4).toArray(), g = [BX, 2.2, -15.5]; const k = clamp((L.T - kt) / .2); const p = shotBall(BALL, a, g, .5, k, L.T); BZ.GO.userData.bulge(clamp((L.T - kt - .18) / .1) * (1 - clamp((L.T - kt - .4) / .4)));  }
+shot(3.48, 'F', null, L => { bolz(); const ts = hussIn(3.0, 3.9); const me = put(ich, BX + .5, 0, -4, PI + .9); const kt = 3.93;
+  if (L.T < kt - .15) { trick(me, BALL, L.T, ts, ['roll', 'step', 'elastico', 'step']); } else { applyPose(me, kickPose(clamp((L.T - (kt - .15)) / .3))); const a = loc(me, .5, 1.0, 1.4).toArray(), g = [BX, 2.2, -15.5]; const k = clamp((L.T - kt) / .2); const p = shotBall(BALL, a, g, .5, k, L.T); BZ.GO.userData.bulge(clamp((L.T - kt - .18) / .1) * (1 - clamp((L.T - kt - .4) / .4)));  }
   cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: L.T > kt ? 'grimace' : 'flat' });
-  orb(L.k, V(BX - .6, 2.8, -6), null, [13, PI + 1.15, .12, 46], [11.5, PI + 1.05, .1, 46]); sh(V(BX, 0, -6), 30); }, [[0, 'flash', .4], [.62, 'trash_hit', .5]]);
+  orb(L.k, V(BX - .6, 2.0, -6), null, [13, PI + 1.15, .12, 46], [11.5, PI + 1.05, .1, 46]); sh(V(BX, 0, -6), 30); }, [[0, 'flash', .4], [.62, 'trash_hit', .5]]);
 // 5 «Denn hier steigt jede einzelne Nacht»: grúa sobre el pueblo de noche, ventanas de colores y fuegos artificiales
 shot(4.13, 'Z', null, L => { street(); OR.FEST.visible = true; windows('party', L.T); party([...K, ...XT], L.T, V(0, 0, -30), 4.6, 0);
   fireworks(V(0, 0, -80), L.T, 3, 16); const k = easeInOut(L.k); cam([22 - k * 10, 48 - k * 18, 40 - k * 16], [0, 4, -40], 52); sh(V(0, 0, -40), 60); }, [[0, 'whoosh_up', .5], [.3, 'firework', .6], [.9, 'firework', .5], [1.4, 'cheer', .3]]);
@@ -28,11 +28,11 @@ shot(6.03, 'W', null, L => { street(); windows('party', L.T); const cx = -15.5, 
   confRain(V(cx, 0, cz), L.T, 40, 8, 14, 12); orb(L.k, V(cx, 3.4, cz + 1), null, [15, PI / 2 + .12, .2, 48], [13.5, PI / 2 + .05, .18, 48]); sh(V(cx, 0, cz), 30); }, [[0, 'swipe', .5], [.2, 'cheer', .4], [.8, 'laugh_m', .3]]);
 // 7 «Poolpartys»: alguien salta en bomba a la piscina iluminada; otros con flotadores
 shot(7.77, 'S', null, L => { use('GT'); night(60); const px = GX - 16, pz = 10;
-  const j = put(K[1], px + 6, 0, pz + 1, -PI / 2); hat(j); const t = clamp(L.lt / .5); j.root.position.set(px + 6 - t * 5, 1.4 + 5 * t * (1 - t) * 1.2 + (t >= 1 ? -2 : 0), pz + 1); applyPose(j, { crouch: .3, lLx: 1.6, lLk: 2.2, lRx: 1.6, lRk: 2.2, aLx: 1.2, aRx: 1.2, aLe: 2, aRe: 2 }); grin(j, L.T);
+  const j = put(K[1], px + 5.6, 0, pz + .6, -PI / 2); hat(j); saltar(j, L.lt, .05, { h: 1.6, dur: .45, base: [px + 5.6, 0, pz + .6] }); actuar(j, 0, [[0, 'cheer']], { T: L.T, weight: false, breathe: false }); grin(j, L.T);
   [XT[0], K[4]].forEach((c, i) => { put(c, px - 1.8 + i * 3.4, -1.6, pz - 1.4 + i, i ? -.4 : .4); hat(c); applyPose(c, { aLx: 2.6, aRx: 2.6, aLz: .5, aRz: .5 }); grin(c, L.T); show(FLOATS[i], c.root.position.x, 1.5, c.root.position.z); });
   show(FLOATS[2], px + 2, 1.5, pz + 2.6); FLOATS[2].rotation.x = 0; [0, 1, 2].forEach(i => FLOATS[i].rotation.set(PI / 2, 0, 0));
-  if (L.lt > .45) dust(V(px + 1, 1.4, pz + 1), L.t0 + .45, L.T, 10, .8);
-  orb(L.k, V(px + 1.5, 3.4, pz + 1), null, [21, PI - .35, .2, 48], [19, PI - .25, .18, 48]); sh(V(px, 0, pz), 30); }, [[0, 'swipe', .4], [.4, 'splash', .7], [.1, 'kids_laugh', .3]]);
+  
+  orb(L.k, V(px + 3.2, 2.8, pz + .8), null, [17, -1.3, .2, 48], [15.5, -1.2, .2, 48]); sh(V(px, 0, pz), 30); }, [[0, 'swipe', .4], [.4, 'splash', .7], [.1, 'kids_laugh', .3]]);
 // 8 «Pizzapartys»: mesa de la cocina llena de pizzas; tres amigos cogen porciones
 shot(8.33, 'R', null, L => { use('KU'); inside(1.0, 60); const tx = KX - 5, tz = 2;
   show(PZ[2], tx - 2, 4.25, tz - .4, .1); show(PZ[3], tx + 1.8, 4.25, tz - .5, -.15);
@@ -41,7 +41,7 @@ shot(8.33, 'R', null, L => { use('KU'); inside(1.0, 60); const tx = KX - 5, tz =
   orb(L.k, V(tx, 3.8, tz + 2.6), null, [16, .08, .12, 48], [14.5, .03, .12, 48]); sh(V(tx, 0, tz), 30); }, [[0, 'whirl', .4], [.3, 'paper', .4], [.7, 'chew', .4], [.9, 'laugh_m', .3]]);
 // 9 «Sogar eine Geburtstagsparty»: el salón de fiestas, tarta con velas, todos cantan alrededor
 shot(9.59, 'Z', null, L => { use('SA'); inside(1.0, 40); SA.LC.forEach((l, i) => l.intensity = 50 + Math.sin(L.T * 6 + i) * 30); SA.DB.rotation.y = L.T;
-  [XT[0], K[0], XT[4], K[5], XT[2]].forEach((c, i) => { put(c, AX - 6 + i * 3, 0, -1.8 + Math.abs(i - 2) * .4, PI + (i - 2) * .12); c.root.rotation.y = 0; hat(c); dance(c, L.T, i, { aLx: 2.8, aRx: 2.8 }); grin(c, L.T); });
+  [XT[0], K[0], XT[4], K[5], XT[2]].forEach((c, i) => { put(c, AX - 6 + i * 3, 0, -1.8 + Math.abs(i - 2) * .4, PI + (i - 2) * .12); c.root.rotation.y = 0; hat(c); dance(c, L.T, i); grin(c, L.T); });
   SA.FB.userData.fish.userData.swim(L.T); SA.FB.userData.bubbles(L.T); confRain(V(AX, 0, -4), L.T, 50, 18, 10, 14);
   orb(L.k, V(AX, 4.4, -5), null, [20, 0, .1, 48], [17, 0, .1, 46]); sh(V(AX, 0, -5), 30); }, [[0, 'whoosh_up', .5], [.2, 'party_horn', .5], [.6, 'cheer', .35]]);
 // 10 «für Herrn Blubb, den Goldfisch»: golpe de zoom a la pecera: el pez con su gorrito delante de la tarta

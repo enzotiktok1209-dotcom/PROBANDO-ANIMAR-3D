@@ -58,6 +58,7 @@ const hat = (...cs) => cs.forEach(c => HATS.get(c).visible = true);
 const GLV = gloves(gerda);
 // ---------- atrezo ----------
 const BALL = football(scene, .55), BALL2 = football(scene, .55); outline(BALL, 1.6); outline(BALL2, 1.6);
+const TRL = Array.from({ length: 7 }, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.5, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .4 * (1 - i / 7), depthWrite: false })); m.renderOrder = 2; scene.add(m); return m; });
 const GUIT = guitar(scene); outline(GUIT, 1.4); const BAG = punchBag(scene); outline(BAG, 1.4); const MAT = yogaMat(scene);
 const CAL = calendar(scene, 'DIENSTAG', 'PARTY!'); const POSTER = (() => { const g = new THREE.Group(); scene.add(g); cyl(.2, .2, 10, mat(0x3a3e4a, { metalness: .6 }), 8, g, 0, 5, -.3);
   const p = textPlane(4.4, 5.6, 220, 280, (c, w, h) => { c.fillStyle = '#ff4a8a'; c.fillRect(0, 0, w, h); c.fillStyle = '#ffd23f'; c.font = `700 52px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MORGEN', w / 2, 60); c.fillStyle = '#ffffff'; c.font = `700 70px ${FONT}`; c.fillText('PARTY!', w / 2, 140); c.font = `700 30px ${FONT}`; c.fillStyle = '#1a1a2a'; c.fillText('ALLE KOMMEN', w / 2, 210); for (let k = 0; k < 14; k++) { c.fillStyle = ['#ffd23f', '#3ab8ff', '#8ad84a', '#fff'][k % 4]; c.fillRect((k * 53) % w, 240 + (k % 3) * 10, 10, 10); } }); p.position.set(0, 5.2, 0); g.add(p); return g; })();
@@ -73,7 +74,7 @@ const NOTES = Array.from({ length: 4 }, (_, i) => { const p = textPlane(1.4, 1.4
 const HEARTS = Array.from({ length: 5 }, () => { const p = textPlane(1.2, 1.2, 64, 64, (c, w, h) => { c.fillStyle = '#ff3a6a'; c.beginPath(); c.moveTo(32, 54); c.bezierCurveTo(0, 30, 8, 4, 32, 18); c.bezierCurveTo(56, 4, 64, 30, 32, 54); c.fill(); }); p.material.depthWrite = false; scene.add(p); return p; });
 const CROWD = crowd(scene, 196); (() => { let i = 0; for (let r = 0; r < 7; r++) for (let k = 0; k < 28; k++) { const s = CROWD.seat[i++]; s.x = SX - 25.3 - r * 2.6; s.y = 1.6 + r * 1.6; s.z = -33 + k * 2.45 + (r % 2) * .6; s.ry = PI2(); } })();
 function PI2() { return Math.PI / 2; }
-const PROPS = [BALL, BALL2, GUIT, BAG, MAT, CAL, POSTER, ABG, ...PZ, SLICE, ...FLOATS, ...CONF, ...FW, ...DUST, ...SWEAT, ...NOTES, ...HEARTS, ...GLV];
+const PROPS = [...TRL, BALL, BALL2, GUIT, BAG, MAT, CAL, POSTER, ABG, ...PZ, SLICE, ...FLOATS, ...CONF, ...FW, ...DUST, ...SWEAT, ...NOTES, ...HEARTS, ...GLV];
 // ---------- ambiente ----------
 const AIR = aire(scene, 300); const BIRDS = bandada(scene, 9);
 function setSky(top, mid, hor) { const u = sky.sky.material.uniforms; u.top.value.setRGB(...top); u.mid.value.setRGB(...mid); u.hor.value.setRGB(...hor); }
@@ -149,10 +150,37 @@ function juggle(ch, ball, T, ts, o = {}) { const Hh = o.h ?? 2.6; let i = -1; fo
   let lL = 0, lR = 0; ts.forEach((t, k) => { const g = Math.exp(-Math.pow((T - t) / .09, 2)); if (k % 2) lL = Math.max(lL, g); else lR = Math.max(lR, g); });
   const pose = { lLx: 1.15 * lL, lLk: .95 * lL, lRx: 1.15 * lR, lRk: .95 * lR, aLx: .5, aLz: .75 + Math.sin(T * 6) * .08, aRx: .5, aRz: .75 - Math.sin(T * 6) * .08, aLe: .5, aRe: .5, headX: .38 - p.y * .05, crouch: .08 + (lL + lR) * .05, lean: .05, twist: (lR - lL) * .12, ...(o.extra || {}) };
   applyPose(ch, pose); const w = loc(ch, p.x, p.y, p.z); show(ball, w.x, w.y, w.z); ball.rotation.set(T * 9, T * 4, 0); return w; }
+// trucos de crack (un truco por cada HUSS): suela, bicicleta, elástica, toques, rodilla y rabona-arcoíris.
+// El balón deja una estela para que se lea bien su recorrido. ts = golpes (absolutos), seq = truco que empieza en cada golpe.
+function trickAt(T, ts, seq, g, o = {}) { let i = -1; for (let k = 0; k < ts.length; k++) if (ts[k] <= T) i = k;
+  if (i < 0) { const k = clamp((T - (ts[0] - .25)) / .25); return { p: V(lerp(1.6, .75, easeOut(k)), g, 1.25), kind: 'pre', k, side: 1 }; }
+  const t0 = ts[i], last = i + 1 >= ts.length, t1 = last ? t0 + (o.tail ?? .3) : ts[i + 1], k = clamp((T - t0) / (t1 - t0)), kind = last && o.end ? 'end' : seq[i % seq.length], side = i % 2 ? -1 : 1; let p;
+  switch (kind) {
+    case 'roll': p = V(lerp(.75 * side, -.75 * side, easeInOut(k)), g, 1.25); break;
+    case 'step': p = V(.12 * Math.sin(k * PI) * side, g, 1.35); break;
+    case 'elastico': p = V(k < .45 ? lerp(0, 1.05 * side, easeOut(k / .45)) : lerp(1.05 * side, -.9 * side, easeInOut((k - .45) / .55)), g, 1.3); break;
+    case 'up': p = V(lerp(.5 * side, -.5 * side, k), 1.35 + 4 * 1.7 * k * (1 - k), 1.3); break;
+    case 'knee': p = V(lerp(.5 * side, -.5 * side, k), 2.5 + 4 * 1.1 * k * (1 - k), 1.15); break;
+    case 'rainbow': p = V(0, g + 4 * 5.6 * k * (1 - k), lerp(-.8, 2.6, k)); break;
+    case 'end': p = V(0, 1.35 + 4 * 2.8 * clamp(k * 1.6) * (1 - clamp(k * 1.6)) + (k > .62 ? 0 : 0), 1.3); break;
+    default: p = V(.75 * side, g, 1.25); }
+  return { p, kind, k, side }; }
+function trick(ch, ball, T, ts, seq, o = {}) { const s = ch.spec.scale || 1, g = .55 / s; const r = trickAt(T, ts, seq, g, o), { kind, k, side } = r;
+  const P = { crouch: .22, lean: .16, aLx: .45, aRx: .45, aLz: .9 + Math.sin(T * 13) * .12, aRz: .9 - Math.sin(T * 13) * .12, aLe: .6, aRe: .6, headX: .32, lLk: .25, lRk: .25, lLx: .12, lRx: .12 };
+  const leg = (sd, x, kn) => { if (sd > 0) { P.lRx = x; P.lRk = kn; } else { P.lLx = x; P.lLk = kn; } };
+  if (kind === 'roll') { leg(side, .5, .45); P.sx = lerp(.35 * side, -.35 * side, easeInOut(k)); P.twist = .25 * side * Math.sin(k * PI); }
+  else if (kind === 'step') { const l = Math.sin(k * PI); leg(side, .3 + .9 * l, .4 + 1.3 * l); P.sx = -side * .4 * l; P.twist = side * .45 * l; P.lean = .22; }
+  else if (kind === 'elastico') { leg(side, .55, .35); P.sx = r.p.x * .3; P.twist = r.p.x * .35; }
+  else if (kind === 'up' || kind === 'knee' || kind === 'end') { ts.forEach((t, j) => { const gg = Math.exp(-Math.pow((T - t) / .07, 2)); if (gg > .02) leg(j % 2 ? -1 : 1, kind === 'knee' ? 1.6 * gg : 1.15 * gg, kind === 'knee' ? 1.6 * gg : .95 * gg); }); P.headX = .3 - r.p.y * .05; P.crouch = .12; }
+  else if (kind === 'rainbow') { if (k < .2) { const q = Math.sin(k / .2 * PI); P.lRx = -.9 * q; P.lRk = 1.8 * q; P.lLx = .5 * q; } P.headX = lerp(.3, -.35, Math.sin(k * PI)); P.lean = .05; }
+  else { leg(1, .4, .3); }
+  P.hipY = 2.05 + Math.abs(Math.sin(T * 14)) * .08; Object.assign(P, o.extra || {}); applyPose(ch, P);
+  const w = loc(ch, r.p.x, r.p.y, r.p.z); show(ball, w.x, w.y, w.z); ball.rotation.set(T * 16, T * 9, 0);
+  TRL.forEach((m, j) => { const q = trickAt(T - (j + 1) * .022, ts, seq, g, o).p; const wq = loc(ch, q.x, q.y, q.z); m.visible = w.distanceTo(wq) > .15; m.position.copy(wq); m.scale.setScalar(1 - j * .08); }); return w; }
 // conducción a la carrera: el personaje corre en dirección ry y empuja el balón con cada golpe
 function dribble(ch, ball, lt, T, o) { const r = caminar(ch, lt, { x: o.x, z: o.z, ry: o.ry, speed: o.speed ?? 9, run: true, accel: .05, T, extra: o.extra }); const ts = o.ts || [];
   let i = -1; for (let k = 0; k < ts.length; k++) if (ts[k] <= T) i = k; const t0 = i < 0 ? T - .2 : ts[i], t1 = i + 1 < ts.length ? ts[i + 1] : t0 + .4, k = clamp((T - t0) / Math.max(.1, t1 - t0));
-  const zz = 1.5 + 1.6 * Math.sin(Math.PI * k), xx = (o.weave ?? 0) * Math.sin((i + k) * Math.PI); const w = loc(ch, xx, .55 / (ch.spec.scale || 1), zz); show(ball, w.x, .55, w.z); ball.rotation.set(T * 14, 0, 0); return r; }
+  const zz = 1.5 + 1.6 * Math.sin(Math.PI * k), xx = (o.weave ?? 0) * Math.sin((i + k) * Math.PI); const w = loc(ch, xx, .55 / (ch.spec.scale || 1), zz); show(ball, w.x, .55, w.z); ball.rotation.set(T * 14, 0, 0); TRL.slice(0, 4).forEach((m, j) => { m.visible = true; m.position.set(w.x - Math.sin(o.ry) * (j + 1) * .35, .55, w.z - Math.cos(o.ry) * (j + 1) * .35); m.scale.setScalar(1 - j * .15); }); return r; }
 // tiro: anticipación (pierna atrás) y golpeo (pierna delante). k: 0..1 del gesto (golpeo en k = .55)
 const kickPose = k => k < .55 ? { lRx: lerp(0, -1.0, easeOut(k / .55)), lRk: lerp(0, 1.5, k / .55), aLx: lerp(0, .9, k / .55), aLz: .6, aRx: lerp(0, -.5, k / .55), aRz: .5, lean: -.12, twist: .25, lLk: .25, crouch: .12 }
   : { lRx: lerp(-1.0, 1.55, easeOut((k - .55) / .45)), lRk: lerp(1.5, .05, easeOut((k - .55) / .45)), aLx: lerp(.9, -.2, (k - .55) / .45), aLz: .7, aRx: lerp(-.5, .8, (k - .55) / .45), aRz: .6, lean: lerp(-.12, .18, (k - .55) / .45), twist: lerp(.25, -.3, (k - .55) / .45), lLk: .3, crouch: .1 };

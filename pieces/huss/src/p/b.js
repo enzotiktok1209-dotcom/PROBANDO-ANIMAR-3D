@@ -27,21 +27,21 @@ shot(22.14, 'C', 'punch', L => { use('OS'); inside(1.0, 60); const o = put(oma, 
 shot(23.01, 'I', null, L => { bolz(); const me = put(ich, BX, 0, 3, PI - .15); holdBall(me, L.T); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' }); fireworks(V(BX, 0, -90), L.T, 2, 14);
   orb(L.k, V(BX, 2.8, 3), null, [11, PI + .55, .12, 44], [10, PI + .45, .1, 44]); sh(V(BX, 0, 3), 30); }, [[0, 'iris_pop', .5], [.2, 'firework', .3], [.4, 'wind', .3]]);
 // 21 HUSS: toques bajo el foco, primer plano desde abajo
-shot(23.92, 'W', null, L => { bolz(); const ts = hussIn(23.9, 25.0); const me = put(ich, BX, 0, 2, .2); const b = juggle(me, BALL, L.T, ts); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' }); 
-  orb(L.k, V(BX, 2.4, 2), null, [9.5, .3, -.12, 50], [9, .45, -.1, 50]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .4]]);
+shot(23.92, 'W', null, L => { bolz(); const ts = hussIn(23.9, 25.0); const me = put(ich, BX, 0, 2, .2); const b = trick(me, BALL, L.T, ts, ['up', 'knee', 'up', 'knee', 'up']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' }); 
+  orb(L.k, V(BX, 2.1, 2), null, [11.5, .3, .05, 46], [10.5, .5, .05, 46]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .4]]);
 // 22 HUSS: conducción entre los conos, travelling lateral
-shot(24.40, 'S', null, L => { bolz(); const ts = hussIn(24.3, 25.0); const r = dribble(ich, BALL, L.lt, L.T, { x: BX, z: 12, ry: PI, speed: 8, ts, weave: 1.1 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
-  cam([BX + 9, 3.4, r.z - 2], [BX, 2.4, r.z - .5], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'whoosh_soft', .4], [.1, 'steps_run', .5]]);
+shot(24.40, 'S', null, L => { bolz(); const ts = hussIn(24.3, 25.0); const r = dribble(ich, BALL, L.lt, L.T, { x: BX, z: 12, ry: PI, speed: 10.5, ts, weave: 1.1 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
+  cam([BX + 9, 2.8, r.z - 2], [BX, 1.7, r.z - .5], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'whoosh_soft', .4], [.1, 'steps_run', .5]]);
 // 23 «Tag für Tag»: de día, el sol en lo alto, sigo corriendo con el balón y el sudor me cae
 shot(25.265, 'Z', null, L => { bolz(false); const me = put(ich, BX - 1, 0, 0, .3); const b = juggle(me, BALL, L.T, [25.3, 25.6, 25.9, 26.15], { h: 2.2 }); cara(me, L.T, { expr: 'determined', eyes: 'squint', mouth: 'grimace' }); sweat(me, L.T, 2);
-  orb(L.k, V(BX - 1, 2.6, 0), null, [12, .55, .15, 46], [11, .7, .13, 46]); sh(V(BX, 0, 0), 30); }, [[0, 'zoom_in', .4], [.2, 'birds', .3], [.5, 'strain', .4]]);
+  orb(L.k, V(BX - 1, 2.0, 0), null, [12, .55, .15, 46], [11, .7, .13, 46]); sh(V(BX, 0, 0), 30); }, [[0, 'zoom_in', .4], [.2, 'birds', .3], [.5, 'strain', .4]]);
 // 24 HUSS: de día, toques mirando desde arriba
-shot(26.33, 'W', null, L => { bolz(false); const ts = hussIn(26.3, 27.0); const me = put(ich, BX + 1, 0, 1, -.4); const b = juggle(me, BALL, L.T, ts, { h: 2.8 }); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' }); sweat(me, L.T, 1);
-  orb(L.k, V(BX + 1, 2.6, 1), null, [13, -.4, .5, 46], [12, -.3, .55, 46]); sh(V(BX, 0, 1), 30); }, [[0, 'swipe', .4]]);
+shot(26.33, 'W', null, L => { bolz(false); const ts = hussIn(26.3, 27.0); const me = put(ich, BX + 1, 0, 1, -.4); const b = trick(me, BALL, L.T, ts, ['rainbow', 'up', 'knee', 'up']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' }); sweat(me, L.T, 1);
+  orb(L.k, V(BX + 1, 2.5, 1), null, [14, -.55, .12, 46], [13, -.4, .1, 46]); sh(V(BX, 0, 1), 30); }, [[0, 'swipe', .4]]);
 // 25 HUSS: de noche otra vez, regateo hacia la portería
-shot(26.99, 'F', null, L => { bolz(); const ts = hussIn(26.95, 27.5); const r = dribble(ich, BALL, L.lt, L.T, { x: BX - 2, z: 8, ry: PI + .15, speed: 9, ts, weave: .8 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
-  cam([BX - 6.5, 2.8, r.z - 9], [r.x, 2.2, r.z], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'flash', .3], [.1, 'steps_run', .5]]);
+shot(26.99, 'F', null, L => { bolz(); const ts = hussIn(26.95, 27.5); const r = dribble(ich, BALL, L.lt, L.T, { x: BX - 2, z: 8, ry: PI + .15, speed: 11, ts, weave: .8 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
+  cam([BX - 6.5, 2.6, r.z - 9], [r.x, 1.6, r.z], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'flash', .3], [.1, 'steps_run', .5]]);
 // 26 HUSS: tiro desde el borde del área y la red de la portería pequeña se hincha
 shot(27.45, 'W', 'punch', L => { bolz(); const kt = 27.70; const me = put(ich, BX - .3, 0, 2, PI); applyPose(me, kickPose(clamp((L.T - (kt - .15)) / .3))); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
   if (L.T < kt) { const w = loc(me, .5, .55 / .84, 1.4); show(BALL, w.x, .55, w.z); } else { const a = loc(me, .5, 1.0, 1.4).toArray(); const p = shotBall(BALL, a, [BX + 1.6, 2.4, -15.4], .8, clamp((L.T - kt) / .2), L.T); BZ.GO.userData.bulge(clamp((L.T - kt - .18) / .1)); }
-  orb(L.k, V(BX - .3, 2.6, 2), null, [11, PI - .6, .12, 46], [10, PI - .7, .1, 46]); sh(V(BX, 0, -4), 30); }, [[0, 'swipe', .3], [.45, 'trash_hit', .5]]);
+  orb(L.k, V(BX - .3, 2.0, 1), null, [12, PI - .6, .12, 46], [11, PI - .7, .1, 46]); sh(V(BX, 0, -4), 30); }, [[0, 'swipe', .3], [.45, 'trash_hit', .5]]);

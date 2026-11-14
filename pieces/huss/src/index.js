@@ -58,6 +58,7 @@ const hat = (...cs) => cs.forEach(c => HATS.get(c).visible = true);
 const GLV = gloves(gerda);
 // ---------- atrezo ----------
 const BALL = football(scene, .55), BALL2 = football(scene, .55); outline(BALL, 1.6); outline(BALL2, 1.6);
+const TRL = Array.from({ length: 7 }, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.5, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .4 * (1 - i / 7), depthWrite: false })); m.renderOrder = 2; scene.add(m); return m; });
 const GUIT = guitar(scene); outline(GUIT, 1.4); const BAG = punchBag(scene); outline(BAG, 1.4); const MAT = yogaMat(scene);
 const CAL = calendar(scene, 'DIENSTAG', 'PARTY!'); const POSTER = (() => { const g = new THREE.Group(); scene.add(g); cyl(.2, .2, 10, mat(0x3a3e4a, { metalness: .6 }), 8, g, 0, 5, -.3);
   const p = textPlane(4.4, 5.6, 220, 280, (c, w, h) => { c.fillStyle = '#ff4a8a'; c.fillRect(0, 0, w, h); c.fillStyle = '#ffd23f'; c.font = `700 52px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MORGEN', w / 2, 60); c.fillStyle = '#ffffff'; c.font = `700 70px ${FONT}`; c.fillText('PARTY!', w / 2, 140); c.font = `700 30px ${FONT}`; c.fillStyle = '#1a1a2a'; c.fillText('ALLE KOMMEN', w / 2, 210); for (let k = 0; k < 14; k++) { c.fillStyle = ['#ffd23f', '#3ab8ff', '#8ad84a', '#fff'][k % 4]; c.fillRect((k * 53) % w, 240 + (k % 3) * 10, 10, 10); } }); p.position.set(0, 5.2, 0); g.add(p); return g; })();
@@ -73,7 +74,7 @@ const NOTES = Array.from({ length: 4 }, (_, i) => { const p = textPlane(1.4, 1.4
 const HEARTS = Array.from({ length: 5 }, () => { const p = textPlane(1.2, 1.2, 64, 64, (c, w, h) => { c.fillStyle = '#ff3a6a'; c.beginPath(); c.moveTo(32, 54); c.bezierCurveTo(0, 30, 8, 4, 32, 18); c.bezierCurveTo(56, 4, 64, 30, 32, 54); c.fill(); }); p.material.depthWrite = false; scene.add(p); return p; });
 const CROWD = crowd(scene, 196); (() => { let i = 0; for (let r = 0; r < 7; r++) for (let k = 0; k < 28; k++) { const s = CROWD.seat[i++]; s.x = SX - 25.3 - r * 2.6; s.y = 1.6 + r * 1.6; s.z = -33 + k * 2.45 + (r % 2) * .6; s.ry = PI2(); } })();
 function PI2() { return Math.PI / 2; }
-const PROPS = [BALL, BALL2, GUIT, BAG, MAT, CAL, POSTER, ABG, ...PZ, SLICE, ...FLOATS, ...CONF, ...FW, ...DUST, ...SWEAT, ...NOTES, ...HEARTS, ...GLV];
+const PROPS = [...TRL, BALL, BALL2, GUIT, BAG, MAT, CAL, POSTER, ABG, ...PZ, SLICE, ...FLOATS, ...CONF, ...FW, ...DUST, ...SWEAT, ...NOTES, ...HEARTS, ...GLV];
 // ---------- ambiente ----------
 const AIR = aire(scene, 300); const BIRDS = bandada(scene, 9);
 function setSky(top, mid, hor) { const u = sky.sky.material.uniforms; u.top.value.setRGB(...top); u.mid.value.setRGB(...mid); u.hor.value.setRGB(...hor); }
@@ -149,10 +150,37 @@ function juggle(ch, ball, T, ts, o = {}) { const Hh = o.h ?? 2.6; let i = -1; fo
   let lL = 0, lR = 0; ts.forEach((t, k) => { const g = Math.exp(-Math.pow((T - t) / .09, 2)); if (k % 2) lL = Math.max(lL, g); else lR = Math.max(lR, g); });
   const pose = { lLx: 1.15 * lL, lLk: .95 * lL, lRx: 1.15 * lR, lRk: .95 * lR, aLx: .5, aLz: .75 + Math.sin(T * 6) * .08, aRx: .5, aRz: .75 - Math.sin(T * 6) * .08, aLe: .5, aRe: .5, headX: .38 - p.y * .05, crouch: .08 + (lL + lR) * .05, lean: .05, twist: (lR - lL) * .12, ...(o.extra || {}) };
   applyPose(ch, pose); const w = loc(ch, p.x, p.y, p.z); show(ball, w.x, w.y, w.z); ball.rotation.set(T * 9, T * 4, 0); return w; }
+// trucos de crack (un truco por cada HUSS): suela, bicicleta, elástica, toques, rodilla y rabona-arcoíris.
+// El balón deja una estela para que se lea bien su recorrido. ts = golpes (absolutos), seq = truco que empieza en cada golpe.
+function trickAt(T, ts, seq, g, o = {}) { let i = -1; for (let k = 0; k < ts.length; k++) if (ts[k] <= T) i = k;
+  if (i < 0) { const k = clamp((T - (ts[0] - .25)) / .25); return { p: V(lerp(1.6, .75, easeOut(k)), g, 1.25), kind: 'pre', k, side: 1 }; }
+  const t0 = ts[i], last = i + 1 >= ts.length, t1 = last ? t0 + (o.tail ?? .3) : ts[i + 1], k = clamp((T - t0) / (t1 - t0)), kind = last && o.end ? 'end' : seq[i % seq.length], side = i % 2 ? -1 : 1; let p;
+  switch (kind) {
+    case 'roll': p = V(lerp(.75 * side, -.75 * side, easeInOut(k)), g, 1.25); break;
+    case 'step': p = V(.12 * Math.sin(k * PI) * side, g, 1.35); break;
+    case 'elastico': p = V(k < .45 ? lerp(0, 1.05 * side, easeOut(k / .45)) : lerp(1.05 * side, -.9 * side, easeInOut((k - .45) / .55)), g, 1.3); break;
+    case 'up': p = V(lerp(.5 * side, -.5 * side, k), 1.35 + 4 * 1.7 * k * (1 - k), 1.3); break;
+    case 'knee': p = V(lerp(.5 * side, -.5 * side, k), 2.5 + 4 * 1.1 * k * (1 - k), 1.15); break;
+    case 'rainbow': p = V(0, g + 4 * 5.6 * k * (1 - k), lerp(-.8, 2.6, k)); break;
+    case 'end': p = V(0, 1.35 + 4 * 2.8 * clamp(k * 1.6) * (1 - clamp(k * 1.6)) + (k > .62 ? 0 : 0), 1.3); break;
+    default: p = V(.75 * side, g, 1.25); }
+  return { p, kind, k, side }; }
+function trick(ch, ball, T, ts, seq, o = {}) { const s = ch.spec.scale || 1, g = .55 / s; const r = trickAt(T, ts, seq, g, o), { kind, k, side } = r;
+  const P = { crouch: .22, lean: .16, aLx: .45, aRx: .45, aLz: .9 + Math.sin(T * 13) * .12, aRz: .9 - Math.sin(T * 13) * .12, aLe: .6, aRe: .6, headX: .32, lLk: .25, lRk: .25, lLx: .12, lRx: .12 };
+  const leg = (sd, x, kn) => { if (sd > 0) { P.lRx = x; P.lRk = kn; } else { P.lLx = x; P.lLk = kn; } };
+  if (kind === 'roll') { leg(side, .5, .45); P.sx = lerp(.35 * side, -.35 * side, easeInOut(k)); P.twist = .25 * side * Math.sin(k * PI); }
+  else if (kind === 'step') { const l = Math.sin(k * PI); leg(side, .3 + .9 * l, .4 + 1.3 * l); P.sx = -side * .4 * l; P.twist = side * .45 * l; P.lean = .22; }
+  else if (kind === 'elastico') { leg(side, .55, .35); P.sx = r.p.x * .3; P.twist = r.p.x * .35; }
+  else if (kind === 'up' || kind === 'knee' || kind === 'end') { ts.forEach((t, j) => { const gg = Math.exp(-Math.pow((T - t) / .07, 2)); if (gg > .02) leg(j % 2 ? -1 : 1, kind === 'knee' ? 1.6 * gg : 1.15 * gg, kind === 'knee' ? 1.6 * gg : .95 * gg); }); P.headX = .3 - r.p.y * .05; P.crouch = .12; }
+  else if (kind === 'rainbow') { if (k < .2) { const q = Math.sin(k / .2 * PI); P.lRx = -.9 * q; P.lRk = 1.8 * q; P.lLx = .5 * q; } P.headX = lerp(.3, -.35, Math.sin(k * PI)); P.lean = .05; }
+  else { leg(1, .4, .3); }
+  P.hipY = 2.05 + Math.abs(Math.sin(T * 14)) * .08; Object.assign(P, o.extra || {}); applyPose(ch, P);
+  const w = loc(ch, r.p.x, r.p.y, r.p.z); show(ball, w.x, w.y, w.z); ball.rotation.set(T * 16, T * 9, 0);
+  TRL.forEach((m, j) => { const q = trickAt(T - (j + 1) * .022, ts, seq, g, o).p; const wq = loc(ch, q.x, q.y, q.z); m.visible = w.distanceTo(wq) > .15; m.position.copy(wq); m.scale.setScalar(1 - j * .08); }); return w; }
 // conducción a la carrera: el personaje corre en dirección ry y empuja el balón con cada golpe
 function dribble(ch, ball, lt, T, o) { const r = caminar(ch, lt, { x: o.x, z: o.z, ry: o.ry, speed: o.speed ?? 9, run: true, accel: .05, T, extra: o.extra }); const ts = o.ts || [];
   let i = -1; for (let k = 0; k < ts.length; k++) if (ts[k] <= T) i = k; const t0 = i < 0 ? T - .2 : ts[i], t1 = i + 1 < ts.length ? ts[i + 1] : t0 + .4, k = clamp((T - t0) / Math.max(.1, t1 - t0));
-  const zz = 1.5 + 1.6 * Math.sin(Math.PI * k), xx = (o.weave ?? 0) * Math.sin((i + k) * Math.PI); const w = loc(ch, xx, .55 / (ch.spec.scale || 1), zz); show(ball, w.x, .55, w.z); ball.rotation.set(T * 14, 0, 0); return r; }
+  const zz = 1.5 + 1.6 * Math.sin(Math.PI * k), xx = (o.weave ?? 0) * Math.sin((i + k) * Math.PI); const w = loc(ch, xx, .55 / (ch.spec.scale || 1), zz); show(ball, w.x, .55, w.z); ball.rotation.set(T * 14, 0, 0); TRL.slice(0, 4).forEach((m, j) => { m.visible = true; m.position.set(w.x - Math.sin(o.ry) * (j + 1) * .35, .55, w.z - Math.cos(o.ry) * (j + 1) * .35); m.scale.setScalar(1 - j * .15); }); return r; }
 // tiro: anticipación (pierna atrás) y golpeo (pierna delante). k: 0..1 del gesto (golpeo en k = .55)
 const kickPose = k => k < .55 ? { lRx: lerp(0, -1.0, easeOut(k / .55)), lRk: lerp(0, 1.5, k / .55), aLx: lerp(0, .9, k / .55), aLz: .6, aRx: lerp(0, -.5, k / .55), aRz: .5, lean: -.12, twist: .25, lLk: .25, crouch: .12 }
   : { lRx: lerp(-1.0, 1.55, easeOut((k - .55) / .45)), lRk: lerp(1.5, .05, easeOut((k - .55) / .45)), aLx: lerp(.9, -.2, (k - .55) / .45), aLz: .7, aRx: lerp(-.5, .8, (k - .55) / .45), aRz: .6, lean: lerp(-.12, .18, (k - .55) / .45), twist: lerp(.25, -.3, (k - .55) / .45), lLk: .3, crouch: .1 };
@@ -194,7 +222,7 @@ const bolz = (n = true) => { use('BZ'); if (n) { night(30); BZ.SPOT.intensity = 
 // estadio (SX): campo x ∈ ±20, z ∈ ±35; portería de casa (G1) en z = -35; gradas a la izquierda; DJ a la derecha (x = 25,5, z = -6)
 const stadium = () => { use('ST'); sunset(); };
 // ---------- a: gancho, las fiestas de cada noche, nadie entrena (0 – 16,15 s) ----------
-const dance = (ch, T, ph = 0, extra = {}) => { const b = Math.sin(T * 9 + ph); applyPose(ch, { aLx: 2.5 + b * .4, aLz: .5, aRx: 2.5 - b * .4, aRz: .5, aLe: .4, aRe: .4, lean: Math.sin(T * 4.5 + ph) * .08, sx: Math.sin(T * 4.5 + ph) * .25, crouch: .12 + Math.abs(b) * .1, lLk: .2 + Math.max(0, b) * .5, lRk: .2 + Math.max(0, -b) * .5, lLx: Math.max(0, b) * .4, lRx: Math.max(0, -b) * .4, headZ: Math.sin(T * 4.5 + ph) * .15, ...extra }); };
+const dance = (ch, T, ph = 0, extra = {}) => { const b = Math.sin(T * 9 + ph); applyPose(ch, { aLx: .35, aLz: 2.2 + b * .35, aRx: .35, aRz: 2.2 - b * .35, aLe: .3, aRe: .3, lean: Math.sin(T * 4.5 + ph) * .08, sx: Math.sin(T * 4.5 + ph) * .25, crouch: .12 + Math.abs(b) * .1, lLk: .2 + Math.max(0, b) * .5, lRk: .2 + Math.max(0, -b) * .5, lLx: Math.max(0, b) * .4, lRx: Math.max(0, -b) * .4, headZ: Math.sin(T * 4.5 + ph) * .15, ...extra }); };
 const party = (chs, T, base, sp = 4.2, ry = 0) => chs.forEach((c, i) => { const r = RNG(i * 7 + 3); put(c, base.x + (i % 3 - 1) * sp + (r() - .5) * 1.4, base.y, base.z - Math.floor(i / 3) * sp * .9 + (r() - .5), ry + (r() - .5) * .8); hat(c); dance(c, T, i * 1.3); grin(c, T); });
 const holdBall = (ch, T) => { applyPose(ch, { aRx: .35, aRz: .15, aRe: 1.6, aLz: .15, aLe: .3, headX: .02 }); const w = loc(ch, 1.2, 2.55, .45); show(BALL, w.x, w.y, w.z); return w; };
 // 1 «In dieser Stadt geht jeder auf Partys»: la calle de noche llena de fiesta; yo delante con el balón bajo el brazo
@@ -207,13 +235,13 @@ shot(0, 'Z', null, L => { street(); OR.FEST.visible = true; windows('party', L.T
 shot(2.21, 'C', 'punch', L => { bolz(); const me = put(ich, BX, 0, 6, 0); holdBall(me, L.T); talk(me, L.T, 2.21, 3.03, 'smug');
   onFace(me, 9.2, -.4, .8, 38, L.k, 8.2); sh(V(BX, 0, 4), 30); }, [[0, 'thump', .6], [.2, 'hmm', .3]]);
 // 3 HUSS (toques): contrapicado frontal, el balón sube y baja de un pie al otro
-shot(3.03, 'W', null, L => { bolz(); const ts = hussIn(3.0, 4.2); const me = put(ich, BX, 0, 2, .1); const b = juggle(me, BALL, L.T, ts); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
-   orb(L.k, V(BX, 2.6, 2), null, [12, .15, -.05, 46], [10.5, .3, -.04, 44]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .5]]);
+shot(3.03, 'W', null, L => { bolz(); const ts = hussIn(3.0, 4.2); const me = put(ich, BX, 0, 2, .1); const b = trick(me, BALL, L.T, ts, ['roll', 'step', 'elastico', 'step', 'roll']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
+   orb(L.k, V(BX, 1.9, 2), null, [11.5, .2, .06, 46], [10.5, .45, .06, 46]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .5]]);
 // 4 HUSS (toques y tiro a la portería pequeña): plano lateral, el balón entra y la red se hincha
-shot(3.48, 'F', null, L => { bolz(); const ts = hussIn(3.0, 3.9); const me = put(ich, BX + .5, 0, -4, PI + .25); const kt = 3.93;
-  if (L.T < kt - .15) { const b = juggle(me, BALL, L.T, ts);  } else { applyPose(me, kickPose(clamp((L.T - (kt - .15)) / .3))); const a = loc(me, .5, 1.0, 1.4).toArray(), g = [BX, 2.2, -15.5]; const k = clamp((L.T - kt) / .2); const p = shotBall(BALL, a, g, .5, k, L.T); BZ.GO.userData.bulge(clamp((L.T - kt - .18) / .1) * (1 - clamp((L.T - kt - .4) / .4)));  }
+shot(3.48, 'F', null, L => { bolz(); const ts = hussIn(3.0, 3.9); const me = put(ich, BX + .5, 0, -4, PI + .9); const kt = 3.93;
+  if (L.T < kt - .15) { trick(me, BALL, L.T, ts, ['roll', 'step', 'elastico', 'step']); } else { applyPose(me, kickPose(clamp((L.T - (kt - .15)) / .3))); const a = loc(me, .5, 1.0, 1.4).toArray(), g = [BX, 2.2, -15.5]; const k = clamp((L.T - kt) / .2); const p = shotBall(BALL, a, g, .5, k, L.T); BZ.GO.userData.bulge(clamp((L.T - kt - .18) / .1) * (1 - clamp((L.T - kt - .4) / .4)));  }
   cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: L.T > kt ? 'grimace' : 'flat' });
-  orb(L.k, V(BX - .6, 2.8, -6), null, [13, PI + 1.15, .12, 46], [11.5, PI + 1.05, .1, 46]); sh(V(BX, 0, -6), 30); }, [[0, 'flash', .4], [.62, 'trash_hit', .5]]);
+  orb(L.k, V(BX - .6, 2.0, -6), null, [13, PI + 1.15, .12, 46], [11.5, PI + 1.05, .1, 46]); sh(V(BX, 0, -6), 30); }, [[0, 'flash', .4], [.62, 'trash_hit', .5]]);
 // 5 «Denn hier steigt jede einzelne Nacht»: grúa sobre el pueblo de noche, ventanas de colores y fuegos artificiales
 shot(4.13, 'Z', null, L => { street(); OR.FEST.visible = true; windows('party', L.T); party([...K, ...XT], L.T, V(0, 0, -30), 4.6, 0);
   fireworks(V(0, 0, -80), L.T, 3, 16); const k = easeInOut(L.k); cam([22 - k * 10, 48 - k * 18, 40 - k * 16], [0, 4, -40], 52); sh(V(0, 0, -40), 60); }, [[0, 'whoosh_up', .5], [.3, 'firework', .6], [.9, 'firework', .5], [1.4, 'cheer', .3]]);
@@ -223,11 +251,11 @@ shot(6.03, 'W', null, L => { street(); windows('party', L.T); const cx = -15.5, 
   confRain(V(cx, 0, cz), L.T, 40, 8, 14, 12); orb(L.k, V(cx, 3.4, cz + 1), null, [15, PI / 2 + .12, .2, 48], [13.5, PI / 2 + .05, .18, 48]); sh(V(cx, 0, cz), 30); }, [[0, 'swipe', .5], [.2, 'cheer', .4], [.8, 'laugh_m', .3]]);
 // 7 «Poolpartys»: alguien salta en bomba a la piscina iluminada; otros con flotadores
 shot(7.77, 'S', null, L => { use('GT'); night(60); const px = GX - 16, pz = 10;
-  const j = put(K[1], px + 6, 0, pz + 1, -PI / 2); hat(j); const t = clamp(L.lt / .5); j.root.position.set(px + 6 - t * 5, 1.4 + 5 * t * (1 - t) * 1.2 + (t >= 1 ? -2 : 0), pz + 1); applyPose(j, { crouch: .3, lLx: 1.6, lLk: 2.2, lRx: 1.6, lRk: 2.2, aLx: 1.2, aRx: 1.2, aLe: 2, aRe: 2 }); grin(j, L.T);
+  const j = put(K[1], px + 5.6, 0, pz + .6, -PI / 2); hat(j); saltar(j, L.lt, .05, { h: 1.6, dur: .45, base: [px + 5.6, 0, pz + .6] }); actuar(j, 0, [[0, 'cheer']], { T: L.T, weight: false, breathe: false }); grin(j, L.T);
   [XT[0], K[4]].forEach((c, i) => { put(c, px - 1.8 + i * 3.4, -1.6, pz - 1.4 + i, i ? -.4 : .4); hat(c); applyPose(c, { aLx: 2.6, aRx: 2.6, aLz: .5, aRz: .5 }); grin(c, L.T); show(FLOATS[i], c.root.position.x, 1.5, c.root.position.z); });
   show(FLOATS[2], px + 2, 1.5, pz + 2.6); FLOATS[2].rotation.x = 0; [0, 1, 2].forEach(i => FLOATS[i].rotation.set(PI / 2, 0, 0));
-  if (L.lt > .45) dust(V(px + 1, 1.4, pz + 1), L.t0 + .45, L.T, 10, .8);
-  orb(L.k, V(px + 1.5, 3.4, pz + 1), null, [21, PI - .35, .2, 48], [19, PI - .25, .18, 48]); sh(V(px, 0, pz), 30); }, [[0, 'swipe', .4], [.4, 'splash', .7], [.1, 'kids_laugh', .3]]);
+  
+  orb(L.k, V(px + 3.2, 2.8, pz + .8), null, [17, -1.3, .2, 48], [15.5, -1.2, .2, 48]); sh(V(px, 0, pz), 30); }, [[0, 'swipe', .4], [.4, 'splash', .7], [.1, 'kids_laugh', .3]]);
 // 8 «Pizzapartys»: mesa de la cocina llena de pizzas; tres amigos cogen porciones
 shot(8.33, 'R', null, L => { use('KU'); inside(1.0, 60); const tx = KX - 5, tz = 2;
   show(PZ[2], tx - 2, 4.25, tz - .4, .1); show(PZ[3], tx + 1.8, 4.25, tz - .5, -.15);
@@ -236,7 +264,7 @@ shot(8.33, 'R', null, L => { use('KU'); inside(1.0, 60); const tx = KX - 5, tz =
   orb(L.k, V(tx, 3.8, tz + 2.6), null, [16, .08, .12, 48], [14.5, .03, .12, 48]); sh(V(tx, 0, tz), 30); }, [[0, 'whirl', .4], [.3, 'paper', .4], [.7, 'chew', .4], [.9, 'laugh_m', .3]]);
 // 9 «Sogar eine Geburtstagsparty»: el salón de fiestas, tarta con velas, todos cantan alrededor
 shot(9.59, 'Z', null, L => { use('SA'); inside(1.0, 40); SA.LC.forEach((l, i) => l.intensity = 50 + Math.sin(L.T * 6 + i) * 30); SA.DB.rotation.y = L.T;
-  [XT[0], K[0], XT[4], K[5], XT[2]].forEach((c, i) => { put(c, AX - 6 + i * 3, 0, -1.8 + Math.abs(i - 2) * .4, PI + (i - 2) * .12); c.root.rotation.y = 0; hat(c); dance(c, L.T, i, { aLx: 2.8, aRx: 2.8 }); grin(c, L.T); });
+  [XT[0], K[0], XT[4], K[5], XT[2]].forEach((c, i) => { put(c, AX - 6 + i * 3, 0, -1.8 + Math.abs(i - 2) * .4, PI + (i - 2) * .12); c.root.rotation.y = 0; hat(c); dance(c, L.T, i); grin(c, L.T); });
   SA.FB.userData.fish.userData.swim(L.T); SA.FB.userData.bubbles(L.T); confRain(V(AX, 0, -4), L.T, 50, 18, 10, 14);
   orb(L.k, V(AX, 4.4, -5), null, [20, 0, .1, 48], [17, 0, .1, 46]); sh(V(AX, 0, -5), 30); }, [[0, 'whoosh_up', .5], [.2, 'party_horn', .5], [.6, 'cheer', .35]]);
 // 10 «für Herrn Blubb, den Goldfisch»: golpe de zoom a la pecera: el pez con su gorrito delante de la tarta
@@ -284,24 +312,24 @@ shot(22.14, 'C', 'punch', L => { use('OS'); inside(1.0, 60); const o = put(oma, 
 shot(23.01, 'I', null, L => { bolz(); const me = put(ich, BX, 0, 3, PI - .15); holdBall(me, L.T); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' }); fireworks(V(BX, 0, -90), L.T, 2, 14);
   orb(L.k, V(BX, 2.8, 3), null, [11, PI + .55, .12, 44], [10, PI + .45, .1, 44]); sh(V(BX, 0, 3), 30); }, [[0, 'iris_pop', .5], [.2, 'firework', .3], [.4, 'wind', .3]]);
 // 21 HUSS: toques bajo el foco, primer plano desde abajo
-shot(23.92, 'W', null, L => { bolz(); const ts = hussIn(23.9, 25.0); const me = put(ich, BX, 0, 2, .2); const b = juggle(me, BALL, L.T, ts); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' }); 
-  orb(L.k, V(BX, 2.4, 2), null, [9.5, .3, -.12, 50], [9, .45, -.1, 50]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .4]]);
+shot(23.92, 'W', null, L => { bolz(); const ts = hussIn(23.9, 25.0); const me = put(ich, BX, 0, 2, .2); const b = trick(me, BALL, L.T, ts, ['up', 'knee', 'up', 'knee', 'up']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' }); 
+  orb(L.k, V(BX, 2.1, 2), null, [11.5, .3, .05, 46], [10.5, .5, .05, 46]); sh(V(BX, 0, 2), 30); }, [[0, 'swipe', .4]]);
 // 22 HUSS: conducción entre los conos, travelling lateral
-shot(24.40, 'S', null, L => { bolz(); const ts = hussIn(24.3, 25.0); const r = dribble(ich, BALL, L.lt, L.T, { x: BX, z: 12, ry: PI, speed: 8, ts, weave: 1.1 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
-  cam([BX + 9, 3.4, r.z - 2], [BX, 2.4, r.z - .5], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'whoosh_soft', .4], [.1, 'steps_run', .5]]);
+shot(24.40, 'S', null, L => { bolz(); const ts = hussIn(24.3, 25.0); const r = dribble(ich, BALL, L.lt, L.T, { x: BX, z: 12, ry: PI, speed: 10.5, ts, weave: 1.1 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
+  cam([BX + 9, 2.8, r.z - 2], [BX, 1.7, r.z - .5], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'whoosh_soft', .4], [.1, 'steps_run', .5]]);
 // 23 «Tag für Tag»: de día, el sol en lo alto, sigo corriendo con el balón y el sudor me cae
 shot(25.265, 'Z', null, L => { bolz(false); const me = put(ich, BX - 1, 0, 0, .3); const b = juggle(me, BALL, L.T, [25.3, 25.6, 25.9, 26.15], { h: 2.2 }); cara(me, L.T, { expr: 'determined', eyes: 'squint', mouth: 'grimace' }); sweat(me, L.T, 2);
-  orb(L.k, V(BX - 1, 2.6, 0), null, [12, .55, .15, 46], [11, .7, .13, 46]); sh(V(BX, 0, 0), 30); }, [[0, 'zoom_in', .4], [.2, 'birds', .3], [.5, 'strain', .4]]);
+  orb(L.k, V(BX - 1, 2.0, 0), null, [12, .55, .15, 46], [11, .7, .13, 46]); sh(V(BX, 0, 0), 30); }, [[0, 'zoom_in', .4], [.2, 'birds', .3], [.5, 'strain', .4]]);
 // 24 HUSS: de día, toques mirando desde arriba
-shot(26.33, 'W', null, L => { bolz(false); const ts = hussIn(26.3, 27.0); const me = put(ich, BX + 1, 0, 1, -.4); const b = juggle(me, BALL, L.T, ts, { h: 2.8 }); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' }); sweat(me, L.T, 1);
-  orb(L.k, V(BX + 1, 2.6, 1), null, [13, -.4, .5, 46], [12, -.3, .55, 46]); sh(V(BX, 0, 1), 30); }, [[0, 'swipe', .4]]);
+shot(26.33, 'W', null, L => { bolz(false); const ts = hussIn(26.3, 27.0); const me = put(ich, BX + 1, 0, 1, -.4); const b = trick(me, BALL, L.T, ts, ['rainbow', 'up', 'knee', 'up']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' }); sweat(me, L.T, 1);
+  orb(L.k, V(BX + 1, 2.5, 1), null, [14, -.55, .12, 46], [13, -.4, .1, 46]); sh(V(BX, 0, 1), 30); }, [[0, 'swipe', .4]]);
 // 25 HUSS: de noche otra vez, regateo hacia la portería
-shot(26.99, 'F', null, L => { bolz(); const ts = hussIn(26.95, 27.5); const r = dribble(ich, BALL, L.lt, L.T, { x: BX - 2, z: 8, ry: PI + .15, speed: 9, ts, weave: .8 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
-  cam([BX - 6.5, 2.8, r.z - 9], [r.x, 2.2, r.z], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'flash', .3], [.1, 'steps_run', .5]]);
+shot(26.99, 'F', null, L => { bolz(); const ts = hussIn(26.95, 27.5); const r = dribble(ich, BALL, L.lt, L.T, { x: BX - 2, z: 8, ry: PI + .15, speed: 11, ts, weave: .8 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
+  cam([BX - 6.5, 2.6, r.z - 9], [r.x, 1.6, r.z], 48); sh(V(BX, 0, r.z), 30); }, [[0, 'flash', .3], [.1, 'steps_run', .5]]);
 // 26 HUSS: tiro desde el borde del área y la red de la portería pequeña se hincha
 shot(27.45, 'W', 'punch', L => { bolz(); const kt = 27.70; const me = put(ich, BX - .3, 0, 2, PI); applyPose(me, kickPose(clamp((L.T - (kt - .15)) / .3))); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
   if (L.T < kt) { const w = loc(me, .5, .55 / .84, 1.4); show(BALL, w.x, .55, w.z); } else { const a = loc(me, .5, 1.0, 1.4).toArray(); const p = shotBall(BALL, a, [BX + 1.6, 2.4, -15.4], .8, clamp((L.T - kt) / .2), L.T); BZ.GO.userData.bulge(clamp((L.T - kt - .18) / .1)); }
-  orb(L.k, V(BX - .3, 2.6, 2), null, [11, PI - .6, .12, 46], [10, PI - .7, .1, 46]); sh(V(BX, 0, -4), 30); }, [[0, 'swipe', .3], [.45, 'trash_hit', .5]]);
+  orb(L.k, V(BX - .3, 2.0, 1), null, [12, PI - .6, .12, 46], [11, PI - .7, .1, 46]); sh(V(BX, 0, -4), 30); }, [[0, 'swipe', .3], [.45, 'trash_hit', .5]]);
 // ---------- c: el partido de la Sommerparty: se ríen de mí, 10:0, silencio y «während du gefeiert hast» (28,02 – 49,59 s) ----------
 const fans = (T, mode = 'cheer', silent = false) => { CROWD.update(T, mode, silent); };
 const FRONT = () => [K[0], XT[3], K[2], XT[1], K[5], XT[0], K[7], XT[2]];
@@ -310,9 +338,9 @@ const frontRow = (T, z0 = -6, expr = 'cheer') => FRONT().forEach((c, i) => { put
 shot(28.02, 'Z', 'slow', L => { stadium(); fans(L.T); fireworks(V(SX, 0, -80), L.T, 3, 18); ST.SB.userData.set(0, 0);
   const k = easeInOut(L.k); cam([SX + 34 - k * 8, 40 - k * 14, 52 - k * 12], [SX - 8, 4, -6], 52); sh(V(SX - 10, 0, 0), 60); }, [[0, 'whoosh_up', .5], [.2, 'cheer', .6], [.5, 'firework', .5], [1.3, 'firework', .5]]);
 // 28 «das Sommerparty-Fußballspiel»: la pancarta y los rivales calentando con gorro de fiesta
-shot(30.33, 'W', null, L => { stadium(); fans(L.T); const kp = put(kap, SX - 9, 0, 1, PI / 2 - .5); hat(kp); const b = juggle(kp, BALL, L.T, [30.4, 30.75, 31.1, 31.45, 31.8, 32.15], { h: 2 }); grin(kp, L.T);
+shot(30.33, 'W', null, L => { stadium(); fans(L.T); const kp = put(kap, SX - 11, 0, 1, PI / 2 - .7); hat(kp); const b = juggle(kp, BALL, L.T, [30.4, 30.75, 31.1, 31.45, 31.8, 32.15], { h: 2 }); grin(kp, L.T);
   const c = put(K[3], SX - 13, 0, -4.5, PI / 2 - .2); hat(c); actuar(c, L.lt, [[0, 'cheer']], { T: L.T }); grin(c, L.T);
-  cam([SX + 2 - L.k * 2, 4.2, 6], [SX - 16, 7.6, -1], 50); sh(V(SX - 14, 0, 0), 40); }, [[0, 'swipe', .4], [.3, 'whistle', .5], [.8, 'cheer', .4]]);
+  cam([SX + 2 - L.k * 2, 4.0, 6], [SX - 16, 6.4, -1], 50); sh(V(SX - 14, 0, 0), 40); }, [[0, 'swipe', .4], [.3, 'whistle', .5], [.8, 'cheer', .4]]);
 // 29 «Alle kamen mit Partyhüten»: travelling por la grada: todos con gorro de fiesta
 shot(32.19, 'S', null, L => { stadium(); fans(L.T); frontRow(L.T, -10); const z = lerp(-12, 4, easeInOut(L.k));
   cam([SX - 13, 5.4, z + 9], [SX - 26, 4.2, z + 2], 48); sh(V(SX - 26, 0, z), 30); }, [[0, 'whoosh_soft', .4], [.2, 'party_horn', .5], [.6, 'party_horn', .4], [.4, 'cheer', .4]]);
@@ -333,22 +361,22 @@ shot(36.67, 'Z', 'slow', L => { stadium(); fans(L.T, 'sway'); const me = put(ich
   cara(me, L.T, { expr: 'determined', eyes: L.lt > .9 ? 'angry' : 'normal', mouth: 'flat' });
   orb(L.k, V(SX, 2.6, -8), null, [12, .25, .08, 46], [9.5, .18, .06, 44]); sh(V(SX, 0, -8), 30); }, [[.0, 'whoosh_soft', .4], [.5, 'kick', .5], [.6, 'murmur', .3]]);
 // 34 HUSS: regateo: el primer rival se cae de culo
-shot(37.93, 'W', null, L => { stadium(); fans(L.T, 'cheer'); const ts = hussIn(37.9, 38.39); const r = dribble(ich, BALL, L.lt, L.T, { x: SX, z: -8, ry: PI, speed: 9, ts, weave: 1.2 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
-  const d = put(K[3], SX - 1.4, 0, -12.5, 0); hat(d); const f = clamp((L.lt - .2) / .25); applyPose(d, { lean: -1.1 * f, crouch: 1.3 * f, lLx: 1.4 * f, lRx: 1.6 * f, aLx: 1.6 * f, aRx: 1.9 * f, aLz: .5, aRz: .5 }); cara(d, L.T, { expr: 'shock', eyes: 'wide', mouth: 'o' }); if (f > .9) dust(V(SX + .8, 0, -12.5), L.t0 + .45, L.T, 6, .6);
-  cam([SX + 8, 3.6, r.z - 7], [r.x - .4, 2.4, r.z - 2], 50); sh(V(SX, 0, r.z), 30); }, [[0, 'swipe', .3], [.42, 'land', .5]]);
+shot(37.93, 'W', null, L => { stadium(); fans(L.T, 'cheer'); const ts = hussIn(37.9, 38.39); const r = dribble(ich, BALL, L.lt, L.T, { x: SX, z: -8, ry: PI, speed: 11, ts, weave: 1.2 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
+  const d = put(K[3], SX - .6, 0, -5.4, PI); hat(d); const f = clamp((L.lt - .2) / .25); applyPose(d, { lean: -1.1 * f, crouch: 1.3 * f, lLx: 1.4 * f, lRx: 1.6 * f, aLx: 1.6 * f, aRx: 1.9 * f, aLz: .5, aRz: .5 }); cara(d, L.T, { expr: 'shock', eyes: 'wide', mouth: 'o' }); if (f > .9) dust(V(SX + .8, 0, -12.5), L.t0 + .45, L.T, 6, .6);
+  cam([SX + 15, 3.0, r.z + 1.4], [r.x - .6, 3.4, r.z + 1.2], 50); sh(V(SX, 0, r.z), 30); }, [[0, 'swipe', .3], [.42, 'land', .5]]);
 // 35 HUSS: bicicleta y caño al capitán, que se queda girando
-shot(38.39, 'R', null, L => { stadium(); fans(L.T, 'cheer'); const ts = hussIn(38.35, 38.84); const r = dribble(ich, BALL, L.lt, L.T, { x: SX - .6, z: -12, ry: PI + .1, speed: 8.5, ts, weave: 1.4 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
-  const kp = put(kap, SX - .4, 0, -17.5, L.lt * 7); hat(kp); applyPose(kp, { aLx: 1.0, aRx: 1.0, aLz: .9, aRz: .9, lean: -.2, lLx: .4, lRk: .5 }); cara(kp, L.T, { expr: 'shock', eyes: 'wide', mouth: 'grimace' });
-  cam([SX + 13, 4.6, r.z - 3], [r.x - 1.2, 2.4, r.z - 3.4], 50); sh(V(SX, 0, r.z), 30); }, [[0, 'whirl', .4], [.3, 'whoosh', .4]]);
+shot(38.39, 'R', null, L => { stadium(); fans(L.T, 'cheer'); const ts = hussIn(38.35, 38.84); const r = dribble(ich, BALL, L.lt, L.T, { x: SX - .6, z: -12, ry: PI + .1, speed: 10.5, ts, weave: 1.4 }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
+  const kp = put(kap, SX - .8, 0, -10.2, PI + L.lt * 7); hat(kp); applyPose(kp, { aLx: 1.0, aRx: 1.0, aLz: .9, aRz: .9, lean: -.2, lLx: .4, lRk: .5 }); cara(kp, L.T, { expr: 'shock', eyes: 'wide', mouth: 'grimace' });
+  cam([SX + 15, 3.0, r.z + 1.3], [r.x - .6, 3.4, r.z + 1.1], 50); sh(V(SX, 0, r.z), 30); }, [[0, 'whirl', .4], [.3, 'whoosh', .4]]);
 // 36 HUSS: plano cenital: corro hacia la portería dejando atrás a todos
-shot(38.84, 'S', null, L => { stadium(); fans(L.T, 'cheer'); const ts = hussIn(38.8, 39.1); const r = dribble(ich, BALL, L.lt, L.T, { x: SX - 1, z: -17, ry: PI, speed: 10, ts }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
+shot(38.84, 'S', null, L => { stadium(); fans(L.T, 'cheer'); const ts = hussIn(38.8, 39.1); const r = dribble(ich, BALL, L.lt, L.T, { x: SX - 1, z: -17, ry: PI, speed: 12, ts }); cara(ich, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
   [K[3], kap, K[7]].forEach((c, i) => { caminar(c, L.lt, { x: SX - 4 + i * 3, z: -9 - i * 1.5, ry: PI, speed: 6, run: true, T: L.T }); hat(c); cara(c, L.T, { expr: 'shock' }); });
   cam([SX + 3, 15, r.z + 7], [r.x, 0, r.z - 3], 50); sh(V(SX, 0, r.z), 30); }, [[0, 'whoosh_soft', .4], [.05, 'crowd_run', .4]]);
 // 37 HUSS: el tiro: el portero se lanza y no llega, la red se hincha
 shot(39.05, 'F', 'punch', L => { stadium(); fans(L.T, L.T > 39.6 ? 'cheer' : 'sway'); const kt = 39.30; const me = put(ich, SX - 1, 0, -21, PI); applyPose(me, kickPose(clamp((L.T - (kt - .17)) / .32))); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'grimace' });
   const gk = put(K[7], SX, 0, -33.5, 0); hat(gk); const dv = clamp((L.T - kt - .05) / .3); gk.root.position.set(SX - 3.6 * dv, 1.4 * Math.sin(dv * PI), -33.5); gk.root.rotation.set(0, 0, dv * 1.3); applyPose(gk, { aLx: 2.8, aRx: 2.8, aLz: .4, aRz: .2, lLx: .3 }); cara(gk, L.T, { expr: 'shock', eyes: 'wide', mouth: 'o' });
   if (L.T < kt) { const w = loc(me, .5, .55 / .84, 1.4); show(BALL, w.x, .55, w.z); } else { const a = loc(me, .5, 1.0, 1.4).toArray(); shotBall(BALL, a, [SX + 3.4, 3.2, -37.6], .6, clamp((L.T - kt) / .26), L.T); ST.G1.userData.bulge(clamp((L.T - kt - .24) / .1)); }
-  cam([SX + 7, 4.2, -14], [SX - .5, 2.8, -29], 46); sh(V(SX, 0, -28), 30); }, [[0, 'flash', .3], [.28, 'net', .7], [.3, 'cheer', .6], [.25, 'whistle', .4]]);
+  cam([SX + 4.5, 3.6, -14.5], [SX - .5, 2.2, -30], 48); sh(V(SX, 0, -28), 30); }, [[0, 'flash', .3], [.28, 'net', .7], [.3, 'cheer', .6], [.25, 'whistle', .4]]);
 // 38 «Zehn Tore»: el marcador sube a toda velocidad hasta 10:0; yo lo celebro de rodillas
 shot(39.72, 'Z', null, L => { stadium(); fans(L.T, 'cheer'); const n = Math.min(10, 1 + Math.floor(L.lt * 14)); ST.SB.userData.set(n, 0, n === 10 ? Math.sin(L.T * 20) : 0);
   const me = put(ich, SX + .5, 0, -27, PI); applyPose(me, { ...GEST.cheer, crouch: 1.0, lLx: 0, lLk: 1.5, lRx: 1.4, lRk: 1.5, hipY: 2.05 }); grin(me, L.T);
@@ -395,8 +423,8 @@ shot(54.01, 'S', null, L => { street(); windows('dark', L.T); OR.FEST.visible = 
 shot(55.30, 'C', 'punch', L => { street(); windows('dark', L.T); const me = put(ich, 1.2, 0, 1, .2); actuar(me, L.lt, [[0, 'shock']], { T: L.T }); cara(me, L.T, { expr: 'gasp', eyes: 'wide', mouth: 'o' });
   onFace(me, 7.6, -.5, .4, 38, L.k, 7); sh(V(1, 0, 1), 30); }, [[0, 'impact_soft', .5]]);
 // 51 «Dann hörte ich es»: me llevo la mano a la oreja
-shot(55.74, 'W', null, L => { street(); windows('warm', L.T); const me = put(ich, 1.2, 0, 1, -.5); actuar(me, L.lt, [[0, 'idle'], [.1, 'listen', { dur: .3 }]], { T: L.T }); cara(me, L.T, { expr: 'confused', eyes: 'side_l', mouth: 'o' });
-  orb(L.k, V(1.2, 3.0, 1), null, [11, -.3, .1, 44], [10, -.36, .1, 44]); sh(V(1, 0, 1), 30); }, [[0, 'swipe', .3], [.3, 'hmm', .3]]);
+shot(55.74, 'W', null, L => { street(); windows('warm', L.T); const me = put(ich, 1.2, 0, 1, .2); actuar(me, L.lt, [[0, 'idle'], [.1, 'listen', { dur: .3 }]], { T: L.T }); cara(me, L.T, { expr: 'confused', eyes: 'side_l', mouth: 'o' });
+  orb(L.k, V(1.2, 3.0, 1), null, [11, .35, .1, 44], [10, .3, .1, 44]); sh(V(1, 0, 1), 30); }, [[0, 'swipe', .3], [.3, 'hmm', .3]]);
 // 52 «aus jedem Fenster» (zoom lento): las ventanas de la casa se encienden una tras otra
 shot(56.75, 'Z', 'slow', L => { street(); windows('sil', L.T); WIN.forEach((ps, i) => ps.forEach((m, j) => { m.visible = L.lt > (i * .7 + j * .23) % 1.2; }));
   cam([-5, 5.6, 48 - L.k * 2], [-18, 6.4, 36], 46); sh(V(-20, 0, 36), 30); }, [[0, 'zoom_in', .3], [.2, 'click_set', .4], [.6, 'click_set', .4], [1.0, 'click_set', .4]]);
@@ -412,15 +440,15 @@ shot(59.505, 'W', null, L => { use('ZI'); inside(1.0, 60); const j = put(jonas, 
   orb(L.k, V(ZX - 2, 3.2, 1), null, [12, .3, .1, 44], [11, .2, .08, 44]); sh(V(ZX, 0, 0), 30); }, [[0, 'swipe', .3], [.05, 'guitar', .7], [.7, 'guitar', .6]]);
 // 57 «Gerda boxte»: Gerda con guantes golpea el saco del garaje
 shot(60.84, 'R', null, L => { use('GA'); inside(1.0, 50); const bx = RX + 1.5, bz = -6; show(BAG, bx, 9.6, bz); const hits = [.12, .38, .62, .86]; let sw = 0; hits.forEach(t => { const g = Math.exp(-Math.pow((L.lt - t - .08) / .1, 2)); sw = Math.max(sw, g); }); BAG.rotation.x = -sw * .18;
-  const g = put(gerda, bx - 3.5, 0, bz, PI / 2); GLV.forEach(x => x.visible = true); const ph = Math.sin(L.lt * PI / .25); applyPose(g, { aLx: 1.5 + Math.max(0, ph) * .2, aLe: Math.max(0, -ph) * 1.6 + .2, aRx: 1.5 + Math.max(0, -ph) * .2, aRe: Math.max(0, ph) * 1.6 + .2, aLz: -.2, aRz: -.2, twist: ph * .25, crouch: .2, lLx: .3, lRx: -.2, lean: .12 }); cara(g, L.T, { expr: 'angry', eyes: 'angry', mouth: 'grimace' }); sweat(g, L.T, 1);
-  orb(L.k, V(bx - 2.6, 3.6, bz), null, [14, .7, .12, 44], [13, .6, .1, 44]); sh(V(bx, 0, bz), 30); }, [[0, 'whirl', .3], [.12, 'fist', .6], [.38, 'fist', .6], [.62, 'fist', .6], [.86, 'fist', .5]]);
+  const g = put(gerda, bx + 3.5, 0, bz, -PI / 2); GLV.forEach(x => x.visible = true); const ph = Math.sin(L.lt * PI / .25); applyPose(g, { aLx: 1.5 + Math.max(0, ph) * .2, aLe: Math.max(0, -ph) * 1.6 + .2, aRx: 1.5 + Math.max(0, -ph) * .2, aRe: Math.max(0, ph) * 1.6 + .2, aLz: -.2, aRz: -.2, twist: ph * .25, crouch: .2, lLx: .3, lRx: -.2, lean: .12 }); cara(g, L.T, { expr: 'angry', eyes: 'angry', mouth: 'grimace' }); sweat(g, L.T, 1);
+  orb(L.k, V(bx + 1.8, 3.4, bz), null, [14, -.5, .12, 44], [13, -.4, .1, 44]); sh(V(bx, 0, bz), 30); }, [[0, 'whirl', .3], [.12, 'fist', .6], [.38, 'fist', .6], [.62, 'fist', .6], [.86, 'fist', .5]]);
 // 58 «Und meine Oma machte Yoga»: la Oma en la postura del árbol sobre la esterilla, muy concentrada
 shot(61.82, 'Z', null, L => { use('OS'); inside(1.0, 60); show(MAT, OX - 1, 0, 9.5, 0); const o = put(oma, OX - 1, .12, 9.5, 0); hat(o); const b = Math.sin(L.T * 2) * .03;
   applyPose(o, { aLx: 3.0, aRx: 3.0, aLz: -.25, aRz: -.25, aLe: .2, aRe: .2, lLx: .3, lLk: 2.2, sx: b, headX: -.05 }); o.lL.hp.rotation.z = -1.1; cara(o, L.T, { expr: 'relief', eyes: 'closed', mouth: 'smile' });
   orb(L.k, V(OX - 1, 2.8, 9.5), null, [12, -.25, .1, 44], [11, -.15, .08, 44]); sh(V(OX, 0, 9), 30); }, [[0, 'zoom_in', .3], [.2, 'breath', .5], [.8, 'chime', .4]]);
 // 59 «Jetzt geht hier keiner mehr auf Partys»: alguien clava el cartel PARTY ABGESAGT delante de la casa de la fiesta
 shot(63.42, 'W', null, L => { street(); windows('sil', L.T); show(ABG, -14.5, 0, 34, PI / 2); const c = put(K[5], -13.2, 0, 38.4, PI / 2 + .7); actuar(c, L.lt, [[0, 'idle'], [.2, 'point_l', { dur: .3 }]], { T: L.T }); cara(c, L.T, { expr: 'determined' });
-  orb(L.k, V(-13.8, 4.6, 36.6), null, [17, PI / 2 + .2, .08, 46], [15.5, PI / 2 + .1, .08, 46]); sh(V(-14, 0, 35), 30); }, [[0, 'swipe', .3], [.2, 'stamp', .6], [.6, 'stamp', .5]]);
+  orb(L.k, V(-14.0, 4.4, 35.6), null, [19, PI / 2 + .25, .08, 46], [17.5, PI / 2 + .15, .08, 46]); sh(V(-14, 0, 35), 30); }, [[0, 'swipe', .3], [.2, 'stamp', .6], [.6, 'stamp', .5]]);
 // 60 «Die ganze Stadt trainiert»: la calle llena de gente corriendo y haciendo dominadas
 shot(65.31, 'S', null, L => { street(); windows('sil', L.T); [K[0], XT[0], K[3], XT[3], K[6], XT[5], K[2]].forEach((c, i) => { caminar(c, L.lt, { x: -5 + (i % 4) * 3.4, z: -6 - Math.floor(i / 4) * 6 - (i % 2) * 2, ry: 0, speed: 6, run: true, accel: .05, T: L.T + i }); cara(c, L.T, { expr: 'determined' }); sweat(c, L.T, 0); });
   const pu = OR.BARS[2]; const bp = wpos(pu); const g = put(gerda, bp.x, 0, bp.z, PI / 2); const up = (Math.sin(L.T * 5) + 1) / 2; applyPose(g, { aLx: 3.05 - up * .45, aRx: 3.05 - up * .45, aLz: .2 + up * .5, aRz: .2 + up * .5, aLe: up * 2, aRe: up * 2, lLk: .8, lRk: .5 }); g.root.position.y = 7.4 - lerp(6.25, 4.6, up) * .92; cara(g, L.T, { expr: 'determined' });
@@ -437,16 +465,16 @@ shot(69.47, 'F', null, L => { use('SA'); inside(1.0, 50); SA.LC.forEach((l, i) =
   orb(L.k, V(AX, 4.4, -4), null, [19, .35, .18, 48], [17, .28, .16, 48]); sh(V(AX, 0, -5), 30); }, [[0, 'flash', .3], [.3, 'water_bloop', .4], [.8, 'party_horn', .4]]);
 // 64 «auf Herrn Blubbs Geburtstag»: soplo las velas junto a Herr Blubb, que lleva su gorrito
 shot(70.84, 'C', 'punch', L => { use('SA'); inside(1.0, 50); const f = SA.FB.userData.fish; f.userData.swim(L.T); f.userData.face(true); f.rotation.y = -.5; SA.FB.userData.bubbles(L.T); SA.CK.userData.FL.forEach(fl => fl.visible = L.lt < .7);
-  const me = put(ich, AX - 8.4, 0, -5.2, PI / 2 - .55); hat(me); applyPose(me, { lean: .35, headX: .1, aLz: .3, aRz: .3, aLx: .6, aRx: .6 }); cara(me, L.T, { eyes: 'closed', mouth: L.lt > .4 ? 'o' : 'smile' });
+  const me = put(ich, AX - 8.2, 0, -4.6, .6); hat(me); applyPose(me, { lean: .2, headY: .6, aLz: .3, aRz: .3, aLx: .6, aRx: .6 }); cara(me, L.T, { eyes: 'closed', mouth: L.lt > .4 ? 'o' : 'smile' });
   const p = wpos(SA.CK); cam([p.x - 3.8, p.y + 1.2, p.z + 12], [p.x - 3.8, p.y + .4, p.z], 44); sh(p, 20); }, [[0, 'impact_soft', .4], [.45, 'blow', .6], [.8, 'clap', .4]]);
 // 65 «Es war alles, was er sich je gewünscht hat» (zoom lento): Herr Blubb feliz, con corazones; yo abrazo la pecera
 shot(72.34, 'Z', 'slow', L => { use('SA'); inside(1.0, 50); const f = SA.FB.userData.fish; f.userData.swim(L.T * 1.5); f.userData.face(true); f.rotation.y = Math.sin(L.T) * .25; SA.FB.userData.bubbles(L.T); const p = wpos(SA.FB);
-  const me = put(ich, p.x + 3.2, 0, p.z + 2.8, -2.2); hat(me); applyPose(me, { aLx: 1.5, aRx: 1.3, aLz: -.2, aRz: -.3, aLe: .8, aRe: .6, lean: .2, headZ: .2 }); cara(me, L.T, { eyes: 'happy', mouth: 'smile' });
+  
   hearts(p.clone().add(V(0, 3.4, 0)), L.T); cam([p.x + 1.8, p.y + 2.2, p.z + 13 - L.k * 2], [p.x + 1.6, p.y + 1.2, p.z], 42); sh(p, 20); }, [[0, 'zoom_in', .3], [.3, 'sparkle', .5], [1.0, 'water_bloop', .4]]);
 // 66 HUSS: toques en la fiesta; Herr Blubb mira desde la pecera
 shot(74.66, 'W', null, L => { use('SA'); inside(.9, 45); SA.LC.forEach((l, i) => l.intensity = 70 + Math.sin(L.T * 7 + i * 1.6) * 50); SA.DB.rotation.y = L.T * .8; const f = SA.FB.userData.fish; f.userData.swim(L.T); f.userData.face(true);
-  const ts = hussIn(74.6, 76); const me = put(ich, AX + 1, 0, 3, -.15); hat(me); const b = juggle(me, BALL, L.T, ts, { end: true }); grin(me, L.T); confRain(V(AX, 0, 2), L.T, 40, 14, 10, 14);
-  orb(L.k, V(AX + .5, 3.6, 0), null, [16, -.1, .14, 48], [14, -.05, .12, 48]); sh(V(AX, 0, 0), 30); }, [[0, 'swipe', .3], [.6, 'cheer', .3]]);
+  const ts = hussIn(74.6, 76); const me = put(ich, AX + 1, 0, 3, -.15); hat(me); const b = trick(me, BALL, L.T, ts, ['up', 'knee', 'rainbow', 'up'], { end: true, tail: .9 }); grin(me, L.T); confRain(V(AX, 0, 2), L.T, 40, 14, 10, 14);
+  orb(L.k, V(AX + 1, 2.4, 3), null, [14, -.1, .12, 48], [12.5, -.05, .1, 48]); sh(V(AX, 0, 0), 30); }, [[0, 'swipe', .3], [.6, 'cheer', .3]]);
 
 
 // ---------- transiciones, sonidos, render ----------
