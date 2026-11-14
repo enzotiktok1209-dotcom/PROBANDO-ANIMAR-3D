@@ -188,14 +188,15 @@ const thrower = (ch, x, z, ry, k, food, ksz = .5) => { put(ch, x, 0, z, ry); app
 const handPos = ch => { ch.root.updateMatrixWorld(true); return ch.aR.hand.getWorldPosition(V(0, 0, 0)); };
 // 1 «In dieser Stadt»: la calle; yo en el centro y los Tiere paseando por la acera
 shot(0, 'Z', null, L => { street(); const z0 = -4;
-  const me = put(ich, 0, 0, z0, 0); actuar(me, L.lt, [[0, 'idle'], [.1, 'wave', { dur: .25 }]], { T: L.T }); talk(me, L.T, 0, .84, 'happy');
-  walkB(TG[0], L.lt, -6.4, z0 - 9, 0, 2.6, L.T); walkB(LI[0], L.lt, 5.2, z0 - 7, PI * .92, 2.2, L.T); beast(NB[1], 2.6, 0, z0 + 1.2, -.3); NB[1].pose(L.T, { wave: 1 });
-  put(XT[1], -9.6, 0, z0 - 14, PI / 2); actuar(XT[1], L.lt, [[0, 'point']], { T: L.T }); grin(XT[1], L.T);
-  cm([0, 6.2, z0 + 18, 0, 4.2, z0 - 3, 50], [0, 5.6, z0 + 14, 0, 4.2, z0 - 3, 48], L.k); sh(V(0, 0, z0 - 4), 30); }, [[.02, 'whoosh', .6], [.25, 'pop', .5], [.5, 'steps', .4]]);
+  const me = put(ich, .4, 0, z0, -.1); actuar(me, L.lt, [[0, 'idle'], [.1, 'wave', { dur: .25 }]], { T: L.T }); talk(me, L.T, 0, .84, 'happy');
+  beast(NB[1], -1.9, 0, z0 + 2, .25).pose(L.T, { wave: 1, face: { eyes: 'happy', mouth: 'grin' } });
+  walkB(TG[0], L.lt, 3.2, z0 - 15, -.15, 2.4, L.T); walkB(LI[0], L.lt, -3.6, z0 - 12, .1, 2.2, L.T);
+  put(XT[1], 6.2, 0, z0 - 16, -.4); actuar(XT[1], L.lt, [[0, 'wave']], { T: L.T }); grin(XT[1], L.T);
+  orb(L.k, V(0, 3.6, z0 - 3), null, [19, .02, .1, 48], [16.5, 0, .08, 46]); sh(V(0, 0, z0 - 4), 30); }, [[.02, 'whoosh', .6], [.25, 'pop', .5], [.5, 'steps', .4]]);
 // 2 «kauft man keine Tiere»: la tienda de animales cerrada, alguien niega con la cabeza
 shot(.84, 'W', null, L => { street(); const zz = 62;
-  const g = put(K[3], -13.2, 0, zz - 2.4, PI / 2 + .25); actuar(g, L.lt, [[0, 'idle'], [.15, { aRx: 1.5, aRz: -.1, aRe: .1, headY: Math.sin(L.T * 9) * .5 }]], { T: L.T }); cara(g, L.T, { expr: 'sad', mouth: 'frown' });
-  orb(L.k, V(-15.4, 5, zz - 1.2), null, [24, 1.25, .1, 44], [21, 1.32, .08, 44]); sh(V(-16, 0, zz), 30); badge('red', 'KEINE TIERE', W / 2, H * .17, (L.lt - .3) * 3, 1, .85); }, [[.05, 'swipe', .5], [.3, 'buzzer', .35], [.6, 'door_creak', .3]]);
+  const g = put(K[3], -13.4, 0, zz + 2.6, PI / 2 + .45); actuar(g, L.lt, [[0, 'idle'], [.15, { aRx: 1.5, aRz: -.1, aRe: .1, headY: Math.sin(L.T * 9) * .5 }]], { T: L.T }); cara(g, L.T, { expr: 'sad', mouth: 'frown' });
+  orb(L.k, V(-17, 5.2, zz - .6), null, [36, 1.18, .08, 46], [33, 1.22, .06, 46]); sh(V(-16, 0, zz), 30); }, [[.05, 'swipe', .5], [.3, 'buzzer', .35], [.6, 'door_creak', .3]]);
 // 3 «Man wirft Essen»: alguien lanza una manzana desde el círculo
 shot(2.26, 'F', null, L => { field(); const k = clamp(L.lt / .62); const t = thrower(K[1], FX, 0, PI, k, 'apfel'); cara(t, L.T, { expr: 'determined', mouth: 'teeth' });
   if (k >= .62) { const f = clamp((L.lt - .38) / 1.2), p = arc([FX + .8, 6, -.6], [FX - 2, 3, -60], 26, f); show(FOODS.apfel, p.x, p.y, p.z, L.T * 6, .7); }
