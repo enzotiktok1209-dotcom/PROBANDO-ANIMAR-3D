@@ -226,12 +226,15 @@ const dance = (ch, T, ph = 0, extra = {}) => { const b = Math.sin(T * 9 + ph); a
 const party = (chs, T, base, sp = 4.2, ry = 0) => chs.forEach((c, i) => { const r = RNG(i * 7 + 3); put(c, base.x + (i % 3 - 1) * sp + (r() - .5) * 1.4, base.y, base.z - Math.floor(i / 3) * sp * .9 + (r() - .5), ry + (r() - .5) * .8); hat(c); dance(c, T, i * 1.3); grin(c, T); });
 const holdBall = (ch, T) => { applyPose(ch, { aRx: .35, aRz: .15, aRe: 1.6, aLz: .15, aLe: .3, headX: .02 }); const w = loc(ch, 1.2, 2.55, .45); show(BALL, w.x, w.y, w.z); return w; };
 // 1 «In dieser Stadt geht jeder auf Partys»: la calle de noche llena de fiesta; yo delante con el balón bajo el brazo
-shot(0, 'Z', null, L => { street(); OR.FEST.visible = true; windows('party', L.T);
-  party([...K, ...XT.slice(0, 4)], L.T, V(0, 0, -12), 4.4, 0);
-  const me = put(ich, .3, 0, 2, .05); holdBall(me, L.T); cara(me, L.T, { expr: 'smug', eyes: 'half', mouth: 'smirk' });
-  fireworks(V(0, 0, -60), L.T, 3, 12); confRain(V(0, 0, -8), L.T, 50, 22, 18, 14);
-  orb(L.k, V(0, 3.4, -1), V(0, 3.2, 0), [21, .06, .12, 50], [16, .02, .1, 48]); sh(V(0, 0, -6), 30); }, [[.0, 'whoosh', .6], [.2, 'cheer', .45], [.4, 'firework', .5], [1.2, 'firework', .4]]);
-// 2 «außer mir»: primer plano delante del Bolzplatz, de noche, balón bajo el brazo
+// 1 «In dieser Stadt»: yo haciendo toques en mitad de la calle de noche; detrás, el pueblo de fiesta
+shot(0, 'Z', null, L => { street(); OR.FEST.visible = true; windows('party', L.T); party([...K.slice(0, 6)], L.T, V(0, 0, -22), 4.6, 0);
+  const me = put(ich, .3, 0, 2, .05); trick(me, BALL, L.T, [.04, .22, .4, .58, .74], ['up', 'knee', 'up', 'knee', 'up']); cara(me, L.T, { expr: 'determined', eyes: 'angry', mouth: 'flat' });
+  fireworks(V(0, 0, -70), L.T, 3, 12); orb(L.k, V(.3, 3.0, 2), null, [13.5, .25, .05, 46], [12.5, .15, .05, 46]); sh(V(0, 0, 0), 30); }, [[.04, 'kick', .5], [.22, 'kick', .4], [.4, 'kick', .5], [.58, 'kick', .4], [.3, 'cheer', .3]]);
+// 2 «geht jeder auf Partys»: grúa sobre la calle llena de gente bailando con gorros de fiesta
+shot(.76, 'W', null, L => { street(); OR.FEST.visible = true; windows('party', L.T);
+  party([...K, ...XT.slice(0, 4)], L.T, V(0, 0, -6), 4.2, 0);
+  fireworks(V(0, 0, -60), L.T, 3, 12); confRain(V(0, 0, -8), L.T, 60, 22, 18, 14);
+  orb(L.k, V(0, 3.2, -8), null, [20, .1, .32, 48], [17, .02, .26, 48]); sh(V(0, 0, -8), 30); }, [[0, 'swipe', .5], [.2, 'cheer', .45], [.4, 'firework', .5], [1.0, 'party_horn', .4]]);
 shot(2.21, 'C', 'punch', L => { bolz(); const me = put(ich, BX, 0, 6, 0); holdBall(me, L.T); talk(me, L.T, 2.21, 3.03, 'smug');
   onFace(me, 9.2, -.4, .8, 38, L.k, 8.2); sh(V(BX, 0, 4), 30); }, [[0, 'thump', .6], [.2, 'hmm', .3]]);
 // 3 HUSS (toques): contrapicado frontal, el balón sube y baja de un pie al otro
@@ -272,9 +275,9 @@ shot(10.89, 'C', 'punch', L => { use('SA'); inside(1.0, 50); SA.LC.forEach((l, i
   const p = wpos(SA.FB); cam([p.x - 1.5 + L.k * .4, p.y + 2.8, p.z + 8.2 - L.k * 1.2], [p.x - .4, p.y + 2.2, p.z], 40); badge3('tag', 'HERR BLUBB', p.clone().add(V(0, 5.2, 0)), (L.lt - .25) * 3); sh(p, 20); }, [[0, 'impact_soft', .6], [.2, 'water_bloop', .5], [.6, 'sparkle', .4]]);
 // 11 «Deshalb trainiert hier niemand»: el Bolzplatz de día, abandonado: conos tirados, un chico dormido con gorro de fiesta
 shot(12.38, 'W', null, L => { bolz(false); BZ.CONES.forEach((c, i) => { c.rotation.set(i % 2 ? PI / 2 : 0, 0, i % 3 ? PI / 2 : 0); c.position.y = i % 2 || i % 3 ? .45 : .55; });
-  const z = put(K[0], BX + 2.5, .5, 1, 0); hat(z); applyPose(z, { aLx: .1, aLz: .3, aRx: 2.9, aRe: .4, lRx: .4, lRk: .6, headY: .4 }); z.root.rotation.set(-PI / 2, 0, 0); cara(z, L.T, { eyes: 'closed', mouth: 'wavy' });
-  show(BALL, BX - 3.4, .55, 3); BALL.scale.set(1, .45, 1);
-  orb(L.k, V(BX + 1.5, 1.4, -.5), null, [12, .55, .45, 46], [10.5, .45, .45, 46]); sh(V(BX, 0, 0), 30); }, [[0, 'whoosh_soft', .4], [.3, 'snore', .5], [.9, 'wind', .3]]);
+  const z = put(XT[2], BX + .5, .55, 2.4, 0); hat(z); applyPose(z, { aLx: .15, aLz: .35, aRx: 2.9, aRe: .4, lRx: .45, lRk: .7, headY: .35 }); z.root.rotation.set(-PI / 2, 0, 0); cara(z, L.T, { eyes: 'closed', mouth: 'wavy' });
+  show(BALL, BX - 2.4, .3, .6); BALL.scale.set(1, .45, 1);
+  orb(L.k, V(BX + .5, .8, .2), null, [12.5, .35, .62, 46], [11, .25, .66, 46]); sh(V(BX, 0, 0), 30); }, [[0, 'whoosh_soft', .4], [.3, 'snore', .5], [.9, 'wind', .3]]);
 // 12 «Wozu auch?»: una chica con gorro de fiesta se encoge de hombros delante de la casa de la fiesta
 shot(13.92, 'F', 'punch', L => { street(); OR.FEST.visible = true; windows('party', L.T); const c = put(K[4], -12.6, 0, 20, PI / 2 + .25); hat(c); actuar(c, L.lt, [[0, 'idle'], [.05, 'shrug', { dur: .3 }]], { T: L.T }); talk(c, L.T, 13.92, 14.7, 'smug');
   party([K[2], XT[1], K[7]], L.T, V(-17, 0, 24), 3.6, PI / 2);
