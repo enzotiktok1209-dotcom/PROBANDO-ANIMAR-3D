@@ -1,6 +1,7 @@
 # tokenrennen – Wer zuerst den Piraten-Token findet, bekommt 1 Million (DE)
 
 Tema real (nov. 2026): token pirata de Fortnite, 1:137.500 por cofre según Epic. Dibujado a nuestro estilo (sin skins, logos ni el aspecto del juego).
+v4: gancho en segunda persona ("Wenn du den Piraten-Token findest, bekommst du eine Million Euro."), luego Kevin y Jonas. 
 v3: cofre dorado trampa al empezar la partida (a Jonas: solo un skin), final abierto (los dos cofres se abren a la vez, corte),
 pregunta directa al espectador: cuántos cofres ha abierto sin el token. Sin "Teil 2" explícito.
 
