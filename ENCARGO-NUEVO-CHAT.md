@@ -5,7 +5,7 @@ Háblame siempre en español y dame traducción de todo lo que esté en alemán.
 
 ## Antes de empezar
 1. Lee `CLAUDE.md`, `plugins/animate/skills/animate/styles/blocky-3d/PRODUCCION.md`, `STYLE.md` y `REFERENCIA.md`.
-2. Usa como plantilla la carpeta **`pieces/gaense/`** (el último vídeo terminado): copia su estructura y scripts (`index.html`, `render.sh`, `render2.mjs`, `mids.mjs`, `sheet.py`, `cues.mjs`, `sfx.py`, `mezclar.sh`, `marca.py`, `finish.sh`, `cover.mjs`, `prep_audio.py`) y reutiliza el motor de `src/` (engine.js, vivo.js, props.js, gvolk.js, gort.js, gans.js…). Cambia duración, puerto y nombres.
+2. Usa como plantilla la carpeta **`pieces/tierwurf/`** (el último vídeo terminado; antes `pieces/gaense/`): copia su estructura y scripts (`index.html`, `render.sh`, `render2.mjs`, `mids.mjs`, `sheet.py`, `cues.mjs`, `sfx.py`, `mezclar.sh`, `marca.py`, `finish.sh`, `cover.mjs`, `prep_audio.py`) y reutiliza el motor de `src/` (engine.js, vivo.js, props.js, gvolk.js, gort.js, gans.js…). Cambia duración, puerto y nombres.
 3. Los vídeos finales (>100 MB) NO van al repo: me los mandas como archivo. El vídeo de referencia y sus fotogramas nunca se suben.
 
 ## Flujo de trabajo
@@ -37,3 +37,14 @@ Háblame siempre en español y dame traducción de todo lo que esté en alemán.
 
 ## Canal
 Se llama «In dieser Stadt». La foto de perfil está en `pieces/gaense/src/avatar.js` (mascota propia con sudadera amarillo-lima en la plaza del pueblo).
+
+## Lecciones del último vídeo (`pieces/tierwurf/`)
+- Réplica de un vídeo viral: mismos datos, mismo ritmo y escenas parecidas a las del original (otra perspectiva, otro pueblo y otro reparto). El gancho se traduce tal cual; el resto se parafrasea para que TikTok no lo vea como contenido duplicado. Si el original habla de «animales», no se nombra el juego: se enseñan los personajes y se dicen sus nombres, y el espectador lo reconoce solo (eso genera comentarios).
+- Personajes de memes (brainrots) como modelos de bloques en `src/brainrots.js`. Manadas grandes con `herd()` (InstancedMesh) en `src/main.js`.
+- Encuadre: el plano vertical es muy estrecho. Usa `orbit(c, d, yaw, pitch, fov)` / `orb(...)` (el sujeto queda al ~42 % de la altura). Revisa siempre que no haya postes, árboles ni paredes entre la cámara y el sujeto, y que la cámara no esté dentro de una casa (sale negro).
+- Revisión: `node mids.mjs URL dir all .55`, más una hoja de 8 por imagen. Corrige y repite hasta que todo esté bien antes del render completo (~64 fotogramas/min, unos 75 min para 160 s).
+- Correcciones puntuales: borra solo los fotogramas de esos planos, lanza `./render.sh` y después `./finish.sh`.
+- Portadas (`src/p/z_cover.js` + `node cover.mjs`):
+  - Todo lo importante (texto, personajes, ilustraciones del tema) tiene que caber en la zona central 3:4, de y = 240 a y = 1680 px; arriba y abajo solo cielo o suelo vacíos, porque TikTok recorta.
+  - El texto va centrado entre los personajes, no separado arriba.
+- Comunicación: respuestas muy cortas en español; mientras se renderiza no hay que contar el progreso. Cuando el vídeo esté listo, mandar solo el vídeo. La descripción y las portadas se hacen cuando las pida.
