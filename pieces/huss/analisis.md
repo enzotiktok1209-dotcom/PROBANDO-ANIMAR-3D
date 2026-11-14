@@ -29,3 +29,7 @@
 Palabras clave: Party, jede Nacht, Huss, Tag für Tag, 50 Punkte, Stille, während du gefeiert hast.
 Causalidad/conectores: aber, dann, als, während, plötzlich, deshalb, jetzt.
 Mini-ganchos: «außer mir», «Wer ist der Kleine?», «Dann bekam ich den Ball», «etwas stimmte nicht», «aus jedem Fenster».
+
+## Adaptación (petición del usuario)
+- Fútbol en vez de baloncesto: el HUSS es el chaval regateando con el balón en los pies, muy rápido (toques, bicicletas, elásticas) y tiro a portería. Marcador 0:50 en goles.
+- Nombres cambiados: Kevin→Jonas, Linda→Gerda, Mr. Goldfish→Herr Blubb. Diálogos parafraseados; datos iguales (50, martes, piscina/pizza/cumpleaños del pez, guitarra/boxeo/yoga).
