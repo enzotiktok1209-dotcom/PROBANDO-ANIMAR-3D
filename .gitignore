@@ -10,3 +10,5 @@ plugins/**/review/
 **/node_modules
 pieces/huss/review/
 pieces/huss/review60/
+pieces/goon/review/
+pieces/goon/review60/
