@@ -427,7 +427,7 @@ for _a, _b in [('ambience_low','wind'),('boing','spring'),('box_drop','thud'),('
 
 
 # ---------- KREIDE: efectos nuevos ----------
-LIB['thunder'] = (lambda s, c: norm(lp(noise(2.2, s), glide(900, 120, 2.2, .5)) * (np.exp(-T(2.2) * 1.6) + .35 * np.exp(-((T(2.2) - .5) ** 2) * 30)) + impact(.6, 70, 30) * .5 * np.pad(np.ones(int(.6 * SR)), (0, int(1.6 * SR)))[:int(2.2 * SR)]), .55)
+LIB['thunder'] = (lambda s, c: norm(lp(noise(2.2, s), glide(900, 120, 2.2, .5)) * (np.exp(-T(2.2) * 1.6) + .35 * np.exp(-((T(2.2) - .5) ** 2) * 30)) + pad(impact(.6, 70, 30), 2.2)[:int(2.2 * SR)] * .5), .55)
 LIB['umbrella'] = (lambda s, c: norm(seq([(bp(noise(.25, s), 400, 3000) * adsr(.25, .02, .15), 0), (click(.03, 2200, s + 1), .22)], .4)), .45)
 LIB['music_box'] = (lambda s, c: norm(seq([(bell([1568, 1319, 1175, 1319, 1568, 1760][k], .5, (1, 3.0, 5.2), 6), k * .16) for k in range(6)], 1.4)), .35)
 
