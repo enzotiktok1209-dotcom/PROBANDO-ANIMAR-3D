@@ -25,11 +25,11 @@ Ich wusste nicht, wer er war. Aber er umarmte mich, als hätte er ewig auf mich 
 [cold, deep voice] „System.“
 [robotic, flat] „Ja.“
 [cold] „Wer ist der alte Mann?“
-[robotic, flat] „Unbekannt.“ „Ich habe ihn nicht geschrieben.“
+[robotic, flat] „Unbekannt. Ich habe ihn nicht geschrieben.“
 [cold] „Wie heißt der Junge?“
 [robotic, flat] „Emil.“
 [suspicious] „Und beim letzten Mal?“
-[robotic, flat] „Leon.“ „Leon.“ „Paul.“ „Noah.“ „Ben.“ „Luca.“ „Max.“
+[robotic, flat] „Leon. Leon. Paul. Noah. Ben. Luca. Max.“
 [quietly] „Und davor?“
 [angry, low] „Du weißt nicht, wer er ist. Du weißt nicht, woher er kommt. Und er erinnert sich.“
 [angry] „Das ist dein Fehler, System. Ich habe dich neunmal gewarnt.“
