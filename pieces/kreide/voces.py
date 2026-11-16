@@ -7,7 +7,7 @@ def rd(f):
     return (x.reshape(-1, ch).mean(1) if ch > 1 else x), sr
 x, sr = rd(src); y = x.copy()
 FX = {'CHEF': 'rubberband=pitch=0.78:formant=preserved,bass=g=4:f=140,alimiter=limit=0.9',
-      'SYS': "rubberband=pitch=0.94,afftfilt=real='hypot(re,im)':imag='0':win_size=512:overlap=0.75,flanger=delay=2:depth=1.5:speed=0.3,highpass=f=180,aecho=0.8:0.6:12:0.25"}
+      'SYS': 'rubberband=pitch=0.93:formant=preserved,chorus=0.6:0.8:20|28:0.35|0.3:0.25|0.4:2|1.5,highpass=f=150,lowpass=f=7500,aecho=0.8:0.5:18:0.18'}
 for k, (sp, a, b, _) in enumerate(R):
     if sp not in FX: continue
     if k + 1 < len(R): b = min(b, R[k + 1][1])
