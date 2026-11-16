@@ -1,6 +1,6 @@
 // HALS — «In dieser Stadt wird dein Hals jedes Mal länger, wenn du aufs Handy schaust»: planos sincronizados con audio/words.json (1080×1920, 30 fps).
 // Réplica de la estructura del vídeo de referencia en Hufenbach (pueblo alemán de entramado): todo el pueblo con cuellos largos. Planos en src/p/*.js; armar.py los une en src/index.js.
-import { THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl, textPlane, outline } from './engine.js';
+import { THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, walkPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl, textPlane, outline } from './engine.js';
 import { nightSky } from './sets.js';
 import { rimLight } from './roblox.js';
 import { FONT } from './props.js';
@@ -46,8 +46,8 @@ const TOPD = []; for (const [x, z, y, ry] of [[-53.8, 40, 16, Math.PI / 2], [-53
 const MYTOP = topDoor(HB.HAUS, 0, 11.4, 7.2, 0, 0x2a6a4a);
 // buhardilla con ventana de tejado (Dachfenster) en la cara delantera del tejado: ventana en local (6, 22.2, 6.6) → mundo ≈ (10.6, 22.2, 90), mira a +x
 const DORM = new THREE.Group(); DORM.position.set(6, 20.2, 4.6); HB.HAUS.add(DORM); const dw = mat(0xf6e6b8, { roughness: .8 });
-box(5, 4.4, 4, dw, .05, DORM, 0, 2.2, 0); const dr = new THREE.Mesh(new THREE.CylinderGeometry(.01, 3.6, 2.2, 4, 1, false, Math.PI / 4), mat(0xb83a2a, { roughness: .6 })); dr.scale.set(1, 1, 1.2); dr.position.set(0, 5.4, 0); DORM.add(dr);
-box(3.4, 3, .1, mat(0x2a3a4a, { roughness: .2 }), 0, DORM, 0, 2.1, 2.0); for (const [w, h, x, y] of [[3.8, .3, 0, .5], [3.8, .3, 0, 3.7], [.3, 3.4, -1.85, 2.1], [.3, 3.4, 1.85, 2.1]]) box(w, h, .4, mat(0xffffff), .05, DORM, x, y, 2.05);
+box(5, 4.4, .3, dw, .02, DORM, 0, 2.2, -1.85); for (const sx of [-1, 1]) box(.3, 4.4, 4, dw, .02, DORM, sx * 2.35, 2.2, 0); box(5, .3, 4, dw, .02, DORM, 0, 4.25, 0); box(5, .3, 4, mat(0x8a6a4a), .02, DORM, 0, .15, 0); box(5, .55, .3, dw, .02, DORM, 0, .3, 1.85); box(5, .7, .3, dw, .02, DORM, 0, 4.05, 1.85); for (const sx of [-1, 1]) box(.7, 4.4, .3, dw, .02, DORM, sx * 2.15, 2.2, 1.85); const dr = new THREE.Mesh(new THREE.CylinderGeometry(.01, 3.6, 2.2, 4, 1, false, Math.PI / 4), mat(0xb83a2a, { roughness: .6 })); dr.scale.set(1, 1, 1.2); dr.position.set(0, 5.4, 0); DORM.add(dr);
+const DWALL = textPlane(4.4, 3.8, 220, 190, (c, w, h) => { c.fillStyle = '#7a9ad8'; c.fillRect(0, 0, w, h); c.fillStyle = '#6a8ac8'; for (let x = 0; x < w; x += 20) c.fillRect(x, 0, 10, h); c.fillStyle = '#ffd23f'; c.fillRect(30, 40, 60, 80); }); DWALL.position.set(0, 2.2, -1.68); DORM.add(DWALL); for (const [w, h, x, y] of [[3.8, .3, 0, .5], [3.8, .3, 0, 3.7], [.3, 3.4, -1.85, 2.1], [.3, 3.4, 1.85, 2.1]]) box(w, h, .4, mat(0xffffff), .05, DORM, x, y, 2.05);
 const SHUT = [-1, 1].map(s => { const g = new THREE.Group(); g.position.set(s * 1.7, 2.1, 2.15); DORM.add(g); box(1.7, 3.1, .12, mat(0x9fd8f8, { roughness: .05, metalness: .3, transparent: true, opacity: .55 }), .03, g, -s * .85, 0, 0); box(1.7, .16, .16, mat(0xffffff), 0, g, -s * .85, 1.5, 0); box(1.7, .16, .16, mat(0xffffff), 0, g, -s * .85, -1.5, 0); return g; });
 const DLIGHT = new THREE.PointLight(0xffd8a0, 0, 12, 1.5); DLIGHT.position.set(0, 2.4, 0); DORM.add(DLIGHT); outline(DORM, 1.4);
 // mesa del jardín (para el portátil): mundo ≈ (16, 3, 100)
@@ -111,7 +111,7 @@ function hideAll() {
   for (const c of POOL) { c.root.visible = false; c.root.rotation.set(0, 0, 0); c.root.scale.setScalar(c.spec.scale || 1); applyPose(c, {}); c.setFace({}); hals(c, 0); if (c.root.parent !== scene) { c.root.parent.remove(c.root); scene.add(c.root); } }
   SOCKS.forEach(s => s.visible = false);
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); if (p.parent !== scene) { p.parent.remove(p); scene.add(p); } }
-  VOLK.hide(); RAIN.update(0, V(0, 0, 0), 1, 1, 1, false); RANKB.visible = VIDB.visible = STATB.visible = EIS.visible = false; SHUT.forEach(g => g.rotation.y = 0); DLIGHT.intensity = 0; KU.hatch.visible = true;
+  VOLK.hide(); RAIN.update(0, V(0, 0, 0), 1, 1, 1, false); RANKB.visible = VIDB.visible = STATB.visible = EIS.visible = false; SHUT.forEach(g => g.rotation.y = 0); DLIGHT.intensity = 0; HB.CURT.forEach(c_ => c_.visible = true); KU.hatch.visible = true;
   for (const k in SETS) SETS[k].visible = false;
   FILL.color.setRGB(1, .96, .91); sun.color.setRGB(1, .95, .86); grade.uniforms.vig.value = .4; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.45; grade.uniforms.sharp.value = 1.08; grade.uniforms.sepia.value = 0; DARK = 0; TINT = null; THERM = false; BIRDSON = 1; SHAKE = 0; day(); }
 const use = (...n) => { for (const k of n) SETS[k].visible = true; };
