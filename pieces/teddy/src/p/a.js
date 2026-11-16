@@ -38,7 +38,7 @@ shot(8.5, 'Z', null, L => { town(); gate(0); const me = put(ich, 0, 0, -27, 0); 
   badge('tag', '0 TALENTE', W / 2, H * .2, (L.lt - .4) * 3); cm([0, 9, 14, 0, 9, -26, 50], [0, 8.6, 8, 0, 8.6, -26, 50], L.k); sh(V(0, 0, -20), 40); }, [[0, 'zoom_in', .3], [.3, 'sad_tone', .4], [.8, 'wind', .3]]);
 // 6 «Auf diese Schule kommen nur die Besten»: vista de dron del internado con la torre del reloj; los alumnos con trofeos entran por la verja abierta
 shot(10.16, 'Z', null, L => { town(); gate(1); OTHERS.slice(0, 8).forEach((c, i) => { walkC(c, L.lt + i * .1, -6 + (i % 4) * 4, -14 - Math.floor(i / 4) * 5, PI, 2.8, L.T + i); cara(c, L.T + i, { expr: 'smug' }); });
-  cm([30, 50, 40, 0, 12, -40, 50], [16, 32, 20, 0, 10, -40, 50], L.k); sh(V(0, 0, -30), 60); }, [[0, 'zoom_in', .4], [.2, 'bells', .4], [.6, 'steps', .4]]);
+  cm([8, 46, 30, 0, 12, -40, 50], [6, 30, 16, 0, 10, -40, 50], L.k); sh(V(0, 0, -30), 60); }, [[0, 'zoom_in', .4], [.2, 'bells', .4], [.6, 'steps', .4]]);
 // 7 «des ganzen Landes»: delante de la verja posan los mejores; la gente de la ciudad hace fotos (destellos)
 shot(11.88, 'S', null, L => { town(); gate(1); [mira, ollie, koch, hack, reich, schwimm].forEach((c, i) => { put(c, -8.5 + i * 3.4, 0, -16, 0); actuar(c, L.lt, [[0, i % 2 ? 'cheer' : 'wave']], { T: L.T + i }); cara(c, L.T + i, { expr: 'happy' }); });
   inHand(TROPHY, ollie, 'R', [0, -.6, .3], [0, 0, 0], .7); inHand(MEDAL, mira, 'L', [0, -.5, .5]);
@@ -59,7 +59,7 @@ shot(16.01, 'Z', 'punch', L => { town(); const k = put(koch, -2, 0, 52, .25); co
   onFace(k, 11, -1.2, -1, 44, L.k, 9); sh(V(-2, 0, 52)); }, [[0, 'impact', .4], [.1, 'fire_whoosh', .5], [.3, 'pan_sizzle', .5]]);
 // 11 «die beste Hackerin»: la hacker teclea en su portátil, luz verde en la cara, «ZUGRIFF ✓»
 shot(16.93, 'F', null, L => { use('KL'); inside(.6, 25); const h = put(hack, KLX + 4.2, .4, 2.5 + 2.8, PI); applyPose(h, { ...SIT, aLx: 1.2, aRx: 1.2, aLe: .9 + Math.sin(L.T * 30) * .1, aRe: .9 - Math.sin(L.T * 30) * .1, headX: .2 }); cara(h, L.T, { expr: 'smug', eyes: 'squint', mouth: 'smirk' });
-  show(LAP, KLX + 4.2, 4.25, 3.0, 0); badge('green', 'ZUGRIFF ✓', W / 2, H * .22, (L.lt - .5) * 3, 1, .8); cm([KLX + 5.6, 6.8, -1.2, KLX + 4.2, 4.4, 5.3, 42], [KLX + 5.3, 6.6, -.4, KLX + 4.2, 4.4, 5.3, 40], L.k); }, [[0, 'flash', .3], [.1, 'keys', .6], [.6, 'beep', .4]]);
+  show(LAP, KLX + 2.6, 4.25, 3.0, .4); badge('green', 'ZUGRIFF ✓', W / 2, H * .22, (L.lt - .5) * 3, 1, .8); cm([KLX + 5.6, 6.8, -1.2, KLX + 4.2, 4.4, 5.3, 42], [KLX + 5.3, 6.6, -.4, KLX + 4.2, 4.4, 5.3, 40], L.k); }, [[0, 'flash', .3], [.1, 'keys', .6], [.6, 'beep', .4]]);
 // 12 «Aber jedes Jahr wird ein ganz normales»: en la calle gira el bombo de la lotería; la gente mira
 shot(18.03, 'S', null, L => { town(); gate(0); show(DRUM, 0, 0, 10, 0, 1.1); DRUM.userData.d.rotation.x = L.T * 8;
   TOWN.slice(0, 4).forEach((p, i) => { put(p, [-10, -7.5, 7.5, 10][i], 0, 9 + (i % 2), faceTo(V([-10, -7.5, 7.5, 10][i], 0, 9), V(0, 0, 10))); actuar(p, L.lt, [[0, i % 2 ? 'lean_in' : 'hands_face']], { T: L.T + i }); cara(p, L.T + i, { expr: 'shock' }); });
@@ -100,7 +100,7 @@ shot(34.15, 'C', 'punch', L => { use('KL'); inside(.85, 40); KL.note.rotation.z 
 // 23 «Dort warteten schon elf andere Schüler» (zoom lento): entro al gimnasio; los once se giran a mirarme
 shot(35.29, 'F', 'slow', L => { use('TH'); inside(.85, 40); OTHERS.forEach((c, i) => { const x = -12 + (i % 6) * 4.8, z = -6 - Math.floor(i / 6) * 4.5; const r0 = faceTo(V(x, 0, z), V(0, 0, 16)); put(c, THX + x, 0, z, lerp(PI, r0, easeInOut(clamp((L.lt - .3 - i * .05) / .4)))); actuar(c, L.lt, [[0, 'idle'], [.5 + i * .04, i % 3 ? 'cross' : 'listen']], { T: L.T + i }); cara(c, L.T + i, { expr: 'sus' }); });
   const me = walkC(ich, L.lt, THX, 18, PI, 1.6, L.T); cara(ich, L.T, { expr: 'worried' });
-  cm([THX, 9, 30, THX, 5, -6, 50], [THX, 8, 24, THX, 5, -6, 50], L.k); }, [[0, 'flash', .3], [.1, 'door_open', .5], [.5, 'steps', .3], [1.0, 'whisper', .4]]);
+  cm([THX, 9, 25, THX, 5, -6, 50], [THX, 8, 20, THX, 5, -6, 50], L.k); }, [[0, 'flash', .3], [.1, 'door_open', .5], [.5, 'steps', .3], [1.0, 'whisper', .4]]);
 // 24 «Eine davon kannte ich aus der Grundschule»: la señalo, sorprendido
 shot(37.39, 'W', 'punch', L => { use('TH'); inside(.85, 40); const me = put(ich, THX - 2, 0, 8, PI - .3); actuar(me, L.lt, [[0, 'shock'], [.4, 'point', { dur: .25 }]], { T: L.T }); cara(me, L.T, { expr: 'shock', mouth: 'o' });
   put(mira, THX - 6, 0, -2, .3); cara(mira, L.T, {}); onFace(me, 10, -1.2, 1.2, 44, L.k, 8.5); }, [[0, 'impact', .4], [.3, 'gasp', .4]]);

@@ -38,7 +38,7 @@ shot(110.86, 'Z', null, L => { use('GR'); inside(.7, 25); const me = atPod(ich, 
   const p = ICHP(); cam([p.x + 1.4, 6.8, p.z - lerp(9, 7.6, L.k)], [p.x, 5.4, p.z], 42); }, [[0, 'zoom_in', .3], [.2, 'heartbeat', .5]]);
 // 70 «Also zeigten alle auf mich»: todos me señalan desde sus atriles
 shot(111.96, 'C', 'punch', L => { use('GR'); inside(.7, 25); const p = ICHP(); KIDS.forEach((c, i) => { if (i === 1 || i === 5) return; const [x, z] = ring(i); put(c, x, 0, z, i ? Math.atan2(p.x - x, p.z - z) : PI); actuar(c, L.lt, [[0, i ? 'point' : 'shock']], { T: L.T + i }); cara(c, L.T + i, i ? { expr: 'angry', mouth: 'talk_wide' } : { expr: 'scared', eyes: 'terror', mouth: 'scream' }); });
-  cam([p.x - 3, 9, p.z - 1], [GRX, 4, -4], 52); }, [[0, 'impact', .5], [.1, 'shout_m', .5], [.5, 'gasp', .3]]);
+  cam([p.x - 2.4, 8.6, p.z + 3.4], [GRX, 4.4, -2], 52); }, [[0, 'impact', .5], [.1, 'shout_m', .5], [.5, 'gasp', .3]]);
 // 71 «Alle – außer einem stillen Mädchen mit Kopfhörern»: ella con los brazos cruzados, sin señalar; los de al lado sí señalan
 shot(113.66, 'W', null, L => { use('GR'); inside(.7, 25); const p = ICHP(); KIDS.forEach((c, i) => { if ([0, 1, 5].includes(i)) return; const [x, z] = ring(i); put(c, x, 0, z, i === 6 ? ring(6)[2] : Math.atan2(p.x - x, p.z - z)); actuar(c, L.lt, [[0, i === 6 ? 'cross' : 'point']], { T: L.T + i }); cara(c, L.T + i, i === 6 ? { expr: 'neutral', eyes: 'half', mouth: 'flat' } : { expr: 'angry' }); });
   const [sx, sz] = ring(6); cm([sx + 4, 7.6, sz + 13, sx, 5.6, sz, 44], [sx + 2.6, 7.2, sz + 11, sx, 5.6, sz, 42], L.k); badge3('tag', '?', V(sx, 9.4, sz), (L.lt - .8) * 3); }, [[0, 'swipe', .3], [.4, 'creepy_ting', .4], [1.4, 'hum', .3]]);
@@ -107,7 +107,7 @@ shot(144.78, 'C', 'punch', L => { use('TN'); night(); TN.lights.forEach(l => l.i
   const h = teddy.head.getWorldPosition(V(0, 0, 0)); cam([h.x + .3, h.y + .4, h.z - lerp(7, 5.4, easeIn(L.k))], [h.x, h.y - .3, h.z], 40); }, [[0, 'slam', .5], [.2, 'creepy_ting', .5], [.9, 'heartbeat', .5]]);
 // 91 «In dieser Nacht lag ich in einem Bett»: en la habitación rosa de Mira, tumbado y despierto
 shot(145.99, 'I', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX - 8, 3.4, -5.6, 0); applyPose(ich, { aLx: .2, aRx: .2, aLz: .3, aRz: .3 }); cara(ich, L.T, { expr: 'sad', eyes: 'half', mouth: 'flat' });
-  cm([ZBX - 2, 9, 6, ZBX - 8, 3.4, -5, 46], [ZBX - 3, 8.6, 4.6, ZBX - 8, 3.4, -5, 44], L.k); }, [[0, 'iris_pop', .3], [.3, 'crickets', .4], [1.4, 'clock_tick', .3]]);
+  cm([ZBX - 3, 9.5, -11, ZBX - 8, 3.4, -7, 46], [ZBX - 3.6, 9, -10.4, ZBX - 8, 3.4, -7, 44], L.k); }, [[0, 'iris_pop', .3], [.3, 'crickets', .4], [1.4, 'clock_tick', .3]]);
 // 92 «das nicht meins war»: los pósteres y la colcha rosa de Mira; yo me giro
 shot(147.79, 'W', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX - 8, 3.4, -5.6, 0); applyPose(ich, { headY: -.6 + Math.sin(L.lt) * .1 }); cara(ich, L.T, { expr: 'sad', eyes: 'side_l' });
   cm([ZBX + 4, 10, 4, ZBX - 2, 9, -12, 48], [ZBX + 2, 10.4, 2, ZBX - 4, 8, -12, 48], L.k); }, [[0, 'swipe', .3], [.4, 'sigh', .4]]);
@@ -118,14 +118,14 @@ shot(148.98, 'F', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX 
 shot(150.08, 'F', 'slow', L => { use('KZ'); inside(.5, 20); grade.uniforms.sepia.value = .25; const me = lie(ich, KZX, 2.7, -4.6, 0); ich.root.scale.setScalar(.62); applyPose(me, { aLx: 1.4, aRx: 1.4, aLz: -.6, aRz: -.6, aLe: 1.2, aRe: 1.2 }); cara(me, L.T, { expr: 'happy', eyes: 'closed', mouth: 'smirk', noBlink: 1 });
   show(TOY, KZX + 1.8, 2.8, -6.6, -.5, .8); TOY.rotation.z = .3; badge('tag', '5 JAHRE', W / 2, H * .2, (L.lt - .2) * 3);
   ZZZ.forEach((z, i) => { const k = (L.T * .5 + i / 3) % 1; z.visible = true; z.position.set(KZX - 1 + k * 2, 5 + k * 3, -6 + i * .2); z.scale.setScalar(.5 + k); z.material.opacity = 1 - k; z.lookAt(camera.position); });
-  cm([KZX + 4, 7, 6, KZX, 3, -4, 46], [KZX + 3, 6.4, 3.6, KZX, 3, -4, 42], L.k); }, [[0, 'flash', .3], [.2, 'lullaby', .5], [1.2, 'snore', .2]]);
+  cm([KZX + 4.5, 7, -10.5, KZX, 3, -6, 46], [KZX + 3.6, 6.6, -10, KZX + .4, 3, -6, 42], L.k); }, [[0, 'flash', .3], [.2, 'lullaby', .5], [1.2, 'snore', .2]]);
 // 95 «in meinem Kinderzimmer»: el cuarto de niño entero con la lucecita de noche
 shot(152.11, 'W', null, L => { use('KZ'); inside(.5, 20); grade.uniforms.sepia.value = .25; const me = lie(ich, KZX, 2.7, -4.6, 0); ich.root.scale.setScalar(.62); applyPose(me, { aLx: 1.4, aRx: 1.4, aLz: -.6, aRz: -.6, aLe: 1.2, aRe: 1.2 }); cara(me, L.T, { eyes: 'closed', mouth: 'smirk', noBlink: 1 });
-  show(TOY, KZX + 1.8, 2.8, -6.6, -.5, .8); TOY.rotation.z = .3; cm([KZX - 9, 10, 9, KZX, 3, -4, 50], [KZX - 6, 9, 10, KZX + 1, 3, -4, 50], L.k); }, [[0, 'swipe', .3], [.4, 'chime', .3]]);
+  show(TOY, KZX + 1.8, 2.8, -6.6, -.5, .8); TOY.rotation.z = .3; cm([KZX - 9, 10, -8, KZX, 3, -5, 50], [KZX - 7, 9.4, -9, KZX, 3, -5, 50], L.k); }, [[0, 'swipe', .3], [.4, 'chime', .3]]);
 // 96 «Jetzt wollte er mich zum Mörder machen» (zoom lento): el osito en su trono a oscuras; solo brilla el ojo de corazón
 shot(153.82, 'C', 'slow', L => { use('GR'); inside(.2, 8); DARK = .35; bear(GRX, 6, -24, 0, { sit: 1, aL: .6, aR: .6, mouth: .25, glow: 3 + L.k * 3, brow: .5, headX: .1 }, 1.3);
   const h = teddy.head.getWorldPosition(V(0, 0, 0)); cam([h.x, h.y + .8, h.z + lerp(16, 8, easeIn(L.k))], [h.x, h.y - .6, h.z], 42); }, [[0, 'slam', .4], [.2, 'heartbeat', .6], [1.2, 'creepy_ting', .4]]);
 // 97 «Und trotzdem vermisse ich ihn»: en la cama de Mira abrazo el osito pequeño; una lágrima. La cámara se aleja
 shot(155.72, 'F', null, L => { use('ZB'); night(); inside(.45, 18); lie(ich, ZBX - 8, 3.4, -5.6, .3); applyPose(ich, { aLx: 1.4, aRx: 1.4, aLz: -.6, aRz: -.6, aLe: 1.3, aRe: 1.3 }); cara(ich, L.T, { expr: 'sad', eyes: 'closed', mouth: 'frown', noBlink: 1 }); show(TOY, ZBX - 6.4, 3.6, -7.4, -.4, .8); TOY.rotation.z = .4;
   const h = hp(ich); TEAR.forEach((t, i) => { if (i) return; t.visible = true; const k = (L.T * .7) % 1; t.position.copy(h).add(V(.45, .3, .3 - k * .8)); });
-  cm([ZBX - 6, 7.6, 1, ZBX - 8, 3.6, -4.6, 40], [ZBX - 2, 11, 6, ZBX - 8, 3.6, -4.6, 46], L.k); }, [[0, 'flash', .2], [.3, 'sob', .4], [.8, 'lullaby', .4], [1.5, 'piano_note', .4]]);
+  cm([ZBX - 4.4, 7.6, -10.6, ZBX - 7.6, 3.6, -7.2, 40], [ZBX - 1, 11, -9, ZBX - 7.6, 3.6, -6.6, 46], L.k); }, [[0, 'flash', .2], [.3, 'sob', .4], [.8, 'lullaby', .4], [1.5, 'piano_note', .4]]);
