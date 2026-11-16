@@ -12,6 +12,7 @@ import { THREE, mat, box, cyl, sphere, canvasTex, RNG } from './engine.js';
 import { mk, glasses, headphones, suit } from './props.js';
 
 const hex = c => '#' + c.toString(16).padStart(6, '0');
+const plaidSk = (a, b) => canvasTex(64, 64, (c, w, h) => { c.fillStyle = a; c.fillRect(0, 0, w, h); c.fillStyle = b; c.globalAlpha = .6; for (let i = 0; i < 4; i++) { c.fillRect(i * 16, 0, 6, h); c.fillRect(0, i * 16, w, 6); } }, true);
 const S = o => ({ noBelt: true, ...o, skinCss: hex(o.skin) });
 const plaid = (a, b) => canvasTex(64, 64, (c, w, h) => { c.fillStyle = a; c.fillRect(0, 0, w, h); c.fillStyle = b; c.globalAlpha = .5; for (let i = 0; i < 4; i++) { c.fillRect(i * 16, 0, 5, h); c.fillRect(0, i * 16, w, 5); } }, true);
 const cap0 = (m, h, sy = .66) => { const c = new THREE.Mesh(new THREE.SphereGeometry(.73, 26, 13, 0, 6.283, 0, 1.3), m); c.position.y = 1.0; c.scale.set(1.05, sy, 1.05); h.add(c); return c; };
@@ -55,10 +56,10 @@ const headband = col => o => { const b = new THREE.Mesh(new THREE.TorusGeometry(
 const roundGlasses = col => o => { for (const s of [-1, 1]) { const r = new THREE.Mesh(new THREE.TorusGeometry(.26, .045, 6, 22), mat(col)); r.position.set(s * .3, .75, .66); o.head.add(r); } box(.2, .05, .05, mat(col), 0, o.head, 0, .78, .66); };
 const backpack = col => o => { box(1.7, 1.9, .8, mat(col, { roughness: .8 }), .2, o.spine, 0, 1.1, -.95); box(1.2, .8, .3, mat(col * 0 + 0xffd23f), .1, o.spine, 0, .7, -1.4); };
 
-export function makeIch(scene) { return mk(scene, S({ seed: 2101, scale: .92, skin: 0xf2c4a2, shirt: 0x1a1c24, shirt2: 0x1a1c24, cuffs: 0x2a8a4a, pants: 0x5a5e68, shoes: 0xd83a3a, sole: 0xf4f4f4, hair: 0x7a4a26, hairBuild: messyAhoge(0x7a4a26),
-  torsoDetail: blazer(0x1a1c24, 0x2a8a4a, true), face: { iris: '#5a3a1a', browColor: '#5a3418', blush: .3 } })); }
-export function makeMira(scene) { return mk(scene, S({ seed: 2102, scale: .88, skin: 0xf8d6c0, shirt: 0xf8f8fc, shirt2: 0xf8f8fc, cuffs: 0x2a3a8a, pants: 0xf8d6c0, shoes: 0x2a3a8a, sole: 0x1a1a1a, socks: 0x1a1a3a, shorts: true, skirt: 0x2a3a8a, hair: 0x3a6ae8, hairBuild: longBlue(0x3a6ae8),
-  torsoDetail: sailor(0xf8f8fc, 0x2a3a8a, 0xff5a8a), face: { iris: '#2a5ac8', browColor: '#2a4ab8', blush: .6 } }), [earrings(0xd8dce4)]); }
+export function makeIch(scene) { return mk(scene, S({ seed: 2101, scale: .92, skin: 0xf2c4a2, shirt: 0x1a1c24, shirt2: 0x1a1c24, cuffs: 0x2a8a4a, pants: 0x5a5e68, shoes: 0xd83a3a, sole: 0xf4f4f4, hair: 0x22306a, hairBuild: messyAhoge(0x22306a),
+  torsoDetail: blazer(0x1a1c24, 0x2a8a4a, true), face: { iris: '#3a4a8a', browColor: '#22306a', blush: .3 } })); }
+export function makeMira(scene) { return mk(scene, S({ seed: 2102, scale: .88, skin: 0xf8d6c0, shirt: 0xf8f8fc, shirt2: 0xf8f8fc, cuffs: 0x2a3a8a, pants: 0xf8d6c0, shoes: 0x2a3a8a, sole: 0x1a1a1a, socks: 0x1a1a3a, shorts: true, skirt: 0x2a5a4a, hair: 0x2a3a9a, hairBuild: longBlue(0x2a3a9a),
+  torsoDetail: sailor(0xf8f8fc, 0x2a5a4a, 0xff6aa8), face: { iris: '#2a5ac8', browColor: '#2a4ab8', blush: .6 } }), [earrings(0xd8dce4)]); }
 export function makeOllie(scene) { return mk(scene, S({ seed: 2103, scale: .97, skin: 0xf0c09c, shirt: 0xf6f6f2, shirt2: 0xf6f6f2, cuffs: 0xf6f6f2, pants: 0x2a2a34, shoes: 0xf4f4f4, sole: 0xd8283a, hair: 0xe0302a, hairBuild: redSpikes(0xe0302a),
   torsoDetail: blazer(0xf6f6f2, 0x1a1a1a, false), face: { iris: '#6a4a2a', browColor: '#b8201a', blush: .3 } }), [earrings(0xd8dce4), headband(0x1a1a1a)]); }
 export function makeKoch(scene) { return mk(scene, S({ seed: 2104, scale: .9, skin: 0xe8b08a, shirt: 0xfbfbf8, shirt2: 0xfbfbf8, cuffs: 0xfbfbf8, pants: 0x3a3a46, shoes: 0x1a1a1a, hair: 0x1a1414, hairBuild: pompadour(0x1a1414),
@@ -67,8 +68,8 @@ export function makeHackerin(scene) { return mk(scene, S({ seed: 2105, scale: .8
   torsoDetail: bigHoodie(0x1ab8b0), face: { iris: '#6a3ab8', browColor: '#6a3ab8', blush: .55 } }), [roundGlasses(0x1a1a1a)]); }
 export function makeZopf(scene) { return mk(scene, S({ seed: 2106, scale: .9, skin: 0xf6d0b6, shirt: 0xf4f4f4, shirt2: 0x1a1a22, cuffs: 0x1a1a22, pants: 0xf6d0b6, shoes: 0x1a1a1a, sole: 0x1a1a1a, socks: 0x1a1a22, shorts: true, skirt: 0xc8283a, hair: 0xf0b088, hairBuild: braid(0xf0b088),
   torsoDetail: shortJacket(0x1a1a22, 0xf4f4f4), face: { iris: '#4a7ad8', browColor: '#d89870', blush: .5 } })); }
-export function makeStille(scene) { return mk(scene, S({ seed: 2107, scale: .9, skin: 0xf6d8c4, shirt: 0x24202c, shirt2: 0x24202c, cuffs: 0x24202c, pants: 0xf6d8c4, shoes: 0x3a2a24, sole: 0x1a1a1a, socks: 0x24202c, shorts: true, skirt: 0x3a2a3a, hair: 0xb8a0d8, hairBuild: longLilac(0xb8a0d8),
-  torsoDetail: darkJacketTie(0x24202c, 0x6a3a9a), face: { iris: '#8a6ab8', browColor: '#9a80c0', blush: .2 } }), [o => headphones(o.head, 0xd8283a)]); }
+export function makeStille(scene) { return mk(scene, S({ seed: 2107, scale: .9, skin: 0xf6d8c4, shirt: 0x24202c, shirt2: 0x24202c, cuffs: 0x24202c, pants: 0xf6d8c4, shoes: 0x3a2a24, sole: 0x1a1a1a, socks: 0x24202c, shorts: true, skirt: 0x3a2a3a, hair: 0xf4a8c8, hairBuild: longLilac(0xf4a8c8),
+  torsoDetail: darkJacketTie(0x24202c, 0x6a3a9a), face: { iris: '#d83a6a', browColor: '#e890b0', blush: .2 } }), [o => headphones(o.head, 0xd8283a)]); }
 export function makeBiker(scene) { return mk(scene, S({ seed: 2108, scale: 1.08, skin: 0xe0a07a, shirt: 0x2a2a2a, shirt2: 0x6a4a2a, cuffs: 0x6a4a2a, pants: 0x2a2a3a, shoes: 0x1a1a1a, hair: 0x5a3a1e, hairBuild: tallPomp(0x5a3a1e),
   torsoDetail: longCoat(0x6a4a2a), face: { iris: '#5a3a1a', browColor: '#3a2410' } })); }
 export function makeReich(scene) { return mk(scene, S({ seed: 2109, scale: 1.0, skin: 0xf6d8c0, shirt: 0xf8f8f8, shirt2: 0xf8f8f8, cuffs: 0xf8f8f8, pants: 0xf8f8f8, shoes: 0x8a5a2a, hair: 0xf0d870, hairBuild: blondPart(0xf0d870),

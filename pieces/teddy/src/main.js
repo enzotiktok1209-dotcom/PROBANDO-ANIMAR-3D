@@ -72,7 +72,7 @@ function hideAll() {
   for (const c of POOL) { c.root.visible = false; c.root.rotation.set(0, 0, 0); c.root.scale.setScalar(c.spec.scale || 1); applyPose(c, {}); c.setFace({}); if (c.root.parent !== scene) { c.root.parent.remove(c.root); scene.add(c.root); } }
   teddy.root.visible = false; teddy.root.rotation.set(0, 0, 0); teddy.root.scale.setScalar(1); teddy.pose({}); SKATES.forEach(s => s.visible = false);
   for (const p of PROPS) { p.visible = false; p.rotation.set(0, 0, 0); p.scale.setScalar(1); if (p.parent !== scene) { p.parent.remove(p); scene.add(p); } }
-  CRW.update(0, 'still', false, 0); SPOTL.intensity = 0; TH.spots.forEach(s => s.intensity = 0); ZA.nums.visible = false; ZA.door.rotation.y = 0; ZB.door.rotation.y = 0; FL.doors.forEach(d => d.rotation.y = 0); TH.trap.hole.visible = false; TH.trap.lids.forEach(l => l.rotation.z = 0); KL.note.visible = true;
+  CRW.update(0, 'still', false, 0); SPOTL.intensity = 0; TH.spots.forEach(s => s.intensity = 0); ZA.nums.visible = false; ZA.door.rotation.y = 0; ZB.door.rotation.y = 0; FL.doors.forEach(d => d.rotation.y = 0); TH.trap.hole.visible = false; TH.g.userData.L.intensity = 360; TH.trap.lids.forEach(l => l.rotation.z = 0); KL.note.visible = true; KL.note.rotation.z = 0;
   for (const k in SETS) SETS[k].visible = false;
   FILL.color.setRGB(1, .96, .91); sun.color.setRGB(1, .95, .86); grade.uniforms.vig.value = .4; grade.uniforms.flash.value = 0; grade.uniforms.lift.value = 0; grade.uniforms.sat.value = 1.45; grade.uniforms.sharp.value = 1.08; grade.uniforms.sepia.value = 0; DARK = 0; TINT = null; THERM = false; VIDEO = 0; BIRDSON = 1; SHAKE = 0; day(); }
 const use = (...n) => { for (const k of n) SETS[k].visible = true; };
@@ -181,7 +181,7 @@ function renderShot(i, T, tr, a) {
   if (tr === 'W' || tr === 'S') { grade.uniforms.blurAmt.value = a * .07; grade.uniforms.dir.value.set(tr === 'W' ? 1 : 0, tr === 'W' ? 0 : 1); } else grade.uniforms.blurAmt.value = 0;
   if (tr === 'F') grade.uniforms.flash.value = Math.max(grade.uniforms.flash.value, a * .95);
   const dir = new THREE.Vector3(); camera.getWorldDirection(dir); const ctr = camera.position.clone().addScaledVector(dir, 14);
-  FILL.position.copy(camera.position).add(V(0, 3, 0)).addScaledVector(dir, 2);
+  FILL.position.copy(camera.position).add(V(0, 3, 0)).addScaledVector(dir, -9); FILL.intensity *= 2.6;
   AIR.update(T, ctr, MODE === 'night' ? 'noche' : 'polvo', MODE === 'in' ? .3 : .4);
   if (BIRDS.update) BIRDS.update(T, camera.position.clone().addScaledVector(dir, 60).add(V(0, 25, 0)), (MODE === 'day' || MODE === 'sunset') && BIRDSON ? 1 : 0);
   sun.castShadow = sun.intensity >= .45; sky.sky.position.copy(camera.position); composer.render();
