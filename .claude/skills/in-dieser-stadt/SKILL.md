@@ -5,7 +5,7 @@ description: Produce a German TikTok storytime for the channel «In dieser Stadt
 
 # «In dieser Stadt» — storytimes 3D en alemán
 
-Esta skill recoge **todo lo aprendido en los 26 vídeos** del canal (de `schlafstadt`, el primero, a `goon`, el último). Catálogo con temas, duraciones, RPM y lecciones de cada uno: [references/catalogo.md](references/catalogo.md). API del motor y recetas de código: [references/motor.md](references/motor.md). Checklist de revisión: [references/checklist.md](references/checklist.md).
+Esta skill recoge **todo lo aprendido en los 29 vídeos** del canal (de `schlafstadt`, el primero, a `hals`, el último). Catálogo con temas, duraciones, RPM y lecciones de cada uno: [references/catalogo.md](references/catalogo.md). API del motor y recetas de código: [references/motor.md](references/motor.md). Checklist de revisión: [references/checklist.md](references/checklist.md).
 
 Documentos del repo que siguen siendo la referencia detallada (léelos al empezar):
 - `CLAUDE.md`, `ENCARGO-NUEVO-CHAT.md` (lecciones), `MENSAJE-NUEVO-CHAT.md`
@@ -32,7 +32,7 @@ Documentos del repo que siguen siendo la referencia detallada (léelos al empeza
    - cada número del guion se verá en pantalla;
    - si hay onomatopeyas o gritos (p. ej. «HUSS!»), escribe el guion de ElevenLabs con **etiquetas solo en esas partes**: `[excited][shouting][very fast]` delante, y repite `[very fast]` cada dos repeticiones. Las etiquetas requieren **Eleven v3**.
    - Entrega el guion **en un bloque para copiar**.
-3. **Voz** (`audio/voz-original.mp3`):
+3. **Voz** (`audio/voz-original.mp3`; el contenedor se reinicia si la sesión queda inactiva: lanza los procesos largos con `run_in_background` y deja una comprobación con `send_later`; `render.sh` es idempotente):
    - si hay partes a acelerar, pásalas con `atempo` sin cambiar tono (`huss/acelerar_huss.py`) y manda **una prueba** antes de seguir;
    - transcribe (`raw_words.json`), recorta silencios con `prep_audio.py voz raw skript.txt audio .055` (margen 55 ms: dinámico sin atropellar);
    - revisa `words.json` (orden, palabras sin pareja, onomatopeyas por golpes de energía: `huss/huss_onsets.py`).
@@ -45,6 +45,7 @@ Documentos del repo que siguen siendo la referencia detallada (léelos al empeza
 ## 2. Imagen (reglas del usuario)
 - 1080×1920, 30 fps. Plano medio **1,1–2 s**, con **cambio de entorno**; ráfagas más rápidas cuando la historia lo pide (cuentas, golpes, «HUSS»).
 - **Lo que se ve ilustra literalmente lo que se dice.** Apóyate en el original: **las mismas escenas**, pero otra ciudad, otros personajes, otro ángulo y detallitos propios para que «parezca nuevo aunque ya lo hayas visto».
+- **Gancho igual que el del original** (mismo tipo de plano y mismo orden); no repitas al mismo personaje en dos planos seguidos del gancho.
 - **Gancho**: profundo, rápido y muy ilustrativo desde el fotograma 0 (golpe de zoom + swoosh); la regla absurda **ya visible**; lo principal **centrado** y con **zoom lento acercándose**; mucha gente, ciudad viva. El 2.º plano también lleno de vida.
 - **Cada plano tiene movimiento de cámara** (acercar, alejar, lateral, grúa, travelling); zooms lentos (riser + viñeta + golpe) en revelaciones.
 - **Cada personaje hace una acción concreta** que ilustra la frase (nadie parado), con caras que cambian con la emoción. Personajes distintos (ropa, pelo, piel, accesorio) y **distintos del original**.
@@ -53,7 +54,7 @@ Documentos del repo que siguen siendo la referencia detallada (léelos al empeza
 - Todo el texto en pantalla en **alemán**; todo número dicho aparece en el mundo.
 
 ## 3. Plantilla y motor
-- Copia **la última pieza terminada** (hoy `pieces/goon/`): `index.html, render.sh, render2.mjs, mids.mjs, sheet.py, cues.mjs, sfx.py, mezclar.sh, marca.py, finish.sh, cover.mjs, prep_audio.py, armar.py, package.json`, `src/*.js`, `src/caras/`, `audio/{campanita-recortada.wav,musica.mp3,musica-fondo.wav}`, y `node_modules` (o `npm install`).
+- Copia **la última pieza terminada** (mira `git log` en `pieces/`; hoy `pieces/hals/`, antes `teddy`, `kreide`, `goon`): `index.html, render.sh, render2.mjs, mids.mjs, sheet.py, cues.mjs, sfx.py, mezclar.sh, marca.py, finish.sh, cover.mjs, prep_audio.py, armar.py, package.json`, `src/*.js`, `src/caras/`, `audio/{campanita-recortada.wav,musica.mp3,musica-fondo.wav}`, y `node_modules` (o `npm install`).
 - Cambia: `DUR` en `src/main.js`, la duración en `render.sh`/`mezclar.sh`/`sfx.py` (`DUR =`), el **puerto** (`render.sh`, `cues.mjs`, `cover.mjs`, servidor `python3 -m http.server <puerto>`), el nombre en `finish.sh`, las horas de campanita en `marca.py` (0 s y cada ≤10 s al empezar frase).
 - Escenarios y reparto nuevos van en archivos propios (`gsets.js`, `gcast.js`…). Detalles del API: [references/motor.md](references/motor.md).
 
@@ -62,7 +63,7 @@ Documentos del repo que siguen siendo la referencia detallada (léelos al empeza
 - ≥1 efecto cada ~1,5 s (`fill_gaps`), variados y realistas; campanita en 0 s y cada ~10 s.
 
 ## 5. Revisión antes del render (obligatoria)
-Mira cada hoja de 10 planos (al 12 % y al 60 %) y corrige: **nadie de espaldas sin motivo**, **nadie tapado** (por objetos, otros personajes, cajas, dinero, números, carteles), **nadie cortado**, **cámara nunca dentro de paredes, casas, coches o vehículos** (sale negro o un color plano), personajes no atravesándose, lo principal centrado y por encima del subtítulo, números legibles y sin solaparse, interiores no quemados a blanco. Detalle en [references/checklist.md](references/checklist.md).
+Mira cada hoja de 10 planos (al 12 % y al 60 %) y corrige: **nadie de espaldas sin motivo**, **nadie tapado** (por objetos, otros personajes, cajas, dinero, números, carteles), **nadie cortado**, **cámara nunca dentro de paredes, casas, coches o vehículos** (sale negro o un color plano), personajes no atravesándose, lo principal centrado y por encima del subtítulo, números legibles y sin solaparse, interiores no quemados a blanco ni zonas demasiado brillantes (ojo con focos o luces pegadas a la cámara en primeros planos). Detalle en [references/checklist.md](references/checklist.md).
 
 ## 6. Portadas (`src/p/z_cover.js` + `node cover.mjs`)
 - 1080×1920, dos versiones. Sujeto principal **centrado**; el texto **centrado entre los personajes** (no separado arriba) y sin tapar caras ni números.

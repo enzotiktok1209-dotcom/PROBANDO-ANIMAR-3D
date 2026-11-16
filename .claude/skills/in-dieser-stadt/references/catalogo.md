@@ -31,6 +31,9 @@ Orden cronológico. Dur = duración de la voz recortada (s). RPM según lo que c
 | 24 | `huss` | todos van de fiesta menos yo; «HUSS!» con fútbol | 76 | — | ElevenLabs: etiquetas solo en los HUSS, `[very fast]` cada dos; acelerar con `atempo` y mandar prueba; onsets por energía; trucos de crack visibles con estela; re-render solo de planos cambiados |
 | 25 | `abschluss` | la única forma de graduarse: matar a un compañero | — | — | (otra sesión) acertijo para comentarios |
 | 26 | `goon` | «fürs Goonen ins Gefängnis» + número sobre la cabeza | 132 | (esperado bajo) | 5–6 variantes de gancho con análisis; datos cambiados; persecución del preso 1353 centrada con zoom lento; ciudad rellena de casas y multitud instanciada con números; revisión al 12 % y 60 %; portada con texto entre drones y número |
+| 27 | `teddy` | «In meiner Welt … einen Mitschüler zu töten» — colegio-trampa, director osito, juicio de clase (versión de `abschluss`) | 157 | (esperado bajo: violencia) | gancho como el original y planos centrados; camas y planos finales con la cara visible; revisión al 12 % |
+| 28 | `kreide` | «alles, was du mit Kreide malst, wird lebendig … bis es regnet» | 255 | — (fantasía mágica: buen candidato) | voz robótica del «Sistema» estilo IA suave; sin música en las partes del Sistema; segundo plano en el gancho; encuadres centrados; más nitidez |
+| 29 | `hals` | «dein Hals wird länger, wenn du aufs Handy schaust» | 117 | — | motor y escenarios propios; revisión de 91 planos |
 
 \* `traumsammler` tiene `words.json` parcial; el vídeo final era más largo.
 
