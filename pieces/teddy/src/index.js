@@ -175,15 +175,13 @@ const MEDAL = (() => { const g = new THREE.Group(); scene.add(g); const m = cyl(
 const TROPHY = (() => { const g = new THREE.Group(); scene.add(g); const gm = mat(0xffd23f, { metalness: .9, roughness: .2, emissive: 0x6a4a00, emissiveIntensity: .3 }); cyl(.5, .7, .4, gm, 14, g, 0, .2, 0); cyl(.12, .12, .8, gm, 8, g, 0, .8, 0); cyl(.8, .3, 1.2, gm, 16, g, 0, 1.8, 0); return g; })();
 PROPS.push(ICE, PANCAKE, ...FIRE, NOTE2, MEDAL, TROPHY);
 
-// 1 «In meiner Welt ist der einzige Weg, die Schule zu verlassen» (zoom lento): la sala del juicio: los doce alumnos en su anillo de atriles, suelo de cuadros; nerviosos, se miran unos a otros
-shot(0, 'Z', 'slow', L => { use('GR'); inside(.75, 28); KIDS.forEach((c, i) => { const [x, z, ry] = ring(i); put(c, x, 0, z, ry + Math.sin(L.T * 1.3 + i) * .5); actuar(c, L.lt, [[0, ['idle', 'cross', 'hug_self', 'think'][i % 4]]], { T: L.T + i, extra: i % 3 ? {} : shiver(L.T + i, .6) }); cara(c, L.T + i, { expr: ['worried', 'sus', 'scared'][i % 3] }); });
-  bear(GRX, 6, -24, 0, { sit: 1, aL: .5, aR: .5, mouth: .3, glow: 2 }, 1.3);
-  cm([GRX + 1.5, 6.5, 30, GRX, 5, 0, 50], [GRX + .5, 6, 19, GRX, 5.4, -4, 48], L.k, easeIn); }, [[0, 'impact', .6], [.2, 'choir', .5], [1.2, 'heartbeat', .5], [2.4, 'whisper', .3]]);
-// 2 «einen Mitschüler zu töten und damit davonzukommen»: el trono altísimo del director; abajo, los alumnos se señalan entre ellos
+// 1 «In meiner Welt ist der einzige Weg, die Schule zu verlassen» (golpe de zoom + zoom lento): yo en mi atril del juicio, nervioso; a los lados otros alumnos en los suyos; la cámara se acerca poco a poco
+shot(0, 'Z', 'slow', L => { use('GR'); inside(.75, 28); KIDS.forEach((c, i) => { const [x, z, ry] = ring(i); put(c, x, 0, z, ry + (i ? Math.sin(L.T * 1.3 + i) * .4 : 0)); actuar(c, L.lt, [[0, i ? ['cross', 'hug_self', 'think'][i % 3] : { aLx: 1.1, aRx: 1.1, aLe: .5, aRe: .5, lean: .12 }]], { T: L.T + i, extra: i ? {} : shiver(L.T, .8) }); cara(c, L.T + i, i ? { expr: ['worried', 'sus', 'scared'][i % 3] } : { expr: 'scared', eyes: 'wide', mouth: 'grimace' }); });
+  sweat(ich, L.T, 2); cm([GRX, 8, -12, GRX, 5.2, 12.4, 50], [GRX, 6.6, 1.5, GRX, 5, 12.4, 46], L.k, easeIn); }, [[0, 'impact', .6], [.2, 'choir', .5], [1.2, 'heartbeat', .5], [2.4, 'whisper', .3]]);
+// 2 «einen Mitschüler zu töten und damit davonzukommen»: el anillo visto desde un lado: los alumnos se señalan unos a otros, acusándose
 shot(3.19, 'W', 'punch', L => { use('GR'); inside(.75, 28); const tg = [3, 7, 9, 10, 1, 11, 2, 0, 5, 4, 6, 8];
-  KIDS.forEach((c, i) => { const [x, z] = ring(i), [tx, tz] = ring(tg[i]); put(c, x, 0, z, Math.atan2(tx - x, tz - z)); actuar(c, L.lt, [[0, 'idle'], [.15 + (i % 4) * .12, i % 3 ? 'point' : 'shock', { dur: .25 }]], { T: L.T + i }); cara(c, L.T + i, { expr: i % 3 ? 'angry' : 'shock' }); });
-  bear(GRX, 6, -24, 0, { sit: 1, aL: 1.2 + Math.sin(L.T * 14) * .2, aR: 1.2 - Math.sin(L.T * 14) * .2, mouth: .9, lean: -.15 + Math.sin(L.T * 12) * .06, glow: 2 }, 1.3);
-  cm([GRX + 1, 7, -4, GRX, 10, -24, 50], [GRX + .6, 7.6, -9, GRX, 10.4, -24, 46], L.k); }, [[0, 'impact', .5], [.3, 'shout_m', .4], [.9, 'gasp', .4], [1.5, 'evil_laugh', .5]]);
+  KIDS.forEach((c, i) => { const [x, z] = ring(i), [tx, tz] = ring(tg[i]); put(c, x, 0, z, Math.atan2(tx - x, tz - z)); actuar(c, L.lt, [[0, 'idle'], [.15 + (i % 4) * .12, i % 3 ? 'point' : 'shock', { dur: .25 }]], { T: L.T + i }); cara(c, L.T + i, { expr: i % 3 ? 'angry' : 'shock', mouth: i % 3 ? 'talk_wide' : 'o' }); });
+  cm([GRX + 2, 9, 4, GRX, 4.6, -12.4, 50], [GRX - 2, 8.6, 1, GRX, 4.6, -12.4, 48], L.k); }, [[0, 'impact', .5], [.3, 'shout_m', .4], [.9, 'gasp', .4], [1.6, 'shout_m', .3]]);
 // 3 «Und der Direktor ist ein Teddybär»: primer plano del osito en el trono: mitad rosa, mitad gris, ojo de corazón; saluda
 shot(5.72, 'C', 'punch', L => { use('GR'); inside(.75, 28); bear(GRX, 6, -24, 0, { sit: 1, aR: 2.5 + Math.sin(L.T * 9) * .3, aRz: .5, aL: .6, mouth: tedM(L.T, 5.7, 7.6) + .2, headZ: Math.sin(L.T * 3) * .12, glow: 2.4 }, 1.3);
   const h = teddy.head.getWorldPosition(V(0, 0, 0)); cam([h.x - .6, h.y + .2, h.z + lerp(14, 11, easeOut(L.k))], [h.x, h.y - 1.6, h.z], 44); }, [[0, 'slam', .5], [.2, 'boing_metal', .4], [1.2, 'evil_laugh', .4]]);
@@ -196,7 +194,7 @@ shot(8.5, 'Z', null, L => { town(); gate(0); const me = put(ich, 0, 0, -27, 0); 
   badge('tag', '0 TALENTE', W / 2, H * .2, (L.lt - .4) * 3); cm([0, 9, 14, 0, 9, -26, 50], [0, 8.6, 8, 0, 8.6, -26, 50], L.k); sh(V(0, 0, -20), 40); }, [[0, 'zoom_in', .3], [.3, 'sad_tone', .4], [.8, 'wind', .3]]);
 // 6 «Auf diese Schule kommen nur die Besten»: vista de dron del internado con la torre del reloj; los alumnos con trofeos entran por la verja abierta
 shot(10.16, 'Z', null, L => { town(); gate(1); OTHERS.slice(0, 8).forEach((c, i) => { walkC(c, L.lt + i * .1, -6 + (i % 4) * 4, -14 - Math.floor(i / 4) * 5, PI, 2.8, L.T + i); cara(c, L.T + i, { expr: 'smug' }); });
-  cm([8, 46, 30, 0, 12, -40, 50], [6, 30, 16, 0, 10, -40, 50], L.k); sh(V(0, 0, -30), 60); }, [[0, 'zoom_in', .4], [.2, 'bells', .4], [.6, 'steps', .4]]);
+  cm([0, 20, -52, 0, 3, -17, 50], [0, 14, -42, 0, 3.4, -19, 48], L.k); sh(V(0, 0, -30), 60); }, [[0, 'zoom_in', .4], [.2, 'bells', .4], [.6, 'steps', .4]]);
 // 7 «des ganzen Landes»: delante de la verja posan los mejores; la gente de la ciudad hace fotos (destellos)
 shot(11.88, 'S', null, L => { town(); gate(1); [mira, ollie, koch, hack, reich, schwimm].forEach((c, i) => { put(c, -8.5 + i * 3.4, 0, -16, 0); actuar(c, L.lt, [[0, i % 2 ? 'cheer' : 'wave']], { T: L.T + i }); cara(c, L.T + i, { expr: 'happy' }); });
   inHand(TROPHY, ollie, 'R', [0, -.6, .3], [0, 0, 0], .7); inHand(MEDAL, mira, 'L', [0, -.5, .5]);
@@ -236,7 +234,7 @@ shot(21.86, 'Z', 'punch', L => { town(); const me = put(ich, -3, 0, 46, 0); actu
   orbit(V(-3, 3.8, 46), lerp(15, 12, easeOut(L.k)), .1, .12, 46); sh(V(-3, 0, 44)); }, [[0, 'impact', .5], [.1, 'confetti', .5], [.3, 'cheer', .5], [.8, 'clap', .4]]);
 // 16 «Ich lief durch das Schultor»: entro por la verja abierta con la mochila; detrás, la ciudad
 shot(23.42, 'F', null, L => { town(); gate(1); const me = walkC(ich, L.lt, 0, -18, PI, 3, L.T); cara(ich, L.T, { expr: 'happy' });
-  cm([2.4, 5.8, -40, 0, 4.6, -18, 46], [2, 5.4, -36, 0, 4.4, -21, 46], L.k); sh(V(0, 0, -22)); }, [[0, 'flash', .3], [.1, 'steps', .5], [.6, 'metal_creak', .4]]);
+  cm([1, 5.6, -30, 0, 4.4, -19, 44], [.8, 5.4, -28, 0, 4.4, -21, 44], L.k); sh(V(0, 0, -22)); }, [[0, 'flash', .3], [.1, 'steps', .5], [.6, 'metal_creak', .4]]);
 // 17 «und plötzlich wurde alles schwarz» (zoom lento): la verja se cierra de golpe detrás de mí, me giro y todo se funde a negro
 shot(24.52, 'C', 'slow', L => { town(); const sl = clamp((L.lt - .2) / .3); gate(1 - easeIn(sl)); const me = put(ich, 0, 0, -27, PI); me.root.rotation.y = PI + (L.lt > .55 ? .5 : 0); actuar(me, L.lt, [[0, 'idle'], [.55, 'shock', { dur: .2 }], [1.2, 'slump', { dur: .5 }]], { T: L.T }); cara(me, L.T, { expr: L.lt > .55 ? 'shock' : 'happy', mouth: L.lt > .55 ? 'scream' : 'flat' });
   DARK = clamp((L.lt - 1.1) / .8); cm([0, 5.8, -44, 0, 4.6, -27, 44], [0, 5.4, -36, 0, 4.6, -27, 40], L.k); sh(V(0, 0, -26)); }, [[.45, 'slam', .7], [.5, 'chain_rattle', .5], [.7, 'gasp', .4], [1.2, 'whoosh_down', .4]]);
@@ -245,7 +243,7 @@ shot(26.51, 'I', null, L => { use('KL'); inside(.85, 40); const me = put(ich, KL
   DARK = 1 - clamp(L.lt / .5); cm([KLX - 4.4, 6.4, -6, KLX - 4.4, 5, 5, 46], [KLX - 4.4, 6.6, -3.4, KLX - 4.4, 5, 5, 46], L.k); }, [[0, 'iris_pop', .3], [.3, 'yawn_big', .4], [.9, 'chair_roll', .3]]);
 // 19 «Die Fenster waren mit Eisenplatten zugeschraubt»: golpeo la placa de hierro de la ventana; tornillos y rendija de luz
 shot(28.48, 'W', null, L => { use('KL'); inside(.85, 40); const me = put(ich, KLX + 16.6, 0, -8, PI / 2); const kn = Math.max(0, Math.sin(L.lt * 12)); actuar(me, L.lt, [[0, { aRx: 1.8, aRe: .4 + kn * .5, aRz: -.1, aLx: .4, lean: .05 }]], { T: L.T }); cara(me, L.T, { expr: 'worried', mouth: 'grimace' });
-  orb(L.k, V(KLX + 17, 7, -8), null, [12, -.2, .1, 46], [10, .2, .08, 46]); }, [[0, 'swipe', .3], [.2, 'metal_hit', .6], [.5, 'metal_hit', .5], [.8, 'metal_hit', .5], [1.4, 'ratchet', .4]]);
+  cm([KLX + 11.4, 6.2, .8, KLX + 16.8, 4.4, -8, 50], [KLX + 12.2, 6, -.4, KLX + 16.8, 4.4, -8, 48], L.k); }, [[0, 'swipe', .3], [.2, 'metal_hit', .6], [.5, 'metal_hit', .5], [.8, 'metal_hit', .5], [1.4, 'ratchet', .4]]);
 // 20 «und in jeder Ecke hing eine Kamera»: una cámara de la esquina gira hacia mí con su luz roja; yo la miro desde abajo
 shot(30.64, 'Z', 'punch', L => { use('KL'); inside(.85, 40); KL.cams[0].rotation.y = PI / 4 + Math.sin(L.lt * 3) * .5; const me = put(ich, KLX - 12, 0, -6, PI + .7); actuar(me, L.lt, [[0, { headX: -.6, aLx: .3 }]], { T: L.T }); cara(me, L.T, { expr: 'worried', eyes: 'wide' });
   cm([KLX - 14, 15.6, -10, KLX - 18.4, 18, -14.4, 46], [KLX - 15, 16.2, -11, KLX - 18.4, 18, -14.4, 40], L.k); }, [[0, 'impact', .4], [.1, 'gears', .4], [.4, 'beep', .4]]);
