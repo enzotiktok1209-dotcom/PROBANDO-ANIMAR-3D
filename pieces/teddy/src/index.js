@@ -410,6 +410,7 @@ const ROPE = (() => { const g = new THREE.Group(); scene.add(g); const m = mat(0
 const PILE = (() => { const t = canvasTexBalls(); const m = new THREE.Mesh(new THREE.SphereGeometry(3.4, 24, 12, 0, PI * 2, 0, PI / 2), mat(0xffffff, { map: t, roughness: .7 })); scene.add(m); return m; })();
 function canvasTexBalls() { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); x.fillStyle = '#b8d020'; x.fillRect(0, 0, 256, 256); for (let i = 0; i < 160; i++) { const px = (i * 47) % 256, py = (i * 83) % 256; x.fillStyle = i % 2 ? '#d8f03a' : '#c8e030'; x.beginPath(); x.arc(px, py, 14, 0, 7); x.fill(); x.strokeStyle = '#f4f4e8'; x.lineWidth = 2; x.beginPath(); x.arc(px - 6, py, 10, -1, 1); x.stroke(); } const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 1); return t; }
 PROPS.push(ROPE, PILE);
+const headCam = (ch, back = 3, up = 5, side = 1.5, fov = 44, tgt = 0) => { const h = hp(ch), f = ch.root.position, d = V(h.x - f.x, 0, h.z - f.z).normalize(), sd = V(-d.z, 0, d.x); cam([h.x + d.x * back + sd.x * side, h.y + up, h.z + d.z * back + sd.z * side], [h.x - d.x * tgt, h.y, h.z - d.z * tgt], fov); };
 const ICHP = () => { const [x, z] = ring(0); return V(x, 0, z); };
 const scrDraw = (key, fn) => GR.scr.userData.s.userData.draw(key, fn);
 const faces12 = (c, w, h, hl = -1, mark = null) => { c.fillStyle = '#1a0a1a'; c.fillRect(0, 0, w, h); const cols = ['#7a4a26', '#3a6ae8', '#e0302a', '#1a1414', '#8a4ad8', '#f0b088', '#b8a0d8', '#5a3a1e', '#f0d870', '#2a2018', '#101014', '#4a2a14'];
@@ -514,7 +515,7 @@ shot(144.78, 'C', 'punch', L => { use('TN'); night(); TN.lights.forEach(l => l.i
   const h = teddy.head.getWorldPosition(V(0, 0, 0)); cam([h.x + .3, h.y + .4, h.z - lerp(7, 5.4, easeIn(L.k))], [h.x, h.y - .3, h.z], 40); }, [[0, 'slam', .5], [.2, 'creepy_ting', .5], [.9, 'heartbeat', .5]]);
 // 91 «In dieser Nacht lag ich in einem Bett»: en la habitación rosa de Mira, tumbado y despierto
 shot(145.99, 'I', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX - 8, 3.4, -5.6, 0); applyPose(ich, { aLx: .2, aRx: .2, aLz: .3, aRz: .3 }); cara(ich, L.T, { expr: 'sad', eyes: 'half', mouth: 'flat' });
-  cm([ZBX - 3, 9.5, -11, ZBX - 8, 3.4, -7, 46], [ZBX - 3.6, 9, -10.4, ZBX - 8, 3.4, -7, 44], L.k); }, [[0, 'iris_pop', .3], [.3, 'crickets', .4], [1.4, 'clock_tick', .3]]);
+  headCam(ich, lerp(-5, -4.2, L.k), 5, .8, 44, -.8); }, [[0, 'iris_pop', .3], [.3, 'crickets', .4], [1.4, 'clock_tick', .3]]);
 // 92 «das nicht meins war»: los pósteres y la colcha rosa de Mira; yo me giro
 shot(147.79, 'W', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX - 8, 3.4, -5.6, 0); applyPose(ich, { headY: -.6 + Math.sin(L.lt) * .1 }); cara(ich, L.T, { expr: 'sad', eyes: 'side_l' });
   cm([ZBX + 4, 10, 4, ZBX - 2, 9, -12, 48], [ZBX + 2, 10.4, 2, ZBX - 4, 8, -12, 48], L.k); }, [[0, 'swipe', .3], [.4, 'sigh', .4]]);
@@ -522,20 +523,20 @@ shot(147.79, 'W', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX 
 shot(148.98, 'F', null, L => { use('ZB'); night(); inside(.4, 15); lie(ich, ZBX - 8, 3.4, -5.6, 0); cara(ich, L.T, { expr: 'sad', eyes: 'down', mouth: 'frown' }); const h = hp(ich);
   cam([h.x + .3, h.y + lerp(6, 5, L.k), h.z + 1.2], [h.x, h.y, h.z + .2], 40); }, [[0, 'flash', .2], [.3, 'lullaby', .4]]);
 // 94 «Fünf Jahre lang lag er jede Nacht neben mir» (recuerdo cálido): yo de pequeño abrazado al osito de peluche
-shot(150.08, 'F', 'slow', L => { use('KZ'); inside(.5, 20); grade.uniforms.sepia.value = .25; const me = lie(ich, KZX, 2.7, -4.6, 0); ich.root.scale.setScalar(.62); applyPose(me, { aLx: 1.4, aRx: 1.4, aLz: -.6, aRz: -.6, aLe: 1.2, aRe: 1.2 }); cara(me, L.T, { expr: 'happy', eyes: 'closed', mouth: 'smirk', noBlink: 1 });
-  show(TOY, KZX + 1.8, 2.8, -6.6, -.5, .8); TOY.rotation.z = .3; badge('tag', '5 JAHRE', W / 2, H * .2, (L.lt - .2) * 3);
+shot(150.08, 'F', 'slow', L => { use('KZ'); inside(.5, 20); grade.uniforms.sepia.value = .25; const me = lie(ich, KZX, 3.3, -4.6, 0); ich.root.scale.setScalar(.62); applyPose(me, { aLx: .7, aRx: .7, aLz: -.5, aRz: -.5, aLe: 1.7, aRe: 1.7 }); cara(me, L.T, { expr: 'happy', eyes: 'closed', mouth: 'smirk', noBlink: 1 });
+  { const h = hp(ich); show(TOY, h.x + 1.6, 2.4, h.z, -.5, .8); } TOY.rotation.z = .3; badge('tag', '5 JAHRE', W / 2, H * .2, (L.lt - .2) * 3);
   ZZZ.forEach((z, i) => { const k = (L.T * .5 + i / 3) % 1; z.visible = true; z.position.set(KZX - 1 + k * 2, 5 + k * 3, -6 + i * .2); z.scale.setScalar(.5 + k); z.material.opacity = 1 - k; z.lookAt(camera.position); });
-  cm([KZX + 4.5, 7, -10.5, KZX, 3, -6, 46], [KZX + 3.6, 6.6, -10, KZX + .4, 3, -6, 42], L.k); }, [[0, 'flash', .3], [.2, 'lullaby', .5], [1.2, 'snore', .2]]);
+  headCam(ich, lerp(-3.4, -2.8, L.k), 3.6, .4, 44, -1.5); }, [[0, 'flash', .3], [.2, 'lullaby', .5], [1.2, 'snore', .2]]);
 // 95 «in meinem Kinderzimmer»: el cuarto de niño entero con la lucecita de noche
-shot(152.11, 'W', null, L => { use('KZ'); inside(.5, 20); grade.uniforms.sepia.value = .25; const me = lie(ich, KZX, 2.7, -4.6, 0); ich.root.scale.setScalar(.62); applyPose(me, { aLx: 1.4, aRx: 1.4, aLz: -.6, aRz: -.6, aLe: 1.2, aRe: 1.2 }); cara(me, L.T, { eyes: 'closed', mouth: 'smirk', noBlink: 1 });
-  show(TOY, KZX + 1.8, 2.8, -6.6, -.5, .8); TOY.rotation.z = .3; cm([KZX - 9, 10, -8, KZX, 3, -5, 50], [KZX - 7, 9.4, -9, KZX, 3, -5, 50], L.k); }, [[0, 'swipe', .3], [.4, 'chime', .3]]);
+shot(152.11, 'W', null, L => { use('KZ'); inside(.5, 20); grade.uniforms.sepia.value = .25; const me = lie(ich, KZX, 3.3, -4.6, 0); ich.root.scale.setScalar(.62); applyPose(me, { aLx: .7, aRx: .7, aLz: -.5, aRz: -.5, aLe: 1.7, aRe: 1.7 }); cara(me, L.T, { eyes: 'closed', mouth: 'smirk', noBlink: 1 });
+  { const h = hp(ich); show(TOY, h.x + 1.6, 2.4, h.z, -.5, .8); } TOY.rotation.z = .3; headCam(ich, -7, 6, lerp(-4, -2, L.k), 50, 1); }, [[0, 'swipe', .3], [.4, 'chime', .3]]);
 // 96 «Jetzt wollte er mich zum Mörder machen» (zoom lento): el osito en su trono a oscuras; solo brilla el ojo de corazón
 shot(153.82, 'C', 'slow', L => { use('GR'); inside(.2, 8); DARK = .35; bear(GRX, 6, -24, 0, { sit: 1, aL: .6, aR: .6, mouth: .25, glow: 3 + L.k * 3, brow: .5, headX: .1 }, 1.3);
   const h = teddy.head.getWorldPosition(V(0, 0, 0)); cam([h.x, h.y + .8, h.z + lerp(16, 8, easeIn(L.k))], [h.x, h.y - .6, h.z], 42); }, [[0, 'slam', .4], [.2, 'heartbeat', .6], [1.2, 'creepy_ting', .4]]);
 // 97 «Und trotzdem vermisse ich ihn»: en la cama de Mira abrazo el osito pequeño; una lágrima. La cámara se aleja
-shot(155.72, 'F', null, L => { use('ZB'); night(); inside(.45, 18); lie(ich, ZBX - 8, 3.4, -5.6, .3); applyPose(ich, { aLx: 1.4, aRx: 1.4, aLz: -.6, aRz: -.6, aLe: 1.3, aRe: 1.3 }); cara(ich, L.T, { expr: 'sad', eyes: 'closed', mouth: 'frown', noBlink: 1 }); show(TOY, ZBX - 6.4, 3.6, -7.4, -.4, .8); TOY.rotation.z = .4;
+shot(155.72, 'F', null, L => { use('ZB'); night(); inside(.45, 18); lie(ich, ZBX - 8, 3.4, -5.6, .3); applyPose(ich, { aLx: .7, aRx: .7, aLz: -.5, aRz: -.5, aLe: 1.7, aRe: 1.7 }); cara(ich, L.T, { expr: 'sad', eyes: 'closed', mouth: 'frown', noBlink: 1 }); { const h = hp(ich); show(TOY, h.x + 1.5, 3.3, h.z - .4, -.4, .8); } TOY.rotation.z = .4;
   const h = hp(ich); TEAR.forEach((t, i) => { if (i) return; t.visible = true; const k = (L.T * .7) % 1; t.position.copy(h).add(V(.45, .3, .3 - k * .8)); });
-  cm([ZBX - 4.4, 7.6, -10.6, ZBX - 7.6, 3.6, -7.2, 40], [ZBX - 1, 11, -9, ZBX - 7.6, 3.6, -6.6, 46], L.k); }, [[0, 'flash', .2], [.3, 'sob', .4], [.8, 'lullaby', .4], [1.5, 'piano_note', .4]]);
+  headCam(ich, lerp(-3.4, -6, L.k), lerp(3.6, 6.5, L.k), .8, 44, -.6); }, [[0, 'flash', .2], [.3, 'sob', .4], [.8, 'lullaby', .4], [1.5, 'piano_note', .4]]);
 // ---------- portadas (fuera del vídeo): el preso con su 1353 huyendo, policías y drones detrás, los del 0 mirando ----------
 function coverTxt(l1, l2, y0 = .255) { const c = octx; c.save(); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
   for (const [t, y, sz, f] of [[l1, H * y0, 104, '#ffffff'], [l2, H * (y0 + .06), 92, '#E2FD07']]) { c.font = `700 ${sz}px ${FONT}`; const tw = c.measureText(t).width, k = Math.min(1, W * .84 / tw); c.save(); c.translate(W / 2, y); c.scale(k, k);
