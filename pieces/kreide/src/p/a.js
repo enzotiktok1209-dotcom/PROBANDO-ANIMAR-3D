@@ -20,7 +20,7 @@ const walkArmsUmb = T => ({ aRx: 1.3, aRe: 1.4, aRz: -.1 });
 const PLAZA_BG = (L, n = 120, mode = 'sway') => crowdAt(L.T, grid(-56, -76, 46, -40, n, 3, 0), mode);
 // ---------- 1 · GANCHO: «In dieser Stadt wird alles, was du mit Kreide malst, lebendig …» ----------
 // Emil dibuja a Krümel en el suelo y salta vivo; alrededor, monopatines, monigotes y el dragón cobran vida. Zoom lento hacia Emil.
-shot(0, 'C', 'slow', L => { town(); PLAZA_BG(L, 90, 'cheer'); const T = L.T;
+shot(0, 'Z', null, L => { town(); PLAZA_BG(L, 90, 'cheer'); const T = L.T;
   put(emil, 0, 0, 0, .15); applyPose(emil, L.lt < 1.2 ? drawP(T, 11) : { ...KNEEL, aRx: 2.6, aRz: .4, aRe: .2, headX: -.1, lean: .1 }); chalkIn(emil); cara(emil, T, L.lt < 1.2 ? { expr: 'determined', mouth: 'smile' } : { eyes: 'wide', mouth: 'open_smile' });
   const kk = clamp((L.lt - .9) / .5); show(KRU, 2.6, 0, 3.2, -.3, Math.max(.01, spring(kk))); KRU.userData.anim(T, L.lt > 1.4 ? 1 : 0); KRU.position.y = L.lt > 1.4 ? Math.abs(Math.sin(T * 7)) * .8 : 0; puff(V(2.6, .6, 3.2), .9, T, 8, .35);
   dec(DC.dog, 2.6, 3.2, -.3, 1 - clamp((L.lt - .9) / .3));
@@ -28,8 +28,17 @@ shot(0, 'C', 'slow', L => { town(); PLAZA_BG(L, 90, 'cheer'); const T = L.T;
   STK.update(T, [[-9, 0, -4, .4], [-12, 0, -8, .2], [9, 0, -6, -.4], [12, 0, -12, -.2], [-6, 0, -16, 0]]);
   DRA.g.visible = true; DRA.update(T, dpath(30 - L.lt * 6, 19, -26, 60, 2, -.15));
   bg(L, [[XT[0], -7, 4, .4, 'draw', .2], [XT[1], 8, -2, -.3, 'cheer'], [lea, -4, -6, .2, 'draw', .5]]);
-  orb(L.k, V(1.0, 3.4, 1.6), null, [16, 0, .15, 50], [11, .05, .12, 46], easeIn); sh(V(0, 0, -6), 34); },
-  [[.05, 'chalk', .8], [.6, 'chalk', .6], [.95, 'pop', .9], [1.05, 'sparkle', .7], [1.5, 'bark', .7], [2.2, 'kids_laugh', .5], [2.6, 'wheels', .5]]);
+  orb(L.k, V(1.0, 3.4, 1.6), null, [15, 0, .15, 50], [11, .05, .12, 46], easeOut); sh(V(0, 0, -6), 34); },
+  [[.05, 'chalk', .8], [.6, 'chalk', .6], [.95, 'pop', .9], [1.05, 'sparkle', .7], [1.5, 'bark', .7]]);
+// ---------- 1b · «… malst, lebendig …» : el dragón de tiza se despega del suelo con los niños subiéndose; monopatines y monigotes alrededor (zoom lento) ----------
+shot(1.88, 'C', 'slow', L => { town(); PLAZA_BG(L, 110, 'cheer'); const T = L.T; const up = easeOut(clamp(L.lt / 1.3));
+  DRA.g.visible = true; DRA.update(T, (s, t) => { const p = dpath(16, 1 + up * 15, -14, 60, up * 2, -.1)(s, t); p.y = Math.max(.8, p.y - s * up * 8); return p; }); riders(T, 0, RIDERS().slice(0, Math.min(7, 2 + Math.floor(L.lt * 6))));
+  puff(V(0, 1, -14), L.t0, T, 16, 1.2, GDUST, 1.4);
+  SKATE.slice(0, 2).forEach((s_, i) => { const x = -10 + i * 18 - L.lt * 6 * (i ? 1 : -1), z = 6 + i * 2; show(s_, x, 0, z, PI / 2 * (i ? -1 : 1)); put(K[6 + i], x, .6, z, PI / 2 * (i ? -1 : 1)); applyPose(K[6 + i], { crouch: .25, aLz: .7, aRz: .7, lean: .1 }); cara(K[6 + i], T, { eyes: 'happy', mouth: 'open_smile' }); });
+  STK.update(T, [[-9, 0, 2, .5], [9, 0, 0, -.5], [-14, 0, -6, .3], [14, 0, -8, -.3]]);
+  bg(L, [[emil, -2.5, 8, .2, 'cheer'], [lea, 2.5, 8, -.2, 'cheer', .3]]); show(KRU, 0, 0, 9, 0, .8); KRU.userData.anim(T, 1); KRU.position.y = Math.abs(Math.sin(T * 7)) * .8;
+  orb(L.k, V(0, 7, -2), null, [42, 0, .12, 50], [30, .02, .14, 46], easeIn); sh(V(0, 0, -6), 40); },
+  [[0, 'magic_hit', .8], [.1, 'growl', .7], [.4, 'kids_laugh', .6], [.9, 'wheels', .5], [1.2, 'cheer', .5]]);
 // ---------- 2 · «bis es regnet.» : una nube negra, la primera gota cae sobre una flor de tiza y se derrite ----------
 shot(3.54, 'F', 'punch', L => { town('storm'); const T = L.T; CLO.set(V(0, 0, -20), T, 1, 120, 55); RAIN.update(T, V(0, 0, 0), .3 + L.k * .7, 50, 40, 50);
   put(emil, 0, 0, 0, .1); actuar(emil, L.lt, [[0, { headX: -.55, aLx: .5, aRx: .5, aLz: .4, aRz: .4 }]], { T }); cara(emil, T, { expr: 'shock', mouth: 'o' }); show(KRU, 3.6, 0, 1.4, -.4); KRU.userData.anim(T, 0);

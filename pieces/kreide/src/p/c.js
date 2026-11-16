@@ -27,26 +27,27 @@ function sala(L, talk = 0, red = 0, scr = null) { use('SY'); dark(); const T = L
   vs((c, w, h) => { c.fillStyle = '#05070c'; c.fillRect(0, 0, w, h); }); }
 // el Chef sentado en su silla (frente a la pantalla, de espaldas a la sala: lo vemos de cara desde la pantalla)
 function chefSit(L, pose = {}, face = {}) { put(chef, SYX + 9, 2.1, -12, PI); applyPose(chef, { ...SIT, lLk: 1.4, lRk: 1.4, lLx: 1.45, lRx: 1.45, crouch: .05, ...pose }); cara(chef, L.T, { expr: 'angry', ...face }); }
-const VSP = V(SYX - 2, 19, -34);   // centro del monitor vertical
+const VSP = V(SYX - 2, 19, -34);
+const aimC = (L, ch, d0, d1, dy = -1.2, off = 0, e = easeInOut) => { const c = hp(ch).add(V(0, dy, 0)); orb(L.k, c, null, [d0, ch.root.rotation.y + off, .08, 44], [d1, ch.root.rotation.y + off * .6, .06, 42], e); };   // centro del monitor vertical
 // ---------- 46 · «System.» : glitch y entramos en la sala oscura; el Chef en su silla, iluminado por la pantalla ----------
 shot(89.92, 'C', null, L => { sala(L); const T = L.T; chefSit(L, { headX: .1 }, { mouth: kitLips(T, spoken(L.t0, L.t1)) || 'flat' });
   vs((c, w, h) => tile(c, SNAP.emilHug, 0, 0, w, h, { title: 'IN DIESER STADT…' }));
   GL = clamp(1 - L.lt / .45);
-  orb(L.k, V(SYX + 9, 8, -12), null, [13, PI + .3, .16, 46], [11, PI + .2, .14, 44]); sh(V(SYX, 0, -20), 40); }, [[0, 'glitch', 1], [.1, 'hum_low', .8], [.3, 'power_on', .6]]);
+  aimC(L, chef, 13, 10.5, -1.2, .25); sh(V(SYX, 0, -20), 40); }, [[0, 'glitch', 1], [.1, 'hum_low', .8], [.3, 'power_on', .6]]);
 // ---------- 47 · «Ja.» : el núcleo se enciende ----------
 shot(90.72, 'F', 'punch', L => { sala(L, 1); orbit(SY.core.position.clone().add(V(SYX, 0, 0)), 16 - L.k * 2, .25, .08, 44); sh(V(SYX, 0, -20), 40); }, [[0, 'zap', .7], [.05, 'beep', .6]]);
 // ---------- 48 · «Wer ist der alte Mann?» : el monitor congela el abrazo y marca al anciano ----------
 shot(91.13, 'Z', null, L => { sala(L); const T = L.T;
   vs((c, w, h) => { tile(c, SNAP.emilHug, 0, 0, w, h, { title: 'IN DIESER STADT…' }); mark(c, w * .66, h * .4, 110, '???', L.lt / .6); });
-  orb(L.k, VSP.clone().add(V(0, -1, 0)), null, [36, .12, .02, 46], [31, .05, .02, 44]); sh(V(SYX, 0, -28), 40); }, [[0, 'zoom_in', .5], [.3, 'beep', .5]]);
+  orb(L.k, VSP.clone().add(V(0, -1, 0)), null, [36, 0, .02, 46], [31, 0, .02, 44]); sh(V(SYX, 0, -28), 40); }, [[0, 'zoom_in', .5], [.3, 'beep', .5]]);
 // ---------- 49 · «Unbekannt. Ich habe ihn nicht geschrieben.» : búsqueda en la base de datos: NICHT GEFUNDEN ----------
 shot(92.26, 'S', null, L => { sala(L, .7, .4, (c, w, h) => { term(c, ['> suche: "ALTER MANN"', '> skript_emil.txt ......', '> figuren: EMIL, LEA, KRÜMEL, LINA', '!> ERGEBNIS: NICHT GEFUNDEN', '!> AUTOR: UNBEKANNT'], 380, 190, 32, '#7ae8ff', L.lt * 70); });
   vs((c, w, h) => { tile(c, SNAP.opaKeys, 0, 0, w, h, { red: clamp(L.lt - .5) }); });
-  orb(L.k, SY.core.position.clone().add(V(SYX, -1, 0)), null, [30, .55, .1, 46], [27, .7, .1, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'tick', .5], [.3, 'tick', .4], [.6, 'tick', .4], [.9, 'buzzer', .6]]);
+  orb(L.k, SY.core.position.clone().add(V(SYX, -1, 0)), null, [26, .1, .06, 46], [23, 0, .06, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'tick', .5], [.3, 'tick', .4], [.6, 'tick', .4], [.9, 'buzzer', .6]]);
 // ---------- 50 · «Wie heißt der Junge?» «Emil.» : ficha de Emil ----------
 shot(94.22, 'W', null, L => { sala(L, L.lt > 1 ? 1 : 0); const T = L.T; chefSit(L, { headX: -.05, lean: .1 }, { mouth: kitLips(T, spoken(L.t0, L.t0 + .9)) || 'flat' });
   vs((c, w, h) => { tile(c, SNAP.emilWave, 0, 0, w, h, { name: L.lt > .95 ? 'EMIL · 11' : '…' }); });
-  orb(L.k, V(SYX + 4, 11, -19), null, [14, PI + .55, .12, 46], [12.5, PI + .45, .1, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'beep', .5], [1.0, 'notif', .7]]);
+  aimC(L, chef, 12, 10.5, -1.2, .3); sh(V(SYX, 0, -20), 40); }, [[0, 'beep', .5], [1.0, 'notif', .7]]);
 // ---------- 51 · «Und beim letzten Mal?» : el Chef se inclina hacia delante ----------
 shot(95.73, 'C', 'punch', L => { sala(L); const T = L.T; chefSit(L, { lean: .35, headX: -.2, aLx: 1.0, aRx: 1.0, aLe: 1.2, aRe: 1.2 }, { mouth: kitLips(T, spoken(L.t0, L.t1)) || 'flat', expr: 'sus' }); SYR.intensity = 120;
   onFace(chef, 9, .4, .8, 40, L.k, 7); sh(V(SYX, 0, -20), 40); }, [[0, 'chair_roll', .5], [.4, 'hum', .5]]);
@@ -56,19 +57,19 @@ const prevWall = (c, w, h, L, red = 0) => { c.fillStyle = '#05070c'; c.fillRect(
   c.save(); c.globalAlpha = k; tile(c, SNAP['k' + PREV[i][1]], x, y + (1 - k) * 30, tw, th, { name: PREV[i][0], red }); c.restore(); } };
 shot(96.91, 'Z', null, L => { sala(L, .8, 0, (c, w, h) => prevWall(c, w, h, L, 0, 7));
   vs((c, w, h) => { const i = [96.91, 97.33, 97.81, 98.40].filter(t => L.T >= t).length - 1; tile(c, SNAP['k' + Math.max(0, i)], 0, 0, w, h, { title: 'IN DIESER STADT…', name: PREV[Math.max(0, i)][0] }); });
-  orb(L.k, VSP.clone().add(V(0, -1, 0)), null, [40, -.1, .02, 46], [36, .05, .02, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'notif', .6], [.42, 'notif', .5], [.9, 'notif', .6]]);
+  orb(L.k, VSP.clone().add(V(0, -1, 0)), null, [40, 0, .02, 46], [36, 0, .02, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'notif', .6], [.42, 'notif', .5], [.9, 'notif', .6]]);
 // ---------- 53 · «Noah. Ben. Luca. Max.» : la pared se llena de vídeos con otros niños ----------
 shot(98.40, 'S', null, L => { sala(L, .8); vs((c, w, h) => prevWall(c, w, h, L));
-  orb(L.k, VSP.clone(), null, [34, -.15, .02, 46], [31, .1, .02, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'notif', .6], [.48, 'notif', .5], [.91, 'notif', .6], [1.5, 'notif', .6]]);
+  orb(L.k, VSP.clone(), null, [38, -.04, .02, 46], [35, .04, .02, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'notif', .6], [.48, 'notif', .5], [.91, 'notif', .6], [1.5, 'notif', .6]]);
 // ---------- 54 · «Und davor?» : el núcleo calla; la pantalla se queda en estática ----------
 shot(100.40, 'C', null, L => { sala(L, 0, 0, (c, w, h) => { const r = RNG(Math.floor(L.T * 30)); for (let i = 0; i < 1600; i++) { const v = r() * 255 | 0; c.fillStyle = `rgb(${v},${v},${v})`; c.fillRect(r() * w, r() * h, 6, 4); } });
   chefSit(L, { lean: .3, headX: -.1 }, { expr: 'sus', mouth: kitLips(L.T, spoken(L.t0, L.t1)) || 'flat' }); GL = .15;
-  orb(L.k, V(SYX + 9, 8.5, -12), null, [12, PI - .3, .1, 42], [10, PI - .2, .1, 40]); sh(V(SYX, 0, -20), 40); }, [[0, 'tv_static', .7]]);
+  aimC(L, chef, 11, 9, -1.2, -.3); sh(V(SYX, 0, -20), 40); }, [[0, 'tv_static', .7]]);
 // ---------- 55 · «Du weißt nicht, wer er ist. Du weißt nicht, woher er kommt.» : el Chef se levanta y golpea la mesa ----------
 shot(101.06, 'W', null, L => { sala(L, 0, .5); const T = L.T; const up = easeOut(clamp(L.lt / .5));
   put(chef, SYX + 7, 0, -16, PI + .3); actuar(chef, L.lt, [[0, { crouch: .4 }], [.4, 'point'], [1.6, { aLx: 1.6, aRx: 1.6, aLe: .4, aRe: .4, lean: .3, aLz: -.1, aRz: -.1 }]], { T }); talk(chef, T, L.t0, L.t1, 'angry');
   vs((c, w, h) => { tile(c, SNAP.opaLie, 0, 0, w, h, { title: 'HERKUNFT: ???', red: .4 }); });
-  orb(L.k, V(SYX + 6, 8, -16), null, [14, PI + .55, .12, 46], [12, PI + .4, .1, 44]); sh(V(SYX, 0, -20), 40); }, [[0, 'chair_roll', .6], [.3, 'steps_heavy', .5], [1.65, 'table_bang', .9], [1.7, 'impact', .5]]);
+  aimC(L, chef, 14, 12, -1.6, 0); sh(V(SYX, 0, -20), 40); }, [[0, 'chair_roll', .6], [.3, 'steps_heavy', .5], [1.65, 'table_bang', .9], [1.7, 'impact', .5]]);
 // ---------- 56 · «Und er erinnert sich.» : en el monitor, el fotograma de la feria parpadea; zoom lento ----------
 shot(104.01, 'G', 'slow', L => { sala(L, 0, .8); GL = .12 + .2 * (Math.sin(L.T * 9) > .7);
   vs((c, w, h) => { tile(c, SNAP.fair, 0, 0, w, h, { title: 'ERINNERUNG?' }); if (Math.sin(L.T * 13) > .3) { c.globalAlpha = .5; tile(c, SNAP.opaKeys, 0, 0, w, h); c.globalAlpha = 1; } mark(c, w * .5, h * .5, 120, '', clamp(L.k * 1.5)); });
@@ -83,7 +84,7 @@ const COMMENTS = ['Wer ist der Opa??', 'Die Schlüssel!!! 🔑', 'Er war schon i
 shot(108.36, 'W', null, L => { sala(L, 0, .5); const T = L.T;
   vs((c, w, h) => { tile(c, SNAP.emilHug, 0, 0, w, h); const n = Math.floor(L.lt * 4.5); for (let i = 0; i < Math.min(n, COMMENTS.length); i++) { const y = 120 + i * 78; c.fillStyle = 'rgba(0,0,0,.66)'; c.beginPath(); c.roundRect(24, y, w - 48, 64, 18); c.fill(); c.font = `700 26px ${FONT}`; c.textAlign = 'left'; c.fillStyle = ['#ffd23f', '#7ae8ff', '#ff9ac0', '#8aff9a'][i % 4]; c.fillText('@user' + (1000 + i * 731) % 9999, 44, y + 26); c.fillStyle = '#fff'; c.fillText(COMMENTS[i], 44, y + 54); } });
     sh(V(SYX, 0, -20), 40);
-  orb(L.k, VSP.clone().add(V(0, -1, 0)), null, [34, -.15, .02, 46], [30, -.05, .02, 46]); }, [[0, 'notif', .5], [.5, 'notif', .5], [1.0, 'notif', .5], [1.6, 'notif', .5], [2.2, 'notif', .5]]);
+  orb(L.k, VSP.clone().add(V(0, -1, 0)), null, [34, 0, .02, 46], [31, 0, .02, 46]); }, [[0, 'notif', .5], [.5, 'notif', .5], [1.0, 'notif', .5], [1.6, 'notif', .5], [2.2, 'notif', .5]]);
 // ---------- 59 · «Sie entschlüsseln sie.» : lupa sobre el vídeo, aparecen códigos ----------
 shot(111.31, 'Z', null, L => { sala(L, 0, .6); vs((c, w, h) => { tile(c, SNAP.opaKeys, 0, 0, w, h); const mx = w * .5 + Math.sin(L.T * 3) * 80, my = h * .45 + Math.cos(L.T * 2) * 60; c.save(); c.beginPath(); c.arc(mx, my, 120, 0, 7); c.clip(); c.drawImage(SNAP.opaKeys, -mx * .8, -my * .8, w * 1.8, h * 1.8); c.restore(); c.lineWidth = 14; c.strokeStyle = '#ffd23f'; c.beginPath(); c.arc(mx, my, 120, 0, 7); c.stroke(); c.beginPath(); c.moveTo(mx + 85, my + 85); c.lineTo(mx + 170, my + 170); c.lineWidth = 26; c.stroke();
     term(c, ['0x4C 0x45 0x4F', 'KEY=ERINNERUNG', 'FIGUR_07: ??'], 30, h - 140, 30, '#8aff9a', L.lt * 40); });
@@ -99,7 +100,7 @@ shot(115.42, 'Z', 'slow', L => { sala(L, 1, .2); const c0 = SY.core.position.clo
 // ---------- 63 · «Der Zuschauer soll weiterwischen.» : en el monitor, un dedo desliza el feed hacia arriba ----------
 shot(117.44, 'W', null, L => { sala(L, .8); vs((c, w, h) => { const off = (L.lt * 2.2 % 1) * h; const imgs = [SNAP.emilHug, SNAP.k0, SNAP.k3, SNAP.dragon, SNAP.k5]; for (let i = -1; i < 3; i++) tile(c, imgs[(Math.floor(L.lt * 2.2) + i + 5) % 5], 0, i * h - off * easeInOut(1), w, h, { views: (1 + i * 3) + ',2 Mio' });
     const fy = h * .75 - ((L.lt * 2.2) % 1) * h * .45; c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.ellipse(w * .62, fy, 46, 62, -.2, 0, 7); c.fill(); });
-  orb(L.k, VSP.clone(), null, [36, .12, .02, 44], [33, .04, .02, 42]); sh(V(SYX, 0, -28), 40); }, [[0, 'swipe', .6], [.45, 'swipe', .5], [.9, 'swipe', .6], [1.35, 'swipe', .5]]);
+  orb(L.k, VSP.clone(), null, [38, 0, .02, 44], [35, 0, .02, 42]); sh(V(SYX, 0, -28), 40); }, [[0, 'swipe', .6], [.45, 'swipe', .5], [.9, 'swipe', .6], [1.35, 'swipe', .5]]);
 // ---------- 64 · «Hier ist ein gutes Video.» : el monitor pone el vídeo de Mila y la cámara entra en la pantalla ----------
 shot(119.12, 'Z', null, L => { sala(L, .9); vs((c, w, h) => { tile(c, SNAP.mila1, 0, 0, w, h, { title: 'IN MEINER STADT…', views: '38 Mio' }); });
   orb(L.k, VSP.clone(), null, [34, 0, .02, 44], [12, 0, .01, 40], easeIn); sh(V(SYX, 0, -28), 40); }, [[0, 'click_set', .6], [.4, 'music_box', .5], [1.0, 'zoom_in', .6]]);
@@ -127,35 +128,35 @@ shot(123.75, 'S', null, L => { milaTown(L, .5 + L.k * .2); const T = L.T;
 shot(126.43, 'G', null, L => { sala(L, .9, 0, (c, w, h) => term(c, ['> video: MILA_regenbogen.mp4', '> fehler: 0   ✓', '> codes: 0    ✓', '> alter mann: 0 ✓'], 420, 220, 34, '#8aff9a', L.lt * 40));
   vs((c, w, h) => tile(c, SNAP.mila2, 0, 0, w, h, { green: L.lt > .9, views: '38 Mio', border: '#2aff8a', bw: 8 }));
   if (L.lt < .2) GL = .6 * (1 - L.lt / .2);
-  orb(L.k, VSP.clone().add(V(0, -2, 0)), null, [42, .2, .03, 46], [38, .1, .03, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'glitch', .5], [.4, 'ding_soft', .7], [1.2, 'ding_soft', .6]]);
+  orb(L.k, VSP.clone().add(V(0, -2, 0)), null, [40, 0, .03, 46], [37, 0, .03, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'glitch', .5], [.4, 'ding_soft', .7], [1.2, 'ding_soft', .6]]);
 // ---------- 69 · «Keine Codes. Kein alter Mann.» : el fotograma del anciano tachado ----------
 shot(128.20, 'C', null, L => { sala(L, .9); vs((c, w, h) => { tile(c, SNAP.mila2, 0, 0, w, h, { green: true }); const k = clamp((L.lt - .5) / .3); if (k > 0) { c.save(); c.globalAlpha = k; tile(c, SNAP.opaKeys, w * .3, h * .3, w * .64, h * .64, { red: 1, bw: 6, border: '#ff3a4a' }); c.restore(); } });
-  orb(L.k, VSP.clone().add(V(0, 0, 0)), null, [31, -.1, .02, 44], [28, 0, .02, 42]); sh(V(SYX, 0, -28), 40); }, [[0, 'ding_soft', .6], [.55, 'buzzer', .7]]);
+  orb(L.k, VSP.clone().add(V(0, 0, 0)), null, [33, 0, .02, 44], [30, 0, .02, 42]); sh(V(SYX, 0, -28), 40); }, [[0, 'ding_soft', .6], [.55, 'buzzer', .7]]);
 // ---------- 70 · «Sie hat noch nie eine einzige Frage gestellt.» : Mila sonríe vacía; el núcleo, satisfecho ----------
 shot(130.19, 'W', null, L => { sala(L, .9); vs((c, w, h) => tile(c, SNAP.mila3, 0, 0, w, h, { views: '38 Mio' }));
-  orb(L.k, V(SYX - 6, 17, -30), null, [36, -.25, .05, 46], [33, -.12, .05, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'hum', .5], [1.2, 'music_box', .4]]);
+  orb(L.k, VSP.clone(), null, [36, -.06, .02, 46], [33, .04, .02, 46]); sh(V(SYX, 0, -28), 40); }, [[0, 'hum', .5], [1.2, 'music_box', .4]]);
 // ---------- 71 · «38 Millionen Aufrufe.» : el contador sube a 38.000.000 ----------
 shot(132.70, 'C', 'punch', L => { sala(L, .9, 0, (c, w, h) => { const v = Math.floor(38000000 * easeOut(clamp(L.lt / 1.2))); c.font = `700 120px monospace`; c.textAlign = 'center'; c.fillStyle = '#ffd23f'; c.fillText(v.toLocaleString('de-DE'), w / 2, h / 2 + 30); c.font = `700 40px monospace`; c.fillStyle = '#7ae8ff'; c.fillText('AUFRUFE', w / 2, h / 2 + 100); });
   vs((c, w, h) => tile(c, SNAP.mila1, 0, 0, w, h, { views: (38 * easeOut(clamp(L.lt / 1.2))).toFixed(0) + ' Mio' }));
   badge('gold', '38 MILLIONEN', W / 2, H * .17, (L.lt - .05) * 2.5, 1, .95);
-  cam([SYX, 22, 6 - L.k * 4], [SYX, 24, -40], 52); sh(V(SYX, 0, -28), 40); }, [[0, 'cash_reg', .7], [.2, 'coins', .6], [.6, 'tick_down', .4]]);
+  cam([SYX - 2, 20, 6 - L.k * 4], [SYX - 2, 20, -40], 52); sh(V(SYX, 0, -28), 40); }, [[0, 'cash_reg', .7], [.2, 'coins', .6], [.6, 'tick_down', .4]]);
 // ---------- 72 · «Aber beim letzten Mal ist der Zuschauer geblieben. Sie mochten ihn.» : el vídeo de Emil se llena de corazones ----------
 shot(134.59, 'S', null, L => { sala(L, 0, .4); const T = L.T; vs((c, w, h) => { tile(c, SNAP.emilHug, 0, 0, w, h, { views: '61 Mio' }); for (let i = 0; i < Math.floor(L.lt * 14); i++) { const r = RNG(i * 5), y = h - ((L.lt * 300 + r() * h) % h); c.font = `${40 + r() * 40}px sans-serif`; c.fillStyle = '#ff3a6a'; c.fillText('♥', w * .6 + r() * w * .35, y); } });
   put(chef, SYX + 8, 0, -22, .9); actuar(chef, L.lt, [[0, "cross"]], { T }); talk(chef, T, L.t0, L.t1, 'sus');
-  orb(L.k, V(SYX + 3, 15, -28), null, [34, .25, .05, 46], [31, .15, .05, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'notif', .5], [.8, 'pop', .4], [1.6, 'pop', .4], [2.4, 'notif', .5]]);
+  orb(L.k, VSP.clone(), null, [35, .04, .02, 46], [32, -.04, .02, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'notif', .5], [.8, 'pop', .4], [1.6, 'pop', .4], [2.4, 'notif', .5]]);
 // ---------- 73 · «Der Zuschauer sieht nur, was ich ihm zeige.» : el núcleo enrojece ----------
 shot(137.83, 'C', null, L => { sala(L, 1, clamp(L.lt / .8)); orb(L.k, SY.core.position.clone().add(V(SYX, 0, 0)), null, [18, .4, .06, 44], [15, .2, .06, 42]); sh(V(SYX, 0, -20), 40); }, [[0, 'hum_low', .7], [.6, 'zap', .5]]);
 // ---------- 74 · «Bring das in Ordnung. Lass ihn vergessen.» : el Chef, amenazante, de cerca ----------
 shot(139.93, 'F', null, L => { sala(L, 0, .8); const T = L.T; put(chef, SYX + 6, 0, -18, PI + .25); actuar(chef, L.lt, [[0, 'point_l'], [1.1, { aLx: 1.2, aLz: -.3, aLe: 1.8, aRx: .3, lean: .2 }]], { T }); talk(chef, T, L.t0, L.t1, 'angry'); SYR.intensity = 180;
-  onFace(chef, 10, .2, -1.4, 40, L.k, 8); sh(V(SYX, 0, -20), 40); }, [[0, 'impact_soft', .5], [1.1, 'whoosh_soft', .4]]);
+  onFace(chef, 10, .2, 0, 40, L.k, 8); sh(V(SYX, 0, -20), 40); }, [[0, 'impact_soft', .5], [1.1, 'whoosh_soft', .4]]);
 // ---------- 75 · «Sonst sieht dich nie wieder jemand.» : la mano sobre el interruptor rojo; las pantallas se apagan una a una (zoom lento) ----------
 shot(141.97, 'C', 'slow', L => { sala(L, 0, 1, (c, w, h) => { c.fillStyle = `rgba(0,0,0,${clamp(L.k * 1.2)})`; c.fillRect(0, 0, w, h); }); const T = L.T;
   put(chef, SYX + 7, 0, -16, PI + .4); actuar(chef, L.lt, [[0, { aRx: 1.3, aRe: .3, lean: .2, headX: .1 }]], { T }); talk(chef, T, L.t0, L.t1, 'angry');
   vs((c, w, h) => { tile(c, SNAP.emilHug, 0, 0, w, h); c.fillStyle = `rgba(0,0,0,${clamp(L.k * 1.3)})`; c.fillRect(0, 0, w, h); }); SY.leds.forEach(([l], i) => { if (i % 7 < L.k * 7) l.visible = false; });
-  orb(L.k, V(SYX + 5, 9, -17), null, [15, PI - .1, .1, 46], [10, PI - .05, .08, 42], easeIn); sh(V(SYX, 0, -20), 40); }, [[0, 'switch', .7], [.5, 'power_on', .3], [1.0, 'machine_shake', .4]]);
+  aimC(L, chef, 15, 10, -1.4, .1, easeIn); sh(V(SYX, 0, -20), 40); }, [[0, 'switch', .7], [.5, 'power_on', .3], [1.0, 'machine_shake', .4]]);
 // ---------- 76 · «Wie soll ich das reparieren? Es ist doch nur Kreide.» : el monitor muestra la plaza en directo; el núcleo duda ----------
 shot(143.64, 'W', null, L => { sala(L, .9, .3, (c, w, h) => term(c, ['> objekt: KREIDE', '> eigenschaft: lebendig', '> schwäche: ???'], 420, 260, 36, '#ffd23f', L.lt * 30)); vs((c, w, h) => tile(c, SNAP.dragon, 0, 0, w, h, { name: 'LIVE · LINDENBRÜCK', nameCol: '#ff6a7a' }));
-  orb(L.k, V(SYX - 7, 17, -30), null, [36, -.1, .05, 46], [33, 0, .05, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'beep', .4], [.7, 'beep', .4], [1.5, 'hmm', .4]]);
+  orb(L.k, VSP.clone(), null, [36, -.05, .02, 46], [33, .05, .02, 46]); sh(V(SYX, 0, -20), 40); }, [[0, 'beep', .4], [.7, 'beep', .4], [1.5, 'hmm', .4]]);
 // ---------- 77 · «Dann lass es regnen.» : el Chef, lento, se inclina hacia la cámara ----------
 shot(146.26, 'C', 'punch', L => { sala(L, 0, 1); const T = L.T; put(chef, SYX + 7, 0, -16, PI + .1); actuar(chef, L.lt, [[0, { lean: .3, headX: -.1 }]], { T }); talk(chef, T, L.t0, L.t1, 'smug'); SYR.intensity = 200;
   onFace(chef, 8, .1, .4, 38, L.k, 6); sh(V(SYX, 0, -20), 40); }, [[0, 'thunder', .5]]);
@@ -164,5 +165,5 @@ shot(147.32, 'G', null, L => { sala(L, 1, 1, (c, w, h) => { const k = easeInOut(
   vs((c, w, h) => { tile(c, SNAP.dragon, 0, 0, w, h); c.fillStyle = 'rgba(40,60,90,.5)'; c.fillRect(0, 0, w, h); const r = RNG(Math.floor(L.T * 30)); c.strokeStyle = 'rgba(200,230,255,.6)'; c.lineWidth = 2; for (let i = 0; i < 120; i++) { const x = r() * w, y = r() * h; c.beginPath(); c.moveTo(x, y); c.lineTo(x - 6, y + 30); c.stroke(); } });
   badge('blue', 'REGEN 100 %', W / 2, H * .17, (L.lt - .45) * 2.5, 1, 1);
   if (L.lt > L.d - .45) GL = (L.lt - (L.d - .45)) / .45;
-  cam([SYX - 2, 20, -6 + L.k * 4], [SYX - 1, 22, -40], 50); sh(V(SYX, 0, -28), 40); }, [[0, 'switch', .6], [.2, 'riser_short', .6], [.5, 'rain', .5], [1.2, 'glitch', .9]]);
+  cam([SYX - 2, 19, -6 + L.k * 4], [SYX - 2, 19, -40], 50); sh(V(SYX, 0, -28), 40); }, [[0, 'switch', .6], [.2, 'riser_short', .6], [.5, 'rain', .5], [1.2, 'glitch', .9]]);
 SNAPS.push(['mila1', L => { const i = shotAt(121.2); S[i].fn({ lt: .5, k: .3, T: 121.2, d: 1.5, t0: 120.62, t1: 122.16 }); VIDUI = null; }], ['mila2', L => { const i = shotAt(122.9); S[i].fn({ lt: .8, k: .5, T: 122.9, d: 1.6, t0: 122.16, t1: 123.75 }); }], ['mila3', L => { const i = shotAt(124.6); S[i].fn({ lt: .8, k: .5, T: 124.6, d: 2.6, t0: 123.75, t1: 126.43 }); }]);
