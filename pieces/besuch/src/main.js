@@ -1,6 +1,6 @@
 // BESUCHSTAG — «In dieser Stadt bekommt jeder, der stirbt, noch einen Tag mehr»: planos sincronizados con audio/words.json (1080×1920, 30 fps).
 // Hufenbach en invierno (nieve), la Stube de la familia (espejos con sábanas), el Mühlenteich al atardecer (hielo con reflejo real) y el cementerio.
-import { THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, walkPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl, textPlane, outline } from './engine.js';
+import { THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, walkPose, runPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl, textPlane, outline } from './engine.js';
 import { nightSky } from './sets.js';
 import { rimLight } from './roblox.js';
 import { FONT, txt } from './props.js';
