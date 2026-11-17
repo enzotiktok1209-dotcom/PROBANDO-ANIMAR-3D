@@ -540,6 +540,15 @@ shot(144.09, 'C', 'punch', L => { town(); show(GRILL, 22, 0, 98.5, 0); GRILL.use
 // 120 «Folge mir und hör nicht bei fast auf.»: yo en la plaza con mi 1000 dorado, señalo a cámara; todos celebran
 shot(146.11, 'Z', null, L => { town(); folk(-6, -6, 70, 8, 40, L.T, 71, { mode: 'cheer' }); const c = put(ich, -6, 0, -6, 0); num(c, 1000, 1, 'gold'); actuar(c, L.lt, [[0, 'point'], [1.6, 'wave', { dur: .3 }]], { T: L.T }); talk(c, L.T, 146.11, 148.4, 'joy'); confRain(V(-6, 0, -6), L.T, 50, 30, 30, 18);
   orbit(headC(c).add(V(0, -1, 0)), lerp(16, 11, L.k), 0, .04, 44); sh(V(-6, 0, -6), 30); }, [[0, 'crowd_cheer', .6], [.4, 'pop', .5], [1.6, 'ding', .5]]);
+// ---------- portada: yo (7) en el centro, triste; a los lados Jonas (990) y el del döner (920) riéndose; texto entre los personajes ----------
+window.renderCover = v => { hideAll(); BAD_.length = 0; town(); const T = 3.2;
+  const c = put(ich, -6, 0, -6, 0); num(c, 7, 1); actuar(c, 0, [[0, 'shrug']], { T }); cara(c, T, { expr: 'sad', eyes: 'worried', mouth: 'frown' });
+  [[jonas, -9.2, -7.4, .45, 'point'], [doenm, -2.8, -7.4, -.45, 'point_l']].forEach(([k, x, z, ry, g]) => { put(k, x, 0, z, ry); num(k); actuar(k, 0, [[0, g]], { T }); cara(k, T, { eyes: 'happy', mouth: 'laugh' }); });
+  COVER = { cam: () => orbit(V(-6, 3.8, -7), 22, 0, .06, 46) };
+  COVER.cam(); grade.uniforms.sharp.value = 1.5; grade.uniforms.vig.value = .6; grade.uniforms.sat.value = 1.55; grade.uniforms.lift.value = .01; camera.updateProjectionMatrix(); while (POST.length) POST.shift()();
+  sun.castShadow = true; sky.sky.position.copy(camera.position); composer.render(); octx.drawImage(renderer.domElement, 0, 0, W, H);
+  const t = (s, y, sz, fill) => { octx.save(); octx.font = `700 ${sz}px ${FONT}`; octx.textAlign = 'center'; octx.textBaseline = 'middle'; octx.lineJoin = 'round'; octx.lineWidth = sz * .22; octx.strokeStyle = '#000'; octx.strokeText(s, W / 2, y); octx.fillStyle = fill; octx.fillText(s, W / 2, y); octx.restore(); };
+  t('JEDER GEWINNT FAST', H * .74, 92, '#ffffff'); t('… AUSSER MIR', H * .80, 110, '#E2FD07'); COVER = null; };
 
 
 // ---------- transiciones, sonidos, render ----------
