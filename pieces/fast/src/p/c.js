@@ -42,12 +42,9 @@ shot(90.28, 'C', 'punch', L => { use('PC'); stands(L.T, 'sway', true); sbDraw(0)
 // 74 «Und Jonas fiel.»: cae de espaldas al colchón azul, a cámara lenta
 shot(91.75, 'S', null, L => { use('PC'); stands(L.T, 'sway', true); sbDraw(0); const j = jonas; const s4 = step(4); const q = clamp(L.lt / .8); put(j, X0 + s4.x + q * 1.5, lerp(s4.h + .35, .4, easeIn(q)), s4.z + q * 2, PI); j.root.rotation.x = -q * 1.4; applyPose(j, { aLx: 2.4, aRx: 2.2, aLz: .9, aRz: .9, lLx: .8, lRx: .4 }); num(j, 0, 1, 'red'); cara(j, L.T, { expr: 'scream' });
   if (L.lt > .8) dust(V(X0 + s4.x + 1.5, .2, s4.z + 2), 91.75 + .8, L.T, 10, .6); orbit(V(X0 + s4.x + 1, 7, s4.z + 1.5), lerp(22, 19, L.k), -PI / 2 + .35, .1, 46); sh(V(X0, 0, -30), 30); }, [[0, 'whoosh_slow', .5], [.8, 'thud', .8], [.9, 'crowd_ooh', .6]]);
-// 75 «AH!»: Jonas en el colchón con las manos en la cabeza
-shot(92.90, 'C', 'punch', L => { use('PC'); stands(L.T, 'sway', true); sbDraw(0); const s4 = step(4); const j = put(jonas, X0 + s4.x + 1.5, .3, s4.z + 3, 0); applyPose(j, { ...SIT, ...GEST.hands_head, crouch: 1.3 }); num(j, 0, 1, 'red'); cara(j, L.T, { expr: 'cry' });
-  orbit(hp(j), lerp(11, 9, L.k), .95, .1, 44); sh(V(X0, 0, -28), 20); }, [[0, 'groan', .5]]);
-// 76 «FAST! FAST!»: en la grada, la Fahrerin y el Dönermann (mojados) se llevan las manos a la cabeza
-shot(93.74, 'W', null, L => { use('PC'); stands(L.T, 'sway', true); sbDraw(0); [[fahrerin, 21.5, -6, -PI / 2 + .2], [doenm, 21.5, -2, -PI / 2 - .2]].forEach(([k, x, z, ry], i) => { put(k, X0 + x, 1.4, z, ry); num(k); actuar(k, L.lt, [[0, 'hands_head']], { T: L.T + i }); cara(k, L.T + i, { expr: 'cry' }); });
-  orbit(V(X0 + 21.5, 5.8, -4), lerp(16, 13, L.k), -PI / 2 + .3 - L.k * .5, .06, 46); sh(V(X0 + 21, 0, -4), 20); }, [[0, 'crowd_ooh', .6], [.4, 'drip', .4]]);
+// 75–76 «AH! ALMOST ×3»: solo Jonas, sentado en el colchón, decepcionado, diciéndolo
+shot(92.90, 'C', 'punch', L => { use('PC'); stands(L.T, 'sway', true); sbDraw(0); const s4 = step(4); const j = put(jonas, X0 + s4.x + 1.5, .3, s4.z + 3, .5); actuar(j, L.lt, [[0, { ...SIT, ...GEST.hands_head, crouch: 1.3 }], [1.1, { ...SIT, crouch: 1.3, aLx: .6, aRx: .6, aLe: 1.2, aRe: 1.2, headX: .15 }, { dur: .5 }]], { T: L.T, extra: { headY: Math.sin(L.T * 7) * .15 } }); num(j, 0, 1, 'red'); talk(j, L.T, 92.90, 94.97, 'sad');
+  orbit(hp(j).add(V(0, -.3, 0)), lerp(12, 8.5, L.k), .5 + .3 - L.k * .15, .1, 44); sh(V(X0, 0, -28), 20); }, [[0, 'groan', .5], [1.2, 'sigh', .4]]);
 // 77 «Dann war ich dran.»: yo en la salida, con mi 7; aprieto los puños (zoom lento)
 shot(94.97, 'Z', 'slow', L => { use('PC'); stands(L.T, 'sway'); sbDraw(0); const c = put(ich, X0, 1.2, 44.5, PI); num(c, 7); actuar(c, L.lt, [[0, 'idle'], [.4, 'fists', { dur: .4 }]], { T: L.T }); cara(c, L.T, { expr: 'determined' });
   orbit(hp(c).add(V(0, -.6, 0)), lerp(15, 9.5, easeIn(L.k)), PI, .03, 44); sh(V(X0, 0, 44), 20); }, [[0, 'heartbeat', .6], [.5, 'crowd_murmur', .4]]);

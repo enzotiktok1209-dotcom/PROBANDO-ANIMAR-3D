@@ -42,12 +42,9 @@ shot(140.90, 'W', null, L => { town(); show(GRILL, 22, 0, 98.5, 0); const p = pu
 // 117 «Er hat das Grillen fast fertig gemacht.»: las salchichas, carbonizadas; humo negro; Papa con cara de susto
 shot(142.01, 'Z', 'punch', L => { town(); show(GRILL, 22, 0, 98.5, 0); const p = put(papa, 18.4, 0, 100, .9); num(p); actuar(p, L.lt, [[0, { aRx: 1.3, aRe: .8 }], [.6, 'shock', { dur: .3 }]], { T: L.T }); cara(p, L.T, { expr: L.lt > .6 ? 'shock' : 'smile' }); GRILL.userData.setBurn(clamp(L.lt / 1.2)); smoke(V(22, 4.6, 98.5), L.T, lerp(.5, 1.3, L.k));
   orbit(V(20.2, 4.4, 99.5), lerp(13, 10, L.k), .7 - L.k * .2, .25, 46); sh(V(20, 0, 100), 20); }, [[0, 'sizzle', .7], [.6, 'fire_whoosh', .6], [1.0, 'cough', .5]]);
-// 118 «AH!»: Papa con las manos en la cabeza entre el humo
-shot(144.09, 'C', 'punch', L => { town(); show(GRILL, 22, 0, 98.5, 0); GRILL.userData.setBurn(1); const p = put(papa, 18.4, 0, 100, .9); num(p); actuar(p, L.lt, [[0, 'hands_head']], { T: L.T, extra: shiver(L.T, .6) }); cara(p, L.T, { expr: 'cry', mouth: 'scream' }); smoke(V(22, 4.6, 98.5), L.T, 1.3);
-  orbit(hp(p).add(V(0, -.4, 0)), lerp(10, 8.5, L.k), .9, .05, 44); sh(V(19, 0, 100), 20); }, [[0, 'cough', .5]]);
-// 119 «FAST! FAST!»: primer plano de la salchicha negra en la parrilla
-shot(144.94, 'W', null, L => { town(); show(GRILL, 22, 0, 98.5, 0); GRILL.userData.setBurn(1); smoke(V(22, 4.6, 98.5), L.T, .8); const p = put(papa, 18.4, 0, 100, .9); num(p); actuar(p, L.lt, [[0, 'facepalm']], { T: L.T }); cara(p, L.T, { expr: 'sad' });
-  orbit(V(22, 4.5, 98.5), lerp(6.5, 5, L.k), .55 - L.k * .3, .55, 46); sh(V(21, 0, 100), 20); }, [[0, 'sizzle', .6], [.4, 'sad_trombone', .5]]);
+// 118–119 «AH! ALMOST ×3»: solo Papa, entre el humo, con las pinzas, diciéndolo
+shot(144.09, 'C', 'punch', L => { town(); show(GRILL, 22, 0, 98.5, 0); GRILL.userData.setBurn(1); const p = put(papa, 18.4, 0, 100, .9); num(p); actuar(p, L.lt, [[0, 'hands_head'], [1.1, 'slump', { dur: .5 }]], { T: L.T, extra: { headY: Math.sin(L.T * 7) * .15 } }); talk(p, L.T, 144.09, 146.11, 'sad'); smoke(V(22, 4.6, 98.5), L.T, 1.1);
+  orbit(hp(p).add(V(0, -.5, 0)), lerp(11, 8, L.k), .9 - L.k * .15, .05, 44); sh(V(19, 0, 100), 20); }, [[0, 'cough', .5], [1.0, 'sizzle', .4], [1.4, 'sad_trombone', .4]]);
 // 120 «Folge mir und hör nicht bei fast auf.»: yo en la plaza con mi 1000 dorado, señalo a cámara; todos celebran
 shot(146.11, 'Z', null, L => { town(); folk(-6, -6, 70, 8, 40, L.T, 71, { mode: 'cheer' }); const c = put(ich, -6, 0, -6, 0); num(c, 1000, 1, 'gold'); actuar(c, L.lt, [[0, 'point'], [1.6, 'wave', { dur: .3 }]], { T: L.T }); talk(c, L.T, 146.11, 148.4, 'joy'); confRain(V(-6, 0, -6), L.T, 50, 30, 30, 18);
   orbit(headC(c).add(V(0, -1, 0)), lerp(16, 11, L.k), 0, .04, 44); sh(V(-6, 0, -6), 30); }, [[0, 'crowd_cheer', .6], [.4, 'pop', .5], [1.6, 'ding', .5]]);

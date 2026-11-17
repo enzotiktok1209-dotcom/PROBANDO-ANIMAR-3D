@@ -28,7 +28,7 @@ for i, w in enumerate(W):
         c = rd(f); c = c * (vr / rms(c)) * .95
         out.append(np.concatenate([np.zeros(int(G0 * R), np.float32), c, np.zeros(int(G1 * R), np.float32)]))
         base = t + sh + G0; on = ON[k]
-        for m, o in enumerate(on): F.append([round(base + o, 3), round(base + (on[m + 1] if m + 1 < len(on) else 1.95), 3), 'AH!' if m == 0 else 'FAST!', -1 - k])
+        for m, o in enumerate(on): F.append([round(base + o, 3), round(base + (on[m + 1] if m + 1 < len(on) else 1.95), 3), 'AH!' if m == 0 else 'ALMOST!', -1 - k])
         print(k + 1, w[2], 'whisper fin', round(w[1], 2), '-> fin real', round(t, 2), f)
         sh += G0 + len(c) / R + G1
 out.append(x[p:]); y = np.concatenate(out)

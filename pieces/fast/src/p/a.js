@@ -18,21 +18,17 @@ const numDrop = (ch, k) => { const n0 = NV.get(ch); const v = Math.round(lerp(n0
 shot(0, 'Z', 'slow', L => { town(); ZIELB.visible = true; folk(-6, -24, 70, 9, 42, L.T, 3, { face: V(-6, 0, -26), mode: 'cheer' }); const r = K[3]; NV.set(r, 950);
   const fall = clamp((L.lt - 1.35) / .4); const w = runC(r, Math.min(L.lt, 1.35), -6, -16, PI, 7.5, L.T); if (fall > 0) { r.root.position.z = -16 - 7.5 * 1.33 - fall * 1.2; applyPose(r, { lean: lerp(.4, 1.3, fall), aLx: 2.6, aRx: 2.8, aLe: .1, aRe: .1, lLx: -.4, lRx: .6, lRk: .8, crouch: fall * .6 }); r.root.position.y = -fall * .6; }
   num(r, 950); cara(r, L.T, { expr: fall > .3 ? 'shock' : 'determined' }); const k2 = put(K[6], -10.5, 0, -19, PI + .1); runC(k2, Math.min(L.lt, 1.35), -10.5, -12, PI, 6.4, L.T + 1); num(k2); cara(k2, L.T, { expr: 'determined' });
-  orbit(V(-6.5, 4.6, -24), lerp(24, 15, easeOut(L.k)), PI + .05, .06, 46); sh(V(-6, 0, -26), 60); }, [[0, 'crowd_cheer', .6], [.1, 'steps_run', .5], [1.4, 'thud', .7], [1.5, 'crowd_ooh', .5]]);
+  const rp = r.root.position; orbit(V(rp.x - .3, lerp(4.4, 2.4, fall), rp.z), lerp(22, 14, easeOut(L.k)), PI + .05, lerp(.06, .2, fall), 46); sh(V(-6, 0, -26), 60); }, [[0, 'crowd_cheer', .6], [.1, 'steps_run', .5], [1.4, 'thud', .7], [1.5, 'crowd_ooh', .5]]);
 // 2 «Außer mir.»: yo, el más pequeño, con un 7 rojo; los de alrededor (900+) me señalan y se ríen
 shot(2.15, 'C', 'punch', L => { town(); folk(-6, -6, 50, 7, 36, L.T, 5); const c = put(ich, -6, 0, -6, 0); num(c, 7, (L.lt - .05) * 4); actuar(c, L.lt, [[0, 'idle'], [.15, 'shrug', { dur: .4 }]], { T: L.T }); cara(c, L.T, { expr: 'sad' });
   [[K[0], -9.6, -8.6, .6], [XT[4], -2.6, -8.8, -.6]].forEach(([k, x, z, ry], i) => { put(k, x, 0, z, ry); num(k); actuar(k, L.lt, [[0, i ? 'point_l' : 'point']], { T: L.T + i }); laughF(k, L.T + i); });
   orbit(headC(c).add(V(0, .6, 0)), lerp(14, 11, L.k), .05, .06, 44); sh(V(-6, 0, -6), 30); }, [[0, 'pop', .5], [.2, 'laugh_crowd', .5]]);
-// 3 «AH!» (audio original): el corredor en el suelo junto a la cinta, manos en la cabeza
-shot(3.08, 'C', 'punch', L => { town(); ZIELB.visible = true; folk(-6, -24, 40, 9, 36, L.T, 7, { face: V(-6, 0, -27) }); const r = put(K[3], -6, 0, -27.6, PI); applyPose(r, { ...SIT, ...GEST.hands_head, crouch: 1.3 }); r.root.position.y = -.2; num(r, 950); cara(r, L.T, { expr: 'cry' });
-  orbit(headC(r), lerp(12, 9, L.k), PI - .15, .12, 44); sh(V(-6, 0, -27), 30); }, [[0, 'groan', .6], [.3, 'crowd_ooh', .4]]);
-// 4 «FAST! FAST!»: otro (780) chuta a puerta… el balón da en el poste (cámara dentro de la portería)
-shot(4.04, 'W', null, L => { town(); GOAL.visible = true; folk(-25, -50, 24, 8, 30, L.T, 9); const k = put(K[1], -25.4, 0, -50, PI); actuar(k, L.lt, [[0, { lRx: -.6, aLx: .6, aRx: -.4 }], [.1, { lRx: 1.3, lRk: .2, aLx: -.5, aRx: .9, lean: -.15 }, { dur: .15 }], [.6, 'hands_head', { dur: .3 }]], { T: L.T }); num(k); cara(k, L.T, { expr: L.lt > .55 ? 'shock' : 'determined' });
-  const post = V(-19.4, 2.4, -62); const q = clamp((L.lt - .12) / .4); const bp = q < 1 ? V(-25.4, .55, -51.4).lerp(post, q) : post.clone().add(V(3 * (L.lt - .52), 1.5 * Math.sin((L.lt - .52) * 6), 5 * (L.lt - .52))); show(BALL, bp.x, Math.max(.55, bp.y), bp.z, L.T * 10);
-  cm([-23.5, 3.2, -64.5, -24.6, 3.4, -50, 48], [-24.4, 3.0, -64, -25, 3.6, -50, 46], L.k); sh(V(-25, 0, -56), 30); }, [[.1, 'kick', .7], [.5, 'clang', .7], [.7, 'crowd_ooh', .5]]);
+// 3–4 «AH! ALMOST, ALMOST, ALMOST!» (audio original): solo el corredor que perdió, sentado junto a la cinta, decepcionado, diciéndolo
+shot(3.08, 'C', 'punch', L => { town(); ZIELB.visible = true; folk(-6, -24, 12, 10, 36, L.T, 7, { face: V(-6, 0, -27) }); const r = put(K[3], -6, 0, -27.6, PI); actuar(r, L.lt, [[0, { ...SIT, ...GEST.hands_head, crouch: 1.3 }], [1.1, { ...SIT, crouch: 1.3, aLx: .6, aRx: .6, aLe: 1.2, aRe: 1.2, headX: .15 }, { dur: .5 }]], { T: L.T, extra: { headY: Math.sin(L.T * 7) * .18 } }); r.root.position.y = -.2; num(r, 950); talk(r, L.T, 3.08, 5.26, 'sad');
+  orbit(headC(r).add(V(0, -.3, 0)), lerp(13, 9, L.k), PI - .15 + L.k * .2, .1, 44); sh(V(-6, 0, -27), 30); }, [[0, 'groan', .5], [.4, 'crowd_ooh', .4], [1.4, 'sigh', .4]]);
 // 5 «Hier hat jeder eine Zahl über dem Kopf:» grúa sobre la multitud: los números van saliendo uno a uno
-shot(5.26, 'S', null, L => { town(); folk(-6, -10, 90, 2, 36, L.T, 11, { arc: [0, 6.283], mode: 'sway' }); POST.push(() => NUMX.forEach((s, i) => { const k = clamp((L.lt - i * .03) * 4); s.scale.set(4.2 * spring(k * 1.6), 1.72 * spring(k * 1.6), 1); }));
-  cm([-6, 12, 26, -6, 4, -6, 50], [10, 20, 14, -8, 5, -14, 50], L.k); sh(V(-6, 0, -10), 50); }, [[0, 'pop', .5], [.3, 'pop', .4], [.6, 'pop', .4], [.9, 'pop', .4], [1.2, 'murmur', .4]]);
+shot(5.26, 'S', null, L => { town(); folk(-6, -12, 16, 3, 22, L.T, 11, { arc: [-PI, 0], max: 16 }); POST.push(() => BG.forEach((c, i) => { if (c.root.visible) num(c, NV.get(c), (L.lt - i * .08) * 4); }));
+  cm([-6, 9, 14, -6, 5, -14, 50], [4, 15, 8, -7, 5, -16, 50], L.k); sh(V(-6, 0, -12), 40); }, [[0, 'pop', .5], [.3, 'pop', .4], [.6, 'pop', .4], [.9, 'pop', .4], [1.2, 'murmur', .4]]);
 // 6 «seine Kraft.»: un vecino (860) saca bíceps y su número late
 shot(7.32, 'C', 'punch', L => { town(); folk(-20, 10, 30, 9, 32, L.T, 13); const k = put(K[2], -20, 0, 10, .3); actuar(k, L.lt, [[0, 'idle'], [.1, FLEX, { dur: .3 }]], { T: L.T }); grin(k, L.T); num(k, 860, 1 + Math.sin(L.lt * 14) * .08);
   orbit(hp(k).add(V(0, .6, 0)), lerp(15, 12, L.k), .3 + L.k * .3, -.02, 44); sh(V(-20, 0, 10), 30); }, [[.1, 'flex', .6], [.3, 'power_on', .4]]);
@@ -41,10 +37,10 @@ shot(8.37, 'W', null, L => { town(); tramAt(44); const f = put(fahrerin, 26, 0, 
   folk(26, 20, 16, 12, 30, L.T, 15); orbit(hp(f).add(V(0, -1, 0)), lerp(20, 15, L.k), PI + .35 - L.k * .3, .06, 46); sh(V(26, 0, 30), 40); }, [[0, 'tram_bell', .6], [.4, 'tram_hum', .4], [1.0, 'pop', .5]]);
 // 8 «Trotzdem erreicht sie jeden Tag»: el tranvía avanza por la calle hacia la parada (travelling lateral)
 shot(11.10, 'S', null, L => { town(); const z = lerp(70, 40, easeOut(L.k)); tramAt(z); const f = put(fahrerin, 26, 2.2, z - 11.5, PI); num(f, 870); actuar(f, L.lt, [[0, 'hold']], { T: L.T }); cara(f, L.T, { expr: 'happy' });
-  folk(36, 6, 10, 2, 6, L.T, 17, { face: V(26, 0, 30) }); cm([40, 8, z - 26, 26, 5, z - 10, 48], [39, 7, z - 30, 26, 5, z - 12, 48], L.k, x => x); sh(V(26, 0, z - 10), 40); }, [[0, 'tram_hum', .6], [.3, 'rails', .5], [1.0, 'tram_bell', .4]]);
+  cm([40, 8, z - 26, 26, 5, z - 10, 48], [39, 7, z - 30, 26, 5, z - 12, 48], L.k, x => x); sh(V(26, 0, z - 10), 40); }, [[0, 'tram_hum', .6], [.3, 'rails', .5], [1.0, 'tram_bell', .4]]);
 // 9 «nur fast die Haltestelle.»: el tranvía frena a dos metros del cartel H; los que esperan se dan una palmada en la frente
 shot(12.56, 'C', null, L => { town(); const zs = 24; const z = lerp(36, zs, easeOut(clamp(L.k * 1.6))); tramAt(z + 13); [[XT[0], 34, 10, -2.1], [XT[2], 35.4, 6.4, -2.0], [K[4], 33.6, 3, -2.3]].forEach(([k, x, zz, ry], i) => { put(k, x, 0, zz, ry); num(k); actuar(k, L.lt, [[0, 'idle'], [.55 + i * .1, i === 1 ? 'shrug' : 'facepalm', { dur: .3 }]], { T: L.T + i }); cara(k, L.T + i, { expr: L.lt > .6 ? 'bored' : 'neutral' }); });
-  badge('red', '2 METER', W / 2, H * .2, (L.lt - .6) * 4, 1, .8); cm([19, 7, -14, 30, 4, 16, 46], [21, 6.5, -11, 30, 4, 16, 44], L.k); sh(V(30, 0, 12), 40); }, [[0, 'brakes', .6], [.5, 'tram_bell', .3], [.7, 'sigh', .5]]);
+  badge('red', '2 METER', W / 2, H * .2, (L.lt - .6) * 4, 1, .8); cm([24, 7, -14, 30.5, 4, 16, 46], [25, 6.5, -11, 30.5, 4, 16, 44], L.k); sh(V(30, 0, 12), 40); }, [[0, 'brakes', .6], [.5, 'tram_bell', .3], [.7, 'sigh', .5]]);
 // 10 «Der Dönermann hat 920.»: el del döner corta carne del asador delante de su puesto; 920
 shot(14.07, 'W', 'punch', L => { town(); const d = put(doenm, 37.6, 0, 40, -PI / 2); num(d, 920, (L.lt - .8) * 4); actuar(d, L.lt, [[0, { aRx: 1.2, aRe: 1.2 + Math.sin(L.T * 16) * .5, aLx: .9, aLe: 1.4, aLz: -.2 }]], { T: L.T }); grin(d, L.T); folk(36, 40, 16, 9, 26, L.T, 19);
   orbit(V(37.6, 5.6, 40), lerp(17, 14, L.k), -PI / 2 + .3 - L.k * .4, .05, 46); sh(V(38, 0, 40), 30); }, [[0, 'sizzle', .6], [.3, 'knife', .5], [.8, 'pop', .5]]);
@@ -64,13 +60,9 @@ shot(20.89, 'W', null, L => { town(); const z = lerp(150, 132, L.k); show(AUTO, 
 shot(22.13, 'C', null, L => { town(); show(AUTO, 26, 0, 132, PI); const p = put(lehrer, 21.6, 0, 129, PI / 2 + .8); num(p); actuar(p, L.lt, [[0, { aRx: 1.5, aRe: .4, aLz: .1 }]], { T: L.T }); talk(p, L.T, 22.12, 23.85, 'sus'); POST.push(() => { const hpz = wpos(p.aR.hand); show(CLIP, hpz.x + .6, hpz.y - .4, hpz.z - .6, faceTo(hpz, camera.position)); });
   const j = put(jonas, 25.2, 0, 128.4, -PI / 2 - .8); num(j, 990); actuar(j, L.lt, [[0, 'idle'], [.4, 'shock', { dur: .3 }]], { T: L.T }); cara(j, L.T, { expr: 'shock' });
   orbit(V(23.3, 5, 128.3), lerp(17, 14, L.k), PI + .1 - L.k * .2, .08, 44); sh(V(23, 0, 129), 30); }, [[0, 'paper', .6], [.4, 'gasp', .5]]);
-// 15 «AH!»: Jonas con las manos en la cabeza, gritando
-shot(23.87, 'C', 'punch', L => { town(); show(AUTO, 26, 0, 132, PI); const j = put(jonas, 25.4, 0, 127.6, -PI / 2 - .4); num(j, 990); actuar(j, L.lt, [[0, 'hands_head']], { T: L.T, extra: shiver(L.T, .8) }); cara(j, L.T, { expr: 'cry', mouth: 'scream' });
-  orbit(hp(j).add(V(0, -.3, 0)), lerp(12, 9.5, L.k), -PI / 2 - .5, .05, 44); sh(V(25, 0, 128), 20); }, [[0, 'scream_short', .3]]);
-// 16 «FAST! FAST!»: el profesor niega con la cabeza y se lleva la mano a la frente
-shot(24.90, 'W', null, L => { town(); show(AUTO, 26, 0, 132, PI); const p = put(lehrer, 21.6, 0, 129, PI / 2 + .8); num(p); actuar(p, L.lt, [[0, 'facepalm']], { T: L.T, extra: { headY: Math.sin(L.T * 9) * .25 } }); cara(p, L.T, { expr: 'bored', eyes: 'closed' });
-  const j = put(jonas, 25.2, 0, 128.4, -PI / 2 - .8); num(j, 990); actuar(j, L.lt, [[0, 'slump']], { T: L.T }); cara(j, L.T, { expr: 'sad' });
-  orbit(V(23.4, 5.2, 128.7), lerp(14, 17, L.k), PI - .25 + L.k * .3, .08, 44); sh(V(23, 0, 129), 30); }, [[0, 'sigh', .5], [.5, 'paper', .3]]);
+// 15–16 «AH! ALMOST ×3»: solo Jonas, junto al coche, hundido, diciéndolo
+shot(23.87, 'C', 'punch', L => { town(); show(AUTO, 26, 0, 132, PI); const j = put(jonas, 25.4, 0, 127.6, -PI / 2 - .4); num(j, 990); actuar(j, L.lt, [[0, 'hands_head'], [1.1, 'slump', { dur: .5 }]], { T: L.T, extra: { headY: Math.sin(L.T * 7) * .15 } }); talk(j, L.T, 23.87, 26.01, 'sad');
+  orbit(hp(j).add(V(0, -.3, 0)), lerp(12.5, 9, L.k), -PI / 2 - .5 + L.k * .2, .05, 44); sh(V(25, 0, 128), 20); }, [[0, 'groan', .4], [1.2, 'sigh', .4]]);
 // 17 «Sogar meine Oma hat ihr Kreuzworträtsel»: la Oma en su sillón con el crucigrama y el lápiz; 640
 shot(26.01, 'R', null, L => { use('OS'); inside(1, 40); const o = put(oma, OSX - 6, 2.75, -3, .5); num(o, 640, (L.lt - .4) * 4); actuar(o, L.lt, [[0, { ...SIT, aLx: 1.1, aRx: 1.3, aLe: 1.0, aRe: 1.2 + Math.sin(L.T * 12) * .15, aLz: -.2, aRz: -.3, headX: .3 }]], { T: L.T }); cara(o, L.T, { expr: 'confused', eyes: 'down' });
   show(KW, OSX - 6 + Math.sin(.5) * 2.2, 5.0, -3 + Math.cos(.5) * 2.2, .5, .7); KW.rotation.x = -.7; orbit(hp(o).add(V(0, -.6, 0)), lerp(15, 12, L.k), .5 + .3 - L.k * .4, .2, 46); sh(V(OSX - 6, 0, -3), 30); }, [[0, 'clock_tick', .5], [.4, 'pencil', .5], [1.2, 'hmm', .4]]);

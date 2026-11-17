@@ -4,7 +4,7 @@
 import { THREE, W, H, FPS, makeRenderer, makeComposer, applyPose, V, lerp, clamp, easeOut, easeIn, easeInOut, spring, RNG, mat, box, sphere, cyl, textPlane, outline } from './engine.js';
 import { nightSky } from './sets.js';
 import { rimLight } from './roblox.js';
-import { FONT, txt, mustache } from './props.js';
+import { FONT, txt, mustache, makeExtra } from './props.js';
 import { makeOma, makeKumpel, makeLena, makeSie, makeEr, makeKassiererin, makeFahrer, makePapa, makeMayor, makeIch, makeJonas, makeMama, makeVerk, makeNachbar } from './gvolk.js';
 import { hufenbach, townhouse } from './gort.js';
 import { numSprite, numTex, doener } from './gsets.js';
@@ -61,10 +61,11 @@ ich.spec.scale = .82;
 const K = Array.from({ length: 8 }, (_, i) => makeKumpel(scene, i)); const XT = [makeKassiererin(scene), makeVerk(scene), makeNachbar(scene), makeMayor(scene), makeLena(scene), makeSie(scene), makeEr(scene), makeMama(scene)];
 kitFace(ich, 'kid'); kitFace(klein, 'kid'); kitFace(papa, 'mustache'); kitFace(jonas, 'hero'); kitFace(oma, 'girl'); kitFace(fahrerin, 'girl'); kitFace(doenm, 'mustache'); kitFace(lehrer, 'plain'); kitFace(schiri, 'mustache'); kitFace(bm, 'villain');
 K.forEach((c, i) => kitFace(c, ['plain', 'hero', 'kid', 'plain', 'girl', 'girl', 'kid', 'hero'][i])); XT.forEach((c, i) => kitFace(c, ['girl', 'girl', 'plain', 'mustache', 'girl', 'girl', 'plain', 'girl'][i]));
-const POOL0 = [ich, klein, papa, jonas, oma, fahrerin, doenm, lehrer, schiri, bm, ...K, ...XT]; const POOL = POOL0; POOL.forEach(c => { outline(c.root, 2); c.root.rotation.order = 'YXZ'; });
+const BG = Array.from({ length: 16 }, (_, i) => makeExtra(scene, i + 3)); BG.forEach((c, i) => kitFace(c, ['plain', 'girl', 'kid', 'hero', 'mustache', 'girl', 'plain', 'kid'][i % 8]));
+const POOL0 = [ich, klein, papa, jonas, oma, fahrerin, doenm, lehrer, schiri, bm, ...K, ...XT, ...BG]; const POOL = POOL0; POOL.forEach(c => { outline(c.root, 2); c.root.rotation.order = 'YXZ'; });
 // número de fuerza sobre la cabeza
 const NUM = new Map(); POOL.forEach(c => { const s = numSprite(); c.head.add(s); s.position.set(0, 3.3, 0); NUM.set(c, s); });
-const NV = new Map([[ich, 7], [klein, 7], [papa, 540], [jonas, 990], [oma, 640], [fahrerin, 870], [doenm, 920], [lehrer, 760], [schiri, 810]]); K.forEach((c, i) => NV.set(c, [910, 780, 860, 950, 690, 820, 740, 880][i])); XT.forEach((c, i) => NV.set(c, [720, 650, 830, 880, 610, 770, 700, 660][i]));
+const NV = new Map([[ich, 7], [klein, 7], [papa, 540], [jonas, 990], [oma, 640], [fahrerin, 870], [doenm, 920], [lehrer, 760], [schiri, 810]]); K.forEach((c, i) => NV.set(c, [910, 780, 860, 950, 690, 820, 740, 880][i])); BG.forEach((c, i) => NV.set(c, [930, 640, 810, 720, 880, 590, 960, 700, 850, 670, 780, 910, 620, 840, 750, 690][i])); XT.forEach((c, i) => NV.set(c, [720, 650, 830, 880, 610, 770, 700, 660][i]));
 const kindOf = n => n >= 1000 ? 'gold' : n < 100 ? 'red' : 'zero';
 const num = (ch, n = NV.get(ch), k = 1, kind) => { const s = NUM.get(ch); s.visible = true; s.material.map = numTex(n, kind || kindOf(n)); const p = spring(clamp(k) * 1.6), wx = String(n).length > 2 ? (String(n).length > 3 ? 2.3 : 2) : 1; s.scale.set(2.2 * p * wx, 1.72 * p, 1); s.position.y = 3.3 + Math.sin((k + ch.seed) * 3) * .06; };
 // ---------- multitud instanciada con números ----------
@@ -72,9 +73,13 @@ const CRW = crowd(scene, 170); CRW.g.children[3].visible = false;
 const NUMX = Array.from({ length: 44 }, (_, i) => { const s = numSprite(); scene.add(s); s.userData.v = [910, 640, 880, 720, 990, 560, 830, 760, 950, 690, 870, 610][i % 12]; return s; });
 function crowdOn(T, mode = 'sway', n = 120, silent = false, nums = true, numV = null) { CRW.update(T, mode, silent, n); NUMX.forEach((s, i) => { const st = CRW.seat[i * 3]; if (!nums || !st || i * 3 >= n) { s.visible = false; return; } s.visible = true; const v = numV ? numV(i) : s.userData.v; s.material.map = numTex(v, kindOf(v)); const j = mode === 'cheer' ? Math.max(0, Math.sin(T * 7 * st.sp + st.ph)) * .7 : 0; s.position.set(st.x, st.y + 6.2 + j, st.z); s.scale.set(4.2, 1.72, 1); }); }
 // gente alrededor de (cx, cz) en la plaza, sin entrar en el radio r0, del lado opuesto a la cámara
+// gente alrededor de (cx, cz): personajes de verdad (modelos del reparto de fondo) con su número, del lado opuesto a la cámara, sin pisarse
 function folk(cx, cz, n, r0, r1, T, seed = 1, o = {}) { POST.push(() => { const r = RNG(seed); const ac = Math.atan2(camera.position.z - cz, camera.position.x - cx); const arc = o.arc || [ac + 1.6, ac + 6.283 - 1.6];
-  for (let i = 0; i < n; i++) { const s = CRW.seat[i]; const a = arc[0] + r() * (arc[1] - arc[0]); const d = r0 + r() * (r1 - r0); s.x = cx + Math.cos(a) * d; s.y = o.y || 0; s.z = cz + Math.sin(a) * d; s.ry = o.face ? Math.atan2(o.face.x - s.x, o.face.z - s.z) + (r() - .5) * .6 : Math.atan2(camera.position.x - s.x, camera.position.z - s.z) + (r() - .5) * 1.2; }
-  crowdOn(T, o.mode || 'sway', n, o.silent, o.nums ?? true, o.numV); }); }
+  const busy = POOL.filter(c => c.root.visible && !BG.includes(c)).map(c => c.root.position.clone()); const P = []; const m = Math.min(n, BG.length, o.max ?? 12);
+  for (let i = 0; i < m; i++) { let x, z, ok = false; for (let t = 0; t < 30 && !ok; t++) { const a = arc[0] + r() * (arc[1] - arc[0]), d = r0 + r() * (r1 - r0); x = cx + Math.cos(a) * d; z = cz + Math.sin(a) * d; ok = [...busy, ...P].every(q => Math.hypot(q.x - x, q.z - z) > 3.6); }
+    if (!ok) continue; P.push(V(x, 0, z)); const c = BG[i]; const ry = o.face ? Math.atan2(o.face.x - x, o.face.z - z) + (r() - .5) * .5 : Math.atan2(camera.position.x - x, camera.position.z - z) + (r() - .5) * .8; put(c, x, o.y || 0, z, ry); num(c);
+    const g = o.mode === 'cheer' ? [[0, 'cheer']] : [[0, ['idle', 'cross', 'idle', 'point', 'idle', 'shrug'][i % 6]]]; actuar(c, T + i * .37, g, { T: T + i, extra: o.mode === 'cheer' ? { hipY: 2.05 + Math.abs(Math.sin(T * 6 + i)) * .3 } : {} });
+    if (o.mode === 'cheer') grin(c, T + i); else cara(c, T + i, { expr: ['smile', 'neutral', 'happy', 'smug'][i % 4] }); } }); }
 // gradas del parcours
 function stands(T, mode = 'cheer', silent = false, nums = true, numV = null) { const n = Math.min(CRW.n, 170); for (let i = 0; i < n; i++) { const s = CRW.seat[i], q = PC.SEATS[(i * 7) % PC.SEATS.length]; s.x = PCX + q.x; s.y = q.y; s.z = q.z; s.ry = q.ry; } crowdOn(T, mode, n, silent, nums, numV); }
 // ---------- atrezo ----------
@@ -177,7 +182,7 @@ function drawBadge(b) {
   else if (b.kind === 'tag') { c.font = `700 50px ${FONT}`; const w = c.measureText(b.text).width + 60; c.fillStyle = '#0e1226'; c.beginPath(); c.roundRect(-w / 2, -40, w, 80, 40); c.fill(); c.lineWidth = 6; c.strokeStyle = '#ffd23f'; c.stroke(); c.fillStyle = '#fff'; c.fillText(b.text, 0, 3); }
   else if (b.kind === 'bubble') { c.font = `700 42px ${FONT}`; const w = Math.max(160, c.measureText(b.text).width + 60); c.fillStyle = '#fff'; c.strokeStyle = '#1a1a1a'; c.lineWidth = 6; c.beginPath(); c.roundRect(-w / 2, -44, w, 88, 36); c.fill(); c.stroke(); c.beginPath(); c.moveTo(-18, 42); c.lineTo(10, 42); c.lineTo(-24, 78); c.closePath(); c.fill(); c.stroke(); c.fillStyle = '#1a1a1a'; c.fillText(b.text, 0, 3); }
   c.restore(); }
-const KEY = /^(Stadt|fast|FAST|AH|mir|Zahl|Kopf|Kraft|870|920|990|37-mal|Führerschein|Oma|Kreuzworträtsel|25|7|kleinste|fertig|Teller|Buch|Seite|8|5000|Nacht|Beinahe-Mann|Gläser|Papa|HUSS|300|3|Regen|Schnee|Ninja-Parcours|Turm|goldene|Knopf|20|Startlinie|lachten|Wand|Pfiff|Seil|Stangen|Jonas|Stufe|fiel|Finger|Händen|los|zersprangen|still|geschafft|Wahrheit|aufgehört|umarmte|weinte|Morgen|pünktlich|warm|38|Wort|1000|Grillen|alles|Folge)$/;
+const KEY = /^(Stadt|fast|FAST|ALMOST|AH|mir|Zahl|Kopf|Kraft|870|920|990|37-mal|Führerschein|Oma|Kreuzworträtsel|25|7|kleinste|fertig|Teller|Buch|Seite|8|5000|Nacht|Beinahe-Mann|Gläser|Papa|HUSS|300|3|Regen|Schnee|Ninja-Parcours|Turm|goldene|Knopf|20|Startlinie|lachten|Wand|Pfiff|Seil|Stangen|Jonas|Stufe|fiel|Finger|Händen|los|zersprangen|still|geschafft|Wahrheit|aufgehört|umarmte|weinte|Morgen|pünktlich|warm|38|Wort|1000|Grillen|alles|Folge)$/;
 const CAPS = WORDS.map(w => { const t = w[2].replace(/[„“"”.,!?:…–]/g, '').replace(/^-|-$/g, '').trim(); return { t: w[0], txt: t, key: KEY.test(t) }; }).filter(w => w.txt);
 function caption(T) { let cur = null; for (const w of CAPS) { if (w.t <= T) cur = w; else break; } if (!cur) return;
   const f = (T - cur.t) * FPS, s = f < 1 ? .2 : f < 2 ? 1.12 : 1, size = H * .046 * (cur.key ? 1.35 : 1), c = octx;
